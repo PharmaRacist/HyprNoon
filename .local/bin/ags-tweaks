@@ -1,7 +1,0 @@
-#!/bin/bash
-
-# Убиваем предыдущий процесс если он завис
-pkill -f "gjs.*ags-tweaks.js"
-
-# Запускаем новый
-gjs "$HOME/.local/bin/ags-tweaks.js"

@@ -1,7 +1,0 @@
-dark
-opaque
-scheme-tonal-spot
-dracula
-border
-vibrant
-normal
