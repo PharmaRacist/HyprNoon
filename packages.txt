@@ -116,7 +116,7 @@ ydotool
 yt-dlg
 quickshell
 darkly-bin
-tela-icon-theme
 sddm
 stow
 ntfs-3g
+# tela-icon-theme
