@@ -1,25 +1,83 @@
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Layouts
 import qs.modules.common
 import qs.modules.common.widgets
 
 Item {
     id: root
-    Layout.fillWidth: true
-    Layout.topMargin: Padding.large
-    Layout.preferredHeight: 140
 
     property int hour: 0
     property int minute: 0
     property bool clockPicker: true
-
     property color onSurface: Colors.colOnLayer3
     property color outline: Colors.colOutline
     property color surface: Colors.colLayer3
 
+    Layout.fillWidth: true
+    Layout.topMargin: Padding.large
+    Layout.preferredHeight: 140
+
+    RowLayout {
+        anchors {
+            // rightMargin: Padding.large
+            // leftMargin: Padding.large
+
+            fill: parent
+        }
+
+        TimeField {
+            id: hourField
+
+            fieldPlaceholder: clockPicker ? "12" : "00"
+            fieldText: clockPicker ? "12" : root.hour.toString().padStart(2, '0')
+            onTextChanged: root.hour = text
+        }
+
+        Text {
+            text: ":"
+            font.pixelSize: Fonts.sizes.title
+            color: Colors.colOnLayer2
+            opacity: 0.6
+            Layout.alignment: Qt.AlignVCenter
+        }
+
+        TimeField {
+            // onAccepted: root.minute = text;
+
+            id: minuteField
+
+            fieldPlaceholder: root.minute
+            fieldText: root.minute.toString().padStart(2, '0')
+            // fieldValidator: RegularExpressionValidator {
+            //     regularExpression: /^[0-5][0-9]$/
+            // }
+            onTextChanged: root.minute = text
+        }
+
+        Text {
+            text: ":"
+            font.pixelSize: Fonts.sizes.title
+            color: Colors.colOnLayer2
+            opacity: 0.6
+            Layout.alignment: Qt.AlignVCenter
+            visible: clockPicker
+        }
+
+        TimeField {
+            id: ampmField
+
+            fieldPlaceholder: "AM"
+            fieldText: "AM"
+            fieldReadOnly: true
+            visible: clockPicker
+        }
+
+    }
+
     component TimeField: TextField {
         id: field
+
         property string fieldPlaceholder: ""
         property string fieldText: ""
         property bool fieldReadOnly: false
@@ -45,63 +103,18 @@ Item {
         background: StyledRect {
             border.color: field.focus ? Colors.colPrimary : "transparent"
             border.width: 2
-            Behavior on border.color {
-                CAnim {}
-            }
             implicitHeight: parent.height
             radius: Rounding.normal
             color: Colors.colLayer3
+
+            Behavior on border.color {
+                CAnim {
+                }
+
+            }
+
         }
+
     }
 
-    RowLayout {
-        anchors {
-            fill: parent
-            // rightMargin: Padding.large
-            // leftMargin: Padding.large
-        }
-
-        TimeField {
-            id: hourField
-            fieldPlaceholder: clockPicker ? "12" : "00"
-            fieldText: clockPicker ? "12" : root.hour.toString().padStart(2, '0')
-            onTextChanged: root.hour = text
-        }
-
-        Text {
-            text: ":"
-            font.pixelSize: Fonts.sizes.title
-            color: Colors.colOnLayer2
-            opacity: 0.6
-            Layout.alignment: Qt.AlignVCenter
-        }
-
-        TimeField {
-            id: minuteField
-            fieldPlaceholder: root.minute
-            fieldText: root.minute.toString().padStart(2, '0')
-            // fieldValidator: RegularExpressionValidator {
-            //     regularExpression: /^[0-5][0-9]$/
-            // }
-            onTextChanged: root.minute = text
-            // onAccepted: root.minute = text;
-        }
-
-        Text {
-            text: ":"
-            font.pixelSize: Fonts.sizes.title
-            color: Colors.colOnLayer2
-            opacity: 0.6
-            Layout.alignment: Qt.AlignVCenter
-            visible: clockPicker
-        }
-
-        TimeField {
-            id: ampmField
-            fieldPlaceholder: "AM"
-            fieldText: "AM"
-            fieldReadOnly: true
-            visible: clockPicker
-        }
-    }
 }
