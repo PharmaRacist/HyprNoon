@@ -50,18 +50,23 @@ StyledRect {
             right: enter.left
         }
 
-        MaterialShapeWrappedMaterialSymbol {
+        MaterialShape {
             id: lockSymb
 
             z: 999
-            text: "lock"
-            fill: 1
             implicitSize: parent.height * 0.6
+            shape: MaterialShapes.Cookie6Sided
 
             anchors {
                 left: parent.left
                 verticalCenter: parent.verticalCenter
                 leftMargin: Padding.massive
+            }
+
+            StyledText {
+                anchors.centerIn: parent
+                animateChanges: true
+                text: HyprlandData.keyboardLayoutShortNames
             }
 
         }

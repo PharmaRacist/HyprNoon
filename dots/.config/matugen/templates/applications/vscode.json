@@ -27,5 +27,14 @@
     "syntax.bracket2": "",
     "syntax.bracket3": "",
     "syntax.bracket4": ""
-  }
+  },
+    "workbench.colorTheme": "HyprNoon",
+  "editor.fontFamily": "Iosevka",
+  "editor.fontSize": 18,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "Delgan.qml-format",
+  "window.menuBarVisibility": "compact",
+  "window.commandCenter": false,
+  "workbench.layoutControl.enabled": false,
+  "workbench.activityBar.location": "hidden"
 }
