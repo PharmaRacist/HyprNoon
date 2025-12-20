@@ -1,6 +1,8 @@
 import "./widgets"
+import Qt5Compat.GraphicalEffects
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell
 import qs.modules.common
@@ -8,6 +10,17 @@ import qs.modules.common.widgets
 import qs.services
 
 StyledRect {
+    // gradient: Gradient {
+    //     GradientStop {
+    //         position: 0
+    //         color: Colors.colLayer1
+    //     }
+    //     GradientStop {
+    //         position: 0.95
+    //         color: "transparent"
+    //     }
+    // }
+
     id: root
 
     implicitWidth: 450
@@ -17,28 +30,31 @@ StyledRect {
     topRadius: Rounding.huge
 
     anchors {
-        bottomMargin: -parent.height - Padding.massive
+        bottomMargin: -parent.height - 2 * Padding.massive
         bottom: parent.bottom
-        right: parent.right
+        left: parent.left
         margins: Padding.massive
     }
 
     ColumnLayout {
+        z: 99
+
         anchors {
             fill: parent
-            margins: Padding.massive
+            margins: Padding.large
+            bottomMargin: 2 * Padding.massive
         }
 
         LockClock {
-        }
-
-        Weather {
         }
 
         Spacer {
         }
 
         Row {
+        }
+
+        Weather {
         }
 
         Music {
@@ -49,19 +65,6 @@ StyledRect {
     Anim on anchors.bottomMargin {
         from: -root.implicitHeight
         to: -Padding.massive
-    }
-
-    gradient: Gradient {
-        GradientStop {
-            position: 0
-            color: Colors.colLayer1
-        }
-
-        GradientStop {
-            position: 0.95
-            color: "transparent"
-        }
-
     }
 
 }

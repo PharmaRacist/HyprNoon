@@ -22,7 +22,7 @@ StyledRect {
     property string currentMode: Mem.states.desktop.appearance.scheme
     property int comboWidth: 160
 
-    signal browserOpened
+    signal browserOpened()
 
     radius: Rounding.verylarge
     color: Colors.m3.m3surfaceContainerLowest
@@ -64,12 +64,14 @@ StyledRect {
                     for (let i = 0; i < root.themes.length; i++) {
                         if (root.themes[i].value === root.currentTheme)
                             return i;
+
                     }
                     return 0;
                 }
-                onActivated: index => {
+                onActivated: (index) => {
                     if (index >= 0 && index < root.themes.length)
                         GowallService.convertTheme(root.themes[index].value);
+
                 }
             }
 
@@ -90,6 +92,7 @@ StyledRect {
                     text: RemBgService.isBusy ? "hourglass" : "content_cut"
                     font.pixelSize: 24
                 }
+
             }
 
             // === Toggle Preset Button ===
@@ -108,6 +111,7 @@ StyledRect {
                     text: "palette"
                     font.pixelSize: 24
                 }
+
             }
 
             // === Mode Combo ===
@@ -122,12 +126,14 @@ StyledRect {
                     for (let i = 0; i < root.modes.length; i++) {
                         if (root.modes[i].value === root.currentMode)
                             return i;
+
                     }
                     return 0;
                 }
-                onActivated: index => {
+                onActivated: (index) => {
                     if (index >= 0 && index < root.modes.length)
                         WallpaperService.updateScheme(root.modes[index].value);
+
                 }
             }
 
@@ -147,11 +153,13 @@ StyledRect {
                     text: "colorize"
                     font.pixelSize: 24
                 }
+
             }
 
             // === Upscale Button ===
             RippleButton {
                 id: upscaleBtn
+
                 enabled: !GowallService.isBusy
                 implicitHeight: 40
                 implicitWidth: 40
@@ -165,6 +173,7 @@ StyledRect {
                     text: "auto_fix_high"
                     font.pixelSize: 24
                 }
+
             }
 
             // === Palette Combo ===
@@ -177,60 +186,77 @@ StyledRect {
                 textRole: "name"
                 valueRole: "name"
                 displayText: Mem.options.appearance.colors.palatteName
-                onActivated: index => {
+                onActivated: (index) => {
                     if (index >= 0 && index < root.palettes.length)
                         Mem.options.appearance.colors.palatteName = root.palettes[index];
+
                 }
             }
+
         }
 
         RowLayout {
             Layout.fillWidth: true
             Layout.preferredHeight: 40
             spacing: 8
+
             StyledTextField {
                 Layout.preferredHeight: 40
                 Layout.fillWidth: true
                 implicitWidth: 0
-                text: Mem.options.desktop.wallpapersFolderPath
+                text: Mem.states.desktop.bg.currentFolder
                 placeholderText: "Wallpaper folder path..."
                 placeholderTextColor: color
                 color: Colors.colOnLayer1
                 Keys.onEscapePressed: focus = false
-                onAccepted: Mem.options.desktop.wallpapersFolderPath = text
+                onAccepted: Mem.states.desktop.bg.currentFolder = text
             }
+
             RippleButton {
                 Layout.preferredHeight: 40
                 Layout.preferredWidth: pressed ? 60 : 40
-                releaseAction: () => WallpaperService.generateThumbnailsForCurrentFolder()
+                releaseAction: () => {
+                    return WallpaperService.generateThumbnailsForCurrentFolder();
+                }
 
                 contentItem: MaterialSymbol {
                     anchors.centerIn: parent
                     font.pixelSize: 25
                     text: "restart_alt"
                 }
+
             }
 
             RippleButton {
-                visible:false
+                visible: false
                 Layout.preferredHeight: 40
                 Layout.preferredWidth: pressed ? 60 : 40
-                releaseAction: () => WallpaperService.goBack()
+                releaseAction: () => {
+                    return WallpaperService.goBack();
+                }
 
                 contentItem: MaterialSymbol {
                     anchors.centerIn: parent
                     font.pixelSize: 25
                     text: "keyboard_arrow_up"
                 }
+
             }
+
         }
+
     }
 
     Behavior on implicitHeight {
-        Anim {}
+        Anim {
+        }
+
     }
 
     Behavior on implicitWidth {
-        Anim {}
+        Anim {
+        }
+
     }
+
 }

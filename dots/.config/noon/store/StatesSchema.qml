@@ -23,6 +23,7 @@ JsonAdapter {
             property bool isLive: false
             property string currentVideo: ""
             property string currentBg: ""
+            property string currentFolder: ""
         }
 
         appearance: JsonObject {

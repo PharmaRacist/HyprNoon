@@ -27,6 +27,11 @@ Singleton {
 
     property string networkName: ""
     property int networkStrength
+    
+    // Network speed properties
+    property real downloadSpeed: 0  // bytes per second
+    property real uploadSpeed: 0    // bytes per second
+    
     property string materialSymbol: root.ethernet
         ? "lan"
         : root.wifiEnabled
@@ -45,6 +50,18 @@ Singleton {
                     : (root.wifiStatus === "disabled")
                         ? "signal_wifi_off"
                         : "signal_wifi_bad"
+
+    // Format speed for display
+    function formatSpeed(bytesPerSecond: real): string {
+        if (bytesPerSecond < 1024)
+            return `${bytesPerSecond.toFixed(0)} B/s`;
+        else if (bytesPerSecond < 1024 * 1024)
+            return `${(bytesPerSecond / 1024).toFixed(1)} KB/s`;
+        else if (bytesPerSecond < 1024 * 1024 * 1024)
+            return `${(bytesPerSecond / (1024 * 1024)).toFixed(1)} MB/s`;
+        else
+            return `${(bytesPerSecond / (1024 * 1024 * 1024)).toFixed(2)} GB/s`;
+    }
 
     // Control
     function enableWifi(enabled = true): void {
@@ -245,6 +262,85 @@ Singleton {
             onStreamFinished: {
                 root.wifiEnabled = text.trim() === "enabled";
             }
+        }
+    }
+
+    // Network speed monitoring
+    Process {
+        id: updateNetworkSpeed
+        property var lastRx: 0
+        property var lastTx: 0
+        property var lastTime: 0
+        property string activeInterface: ""
+        
+        command: ["sh", "-c", `
+            # Find active network interface
+            IFACE=$(ip route | grep default | awk '{print $5}' | head -1)
+            if [ -z "$IFACE" ]; then
+                echo "no-interface"
+                exit 0
+            fi
+            # Get RX and TX bytes
+            cat /sys/class/net/$IFACE/statistics/rx_bytes 2>/dev/null || echo "0"
+            cat /sys/class/net/$IFACE/statistics/tx_bytes 2>/dev/null || echo "0"
+            echo "$IFACE"
+        `]
+        
+        property int lineCount: 0
+        property var rxBytes: 0
+        property var txBytes: 0
+        
+        stdout: SplitParser {
+            onRead: data => {
+                if (data === "no-interface") {
+                    root.downloadSpeed = 0;
+                    root.uploadSpeed = 0;
+                    updateNetworkSpeed.lineCount = 0;
+                    return;
+                }
+                
+                if (updateNetworkSpeed.lineCount === 0) {
+                    updateNetworkSpeed.rxBytes = parseInt(data) || 0;
+                    updateNetworkSpeed.lineCount++;
+                } else if (updateNetworkSpeed.lineCount === 1) {
+                    updateNetworkSpeed.txBytes = parseInt(data) || 0;
+                    updateNetworkSpeed.lineCount++;
+                } else if (updateNetworkSpeed.lineCount === 2) {
+                    updateNetworkSpeed.activeInterface = data;
+                    updateNetworkSpeed.lineCount = 0;
+                    
+                    const now = Date.now();
+                    
+                    if (updateNetworkSpeed.lastTime > 0) {
+                        const timeDiff = (now - updateNetworkSpeed.lastTime) / 1000; // seconds
+                        
+                        if (timeDiff > 0) {
+                            const rxDiff = updateNetworkSpeed.rxBytes - updateNetworkSpeed.lastRx;
+                            const txDiff = updateNetworkSpeed.txBytes - updateNetworkSpeed.lastTx;
+                            
+                            // Only update if values are reasonable (prevent negative or huge spikes)
+                            if (rxDiff >= 0 && txDiff >= 0) {
+                                root.downloadSpeed = rxDiff / timeDiff;
+                                root.uploadSpeed = txDiff / timeDiff;
+                            }
+                        }
+                    }
+                    
+                    updateNetworkSpeed.lastRx = updateNetworkSpeed.rxBytes;
+                    updateNetworkSpeed.lastTx = updateNetworkSpeed.txBytes;
+                    updateNetworkSpeed.lastTime = now;
+                }
+            }
+        }
+    }
+
+    Timer {
+        interval: 1000  // Update speed every second
+        running: true
+        repeat: true
+        onTriggered: {
+            updateNetworkSpeed.lineCount = 0;
+            updateNetworkSpeed.running = true;
         }
     }
 

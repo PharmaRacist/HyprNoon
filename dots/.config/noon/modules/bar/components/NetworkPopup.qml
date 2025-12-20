@@ -10,8 +10,11 @@ StyledPopup {
 
     ColumnLayout {
         id: columnLayout
+
         anchors.centerIn: parent
         spacing: 4
+        implicitWidth: 400
+        implicitHeight: 400
 
         // Header
         Row {
@@ -37,7 +40,9 @@ StyledPopup {
                     weight: Font.Medium
                     pixelSize: Fonts.sizes.normal
                 }
+
             }
+
         }
 
         // Connection Type Row
@@ -62,6 +67,7 @@ StyledPopup {
                 color: Colors.m3.m3onSurfaceVariant
                 text: Network.ethernet ? "Ethernet" : "Wi-Fi"
             }
+
         }
 
         // Network Name Row
@@ -93,8 +99,11 @@ StyledPopup {
             }
 
             Behavior on opacity {
-                FAnim {}
+                FAnim {
+                }
+
             }
+
         }
 
         // Signal Strength Row (Wi-Fi only)
@@ -125,25 +134,17 @@ StyledPopup {
             }
 
             Behavior on opacity {
-                FAnim {}
+                FAnim {
+                }
+
             }
+
         }
 
         // Download Speed Row
         RowLayout {
-            // StyledText {
-            //     Layout.fillWidth: true
-            //     horizontalAlignment: Text.AlignRight
-            //     color: Colors.m3.m3onSurfaceVariant
-            //     text: Network.formatSpeed(Network.downloadSpeed)
-            // }
-
-            property bool rowVisible: Network.downloadSpeed > 0
-
             spacing: 5
             Layout.fillWidth: true
-            visible: rowVisible
-            opacity: rowVisible ? 1 : 0
 
             MaterialSymbol {
                 text: "download"
@@ -156,41 +157,40 @@ StyledPopup {
                 color: Colors.m3.m3onSurfaceVariant
             }
 
-            Behavior on opacity {
-                Anim {}
+            StyledText {
+                Layout.fillWidth: true
+                horizontalAlignment: Text.AlignRight
+                color: Colors.m3.m3onSurfaceVariant
+                text: Network.formatSpeed(Network.downloadSpeed)
             }
+
         }
+
+        // Upload Speed Row - MOVED INSIDE ColumnLayout!
+        RowLayout {
+            spacing: 5
+            Layout.fillWidth: true
+
+            MaterialSymbol {
+                text: "upload"
+                color: Colors.m3.m3onSurfaceVariant
+                font.pixelSize: Fonts.sizes.large
+            }
+
+            StyledText {
+                text: qsTr("Upload:")
+                color: Colors.m3.m3onSurfaceVariant
+            }
+
+            StyledText {
+                Layout.fillWidth: true
+                horizontalAlignment: Text.AlignRight
+                color: Colors.m3.m3onSurfaceVariant
+                text: Network.formatSpeed(Network.uploadSpeed)
+            }
+
+        }
+
     }
 
-    // Upload Speed Row
-    RowLayout {
-        // StyledText {
-        //     Layout.fillWidth: true
-        //     horizontalAlignment: Text.AlignRight
-        //     color: Colors.m3.m3onSurfaceVariant
-        //     text: Network.formatSpeed(Network.uploadSpeed)
-        // }
-
-        property bool rowVisible: Network.uploadSpeed > 0
-
-        spacing: 5
-        Layout.fillWidth: true
-        visible: rowVisible
-        opacity: rowVisible ? 1 : 0
-
-        MaterialSymbol {
-            text: "upload"
-            color: Colors.m3.m3onSurfaceVariant
-            font.pixelSize: Fonts.sizes.large
-        }
-
-        StyledText {
-            text: qsTr("Upload:")
-            color: Colors.m3.m3onSurfaceVariant
-        }
-
-        Behavior on opacity {
-            Anim {}
-        }
-    }
 }

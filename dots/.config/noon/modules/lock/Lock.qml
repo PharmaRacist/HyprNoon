@@ -14,25 +14,30 @@ Scope {
 
     LockContext {
         id: lockContext
+
         onUnlocked: {
-            lock.locked = false
-            GlobalStates.locked = false
+            lock.locked = false;
+            GlobalStates.locked = false;
         }
-        }
+    }
+
     Connections {
-        target: GlobalStates
         function onLockedChanged() {
             if (GlobalStates.locked) {
                 Noon.playSound("locked", 2);
-                lock.locked = true
-            } else if (!GlobalStates.locked ){
+                lock.locked = true;
+            } else if (!GlobalStates.locked) {
                 Noon.playSound("unlocked", 10);
-                lock.locked = false
+                lock.locked = false;
             }
         }
+
+        target: GlobalStates
     }
+
     WlSessionLock {
         id: lock
+
         locked: GlobalStates.locked
 
         WlSessionLockSurface {
@@ -40,6 +45,9 @@ Scope {
                 anchors.fill: parent
                 context: lockContext
             }
+
         }
+
     }
+
 }

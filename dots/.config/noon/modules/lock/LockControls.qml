@@ -12,9 +12,9 @@ ColumnLayout {
     spacing: Padding.normal
 
     anchors {
-        left: parent.left
+        right: parent.right
         bottom: parent.bottom
-        leftMargin: -75
+        rightMargin: -75
         margins: Padding.huge
     }
 
@@ -42,7 +42,7 @@ ColumnLayout {
         }
     }
 
-    Anim on anchors.leftMargin {
+    Anim on anchors.rightMargin {
         from: -75
         to: anchors.margins
     }

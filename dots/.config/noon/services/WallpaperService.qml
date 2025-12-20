@@ -16,7 +16,7 @@ Singleton {
 
     readonly property string currentWallpaper: Mem.states.desktop.bg.currentBg ?? "root:///assets/images/default_wallpaper.png"
     readonly property string shellMode: Mem.states.desktop.appearance.mode
-    readonly property string currentFolderPath: Qt.resolvedUrl(Directories.home + "/" + Mem.options.desktop.wallpapersFolderPath)
+    readonly property string currentFolderPath: Qt.resolvedUrl(Directories.home + "/" + Mem.states.desktop.bg.currentFolder)
     readonly property FolderListModel wallpaperModel: _wallpaperModel
     property var _thumbnailCache: ({})
     property string thumbnailSize: "large"
@@ -43,6 +43,12 @@ Singleton {
     Process {
         id: thumbnailGenerator
         running: false
+        onStarted:Noon.notify("Generating Thumbnails");
+        onExited:exitcode => {
+            if (exitcode === 0)
+                Noon.notify("Thumbnails Done");
+
+        }   
         stdout: StdioCollector {
             onStreamFinished: _thumbnailCache = {}
         }
@@ -54,7 +60,7 @@ Singleton {
 
         const cleanDir = FileUtils.trimFileProtocol(directory);
         const cmd = ["python3", Directories.wallpaperSwitchScriptPath, "--gen-thumbnails", cleanDir, "--thumb-size", size, "--thumb-workers", (workers || 4).toString()];
-
+        console.log(cmd)
         if (recursive === false)
             cmd.push("--thumb-no-recursive");
 
@@ -89,9 +95,8 @@ Singleton {
         return useThumbnail && fileUrl ? getThumbnailPath(fileUrl, thumbnailSize) : fileUrl;
     }
 
-    function generateThumbnailsForCurrentFolder(size, workers) {
-        generateThumbnails(FileUtils.trimFileProtocol(currentFolderPath), size || thumbnailSize, workers || 4, true);
-        Noon.notify("Generating Thumbnails");
+    function generateThumbnailsForCurrentFolder(size) {
+        generateThumbnails(FileUtils.trimFileProtocol(currentFolderPath), size || thumbnailSize, 4);
     }
 
     function clearThumbnailCache() {
@@ -137,10 +142,10 @@ Singleton {
     }
 
     function goBack() {
-        const currentDir = Mem.options.desktop.wallpapersFolderPath;
+        const currentDir = Mem.states.desktop.bg.currentFolder;
         const parentDir = FileUtils.parentDirectory(currentDir);
         if (parentDir && parentDir !== currentDir)
-            Mem.options.desktop.wallpapersFolderPath = parentDir;
+            Mem.states.desktop.bg.currentFolder = parentDir;
     }
 
     FolderListModel {

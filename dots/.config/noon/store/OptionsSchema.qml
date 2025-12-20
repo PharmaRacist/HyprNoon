@@ -281,14 +281,12 @@ JsonAdapter {
         property bool desktopClock: true
         property int screenCorners: 1
         property bool timerOverlayMode: true
-        property string wallpapersFolderPath: "Pictures/Wallpapers"
         view: JsonObject {
             property string mode: "spiral"
         }
         bg: JsonObject {
             property JsonObject parallax
 
-            property string currentBg: ""
             property real borderMultiplier: 0.2
             property bool depthMode: true
             property bool useQs: true

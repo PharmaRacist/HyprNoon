@@ -12,7 +12,7 @@ StyledRect {
     z: 99
     implicitHeight: 60
     implicitWidth: passwordBox.length > 5 ? Sizes.beamSizeExpanded.width : Sizes.beamSize.width
-    topRadius: Rounding.normal
+    radius: Rounding.large
     color: Colors.colLayer1
     enableShadows: true
     enableBorders: false
@@ -20,7 +20,7 @@ StyledRect {
     anchors {
         bottom: parent.bottom
         horizontalCenter: parent.horizontalCenter
-        bottomMargin: -60
+        bottomMargin: -60 + Sizes.elevationMargin
     }
 
     TextField {
@@ -55,7 +55,8 @@ StyledRect {
 
             z: 999
             implicitSize: parent.height * 0.6
-            shape: MaterialShapes.Cookie6Sided
+            shape: MaterialShape.Cookie6Sided
+            color: Colors.colSecondaryContainer
 
             anchors {
                 left: parent.left
@@ -65,8 +66,8 @@ StyledRect {
 
             StyledText {
                 anchors.centerIn: parent
-                animateChanges: true
-                text: HyprlandData.keyboardLayoutShortNames
+                animateChange: true
+                text: HyprlandData.keyboardLayoutShortName
             }
 
         }
@@ -118,7 +119,7 @@ StyledRect {
 
     Anim on anchors.bottomMargin {
         from: -implicitHeight
-        to: 0
+        to: Sizes.elevationMargin
     }
 
 }

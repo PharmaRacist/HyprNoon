@@ -14,11 +14,14 @@ StyledRect {
     Layout.margins: Padding.normal
     enableBorders: true
     enableShadows: true
-    color: Colors.colLayer3
+    color: Colors.colLayer1
     radius: Rounding.verylarge
 
+    Visualizer {
+    }
+
     RowLayout {
-        spacing: Padding.verylarge
+        spacing: Padding.massive
 
         anchors {
             fill: parent
@@ -30,7 +33,7 @@ StyledRect {
 
             z: 99
             Layout.fillHeight: true
-            Layout.preferredWidth: 160
+            Layout.preferredWidth: height
             source: MusicPlayerService.artUrl
             mipmap: true
             radius: root.radius
