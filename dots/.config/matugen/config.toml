@@ -1,17 +1,16 @@
 [config]
-include = 'Extra'
 
 [templates.btop]
 input_path = "~/.config/matugen/templates/applications/btop.theme"
-output_path = '~/.config/btop/themes/hyprnoon.theme'
+output_path = '~/.config/btop/themes/noon.theme'
 
 [templates.obsidian]
 input_path = "~/.config/matugen/templates/applications/obsidian.css"
-output_path = "/mnt/Data/General-Archive/notes/.obsidian/snippets/Noon.css"
+output_path = "~/Documents/Notes/.obsidian/snippets/noon.css"
 
-# [templates.niri]
-# input_path = '~/.config/matugen/templates/niri/colors.kdl'
-# output_path = '~/.config/niri/colors.kdl'
+[templates.niri]
+input_path = '~/.config/matugen/templates/niri/colors.kdl'
+output_path = '~/.config/niri/colors.kdl'
 
 [templates.sequences]
 input_path = "~/.config/matugen/templates/terminal/sequences.txt"
@@ -30,21 +29,20 @@ input_path = '~/.config/matugen/templates/hyprland/colors.conf'
 output_path = '~/.cache/hyprland/colors.conf'
 
 [templates.gtk3]
-input_path = '~/.config/matugen/templates/gtk/gtk-colors.css'
+input_path = '~/.config/matugen/templates/gtk/colors.css'
 output_path = '~/.config/gtk-3.0/gtk.css'
 
 [templates.gtk4]
-pre_hook = 'rm -rf ~/.config/gtk-4.0 && mkdir -p ~/.config/gtk-4.0'
-input_path = '~/.config/matugen/templates/gtk/gtk-colors.css'
+input_path = '~/.config/matugen/templates/gtk/colors.css'
 output_path = '~/.config/gtk-4.0/gtk.css'
 
 [templates.pywalfox]
-input_path = '~/.config/matugen/templates/applications/pywalfox-colors.json'
+input_path = '~/.config/matugen/templates/applications/pywalfox.json'
 output_path = '~/.cache/wal/colors.json'
 post_hook = 'pywalfox update'
 
 [templates.heroic]
-input_path = "~/.config/matugen/templates/applications/heroic-theme.css"
+input_path = "~/.config/matugen/templates/applications/heroic.css"
 output_path = "~/.cache/noon/user/generated/heroic-colors.css"
 
 [templates.spicetify]
@@ -52,18 +50,35 @@ input_path = "~/.config/matugen/templates/applications/spicetify.ini"
 output_path = "~/.config/spicetify/Themes/noon/color.ini"
 
 [templates.discord]
-input_path = "~/.config/matugen/templates/applications/midnight-discord.css"
+input_path = "~/.config/matugen/templates/applications/discord.css"
 output_path = "~/.config/vesktop/themes/noon.css"
 
 [templates.zed]
 input_path = '~/.config/matugen/templates/applications/zed.json'
-output_path = '~/.config/zed/themes/m3colors.json'
+output_path = '~/.config/zed/themes/noon.json'
+
+[templates.only_office]
+input_path = '~/.config/matugen/templates/applications/onlyoffice.json'
+output_path = '~/.config/onlyoffice/DesktopEditors/themes/noon.json'
 
 [templates.telegram]
-input_path = '~/.config/matugen/templates/applications/telegram-colors.tdesktop-theme'
+input_path = '~/.config/matugen/templates/applications/telegram.tdesktop-theme'
 output_path = '~/.cache/noon/user/generated/colors/noon.tdesktop-theme'
 post_hook = 'ln -sf ${{image}} ~/.cache/noon/user/generated/colors.jpg'
 
 [templates.codium]
 input_path = "~/.config/matugen/templates/applications/vscode.json"
 output_path = '~/.config/VSCodium/User/settings.json'
+
+[templates.fuzzel]
+input_path = "~/.config/matugen/templates/applications/fuzzel.ini"
+output_path = '~/.config/fuzzel/colors.ini'
+
+[templates.cava]
+input_path = '~/.config/matugen/templates/applications/cava.ini'
+output_path = '~/.config/cava/themes/noon.ini'
+post_hook = "pkill -USR1 cava"
+
+[templates.zathura]
+input_path = '~/.config/matugen/templates/applications/zathura'
+output_path = '~/.config/zathura/zathurarc'

@@ -16,3 +16,5 @@ pokemon-colorscripts-go
 vlc
 stow
 vscodium-bin
+zathura
+zathura-pdf-mupdf
