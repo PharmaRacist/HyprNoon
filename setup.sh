@@ -357,7 +357,7 @@ update_from_git() {
     # Check if we're behind
     if [ "$local_commit" = "$remote_commit" ]; then
         ok "Already up to date"
-        return 0
+        return 1
     fi
     
     # Count commits behind
@@ -471,7 +471,9 @@ main() {
             collect_uninstall_inputs
             ;;
         update)
-            update_from_git && copy_dots
+            if update_from_git; then
+                copy_dots
+            fi
             echo ""
             ok "Update complete!"
             ;;
