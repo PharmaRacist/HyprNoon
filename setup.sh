@@ -322,6 +322,66 @@ copy_dots() {
     ok "Copied $copied files"
 }
 
+# Update from git repository
+update_from_git() {
+    info "Checking for updates..."
+    
+    # Check if we're in a git repository
+    if [ ! -d "$DIR/.git" ]; then
+        warn "Not a git repository, skipping update check"
+        return 1
+    fi
+    
+    # Check if git is installed
+    if ! command -v git &>/dev/null; then
+        warn "git not installed, skipping update check"
+        return 1
+    fi
+    
+    # Fetch latest changes
+    info "Fetching from github.com/pharmaracist/hyprnoon..."
+    git -C "$DIR" fetch origin 2>/dev/null || {
+        warn "Failed to fetch from remote"
+        return 1
+    }
+    
+    # Get current and remote commit hashes
+    local local_commit=$(git -C "$DIR" rev-parse HEAD 2>/dev/null)
+    local remote_commit=$(git -C "$DIR" rev-parse origin/main 2>/dev/null || git -C "$DIR" rev-parse origin/master 2>/dev/null)
+    
+    if [ -z "$local_commit" ] || [ -z "$remote_commit" ]; then
+        warn "Failed to get commit information"
+        return 1
+    fi
+    
+    # Check if we're behind
+    if [ "$local_commit" = "$remote_commit" ]; then
+        ok "Already up to date"
+        return 0
+    fi
+    
+    # Count commits behind
+    local commits_behind=$(git -C "$DIR" rev-list --count HEAD..origin/main 2>/dev/null || git -C "$DIR" rev-list --count HEAD..origin/master 2>/dev/null)
+    
+    info "Found $commits_behind new commit(s)"
+    echo ""
+    
+    if ! prompt "Pull updates?"; then
+        info "Update skipped"
+        return 1
+    fi
+    
+    # Pull updates
+    info "Pulling updates..."
+    if git -C "$DIR" pull origin main 2>/dev/null || git -C "$DIR" pull origin master 2>/dev/null; then
+        ok "Updated successfully"
+        return 0
+    else
+        err "Failed to pull updates"
+        return 1
+    fi
+}
+
 # Remove dotfiles
 remove_dots() {
     info "Removing dotfiles..."
@@ -411,9 +471,9 @@ main() {
             collect_uninstall_inputs
             ;;
         update)
+            update_from_git && copy_dots
             echo ""
-            prompt "Update dotfiles?" || exit 0
-            echo ""
+            ok "Update complete!"
             ;;
     esac
     
