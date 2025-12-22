@@ -14,7 +14,10 @@ fuzzel
 partitionmanager
 pokemon-colorscripts-go
 vlc
+mpv
 stow
 vscodium-bin
 zathura
 zathura-pdf-mupdf
+perplexity
+opencode-bin

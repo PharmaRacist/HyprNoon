@@ -109,6 +109,8 @@ darkly-bin
 sddm
 egl-wayland
 ntfs-3g
-ananicy-cpp
+qalculate-qt
 tlp
+ananicy-cpp
+auto-cpufreq
 ufw

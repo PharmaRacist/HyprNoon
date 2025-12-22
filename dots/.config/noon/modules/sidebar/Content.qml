@@ -304,7 +304,7 @@ FocusScope {
     }
 
     Connections {
-        function onsidebarOpenChanged() {
+        function onSidebarOpenChanged() {
             if (GlobalStates.sidebarOpen && showContent)
                 Qt.callLater(root.focusSearchInput);
 

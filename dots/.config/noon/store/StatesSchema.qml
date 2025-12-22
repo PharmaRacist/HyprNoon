@@ -56,7 +56,9 @@ JsonAdapter {
         property JsonObject power
 
         power: JsonObject {
-            property string controller
+            property string controller: ""
+            property string mode: ""
+            property list<var> modes
         }
         kdeconnect: JsonObject {
             property list<var> devices: []
