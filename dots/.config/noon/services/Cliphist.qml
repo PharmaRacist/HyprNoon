@@ -49,7 +49,7 @@ Singleton {
     function decodeImageEntry(entry) {
         const entryNumber = entry.split("\t")[0];
         const tmpPath = `/tmp/cliphist-${entryNumber}.png`;
-        Noon.exec(`${Cliphist.cliphistBinary} decode ${entryNumber} > '${tmpPath}' && while [ ! -s '${tmpPath}' ]; do sleep 0.01; done`);
+        Noon.execDetached(`${Cliphist.cliphistBinary} decode ${entryNumber} > '${tmpPath}' && while [ ! -s '${tmpPath}' ]; do sleep 0.01; done`);
         return tmpPath.trim();
     }
 
@@ -75,19 +75,19 @@ Singleton {
 
     function copy(entry) {
         if (root.cliphistBinary.includes("cliphist"))
-            Noon.exec(`printf '${StringUtils.shellSingleQuoteEscape(entry)}' | ${root.cliphistBinary} decode | wl-copy`);
+            Noon.execDetached(`printf '${StringUtils.shellSingleQuoteEscape(entry)}' | ${root.cliphistBinary} decode | wl-copy`);
         else {
             const entryNumber = entry.split("\t")[0];
-            Noon.exec(`${root.cliphistBinary} decode ${entryNumber} | wl-copy`);
+            Noon.execDetached(`${root.cliphistBinary} decode ${entryNumber} | wl-copy`);
         }
     }
 
     function paste(entry) {
         if (root.cliphistBinary.includes("cliphist"))
-            Noon.exec(`printf '${StringUtils.shellSingleQuoteEscape(entry)}' | ${root.cliphistBinary} decode | wl-copy && wl-paste`);
+            Noon.execDetached(`printf '${StringUtils.shellSingleQuoteEscape(entry)}' | ${root.cliphistBinary} decode | wl-copy && wl-paste`);
         else {
             const entryNumber = entry.split("\t")[0];
-            Noon.exec(`${root.cliphistBinary} decode ${entryNumber} | wl-copy; ${root.pressPasteCommand}`);
+            Noon.execDetached(`${root.cliphistBinary} decode ${entryNumber} | wl-copy; ${root.pressPasteCommand}`);
         }
     }
 
@@ -99,7 +99,7 @@ Singleton {
         const pasteCommands = [...targetEntries].reverse().map(entry => 
             `printf '${StringUtils.shellSingleQuoteEscape(entry)}' | ${root.cliphistBinary} decode | wl-copy && sleep ${root.pasteDelay} && ${root.pressPasteCommand}`
         );
-        Noon.exec(pasteCommands.join(` && sleep ${root.pasteDelay} && `));
+        Noon.execDetached(pasteCommands.join(` && sleep ${root.pasteDelay} && `));
     }
 
     Process {

@@ -50,6 +50,14 @@ Scope {
                         showHint: true,
                         showOsrButton: false
                     },
+                    "calc": {
+                        prefix: "=",
+                        icon: "calculate",
+                        shape: MaterialShape.Shape.Hexagon,
+                        placeholder: "Calculate ..",
+                        showHint: true,
+                        showOsrButton: false
+                    },
                     "install": {
                         prefix: "$",
                         icon: "deployed_code_update",
@@ -293,7 +301,6 @@ Scope {
             function hide() {
                 GlobalStates.showBeam = false;
             }
-
             function getAppSuggestion() {
                 const q = root.query.substring(1).trim().toLowerCase();
 
@@ -383,6 +390,12 @@ Scope {
                         Noon.installPkg(cleanQuery);
                     }
                     break;
+                case "calc":
+                    if (cleanQuery.length > 0) {
+                        QalcService.calculate(cleanQuery)
+                        Cliphist.copy(QalcService.result)
+                    }
+                    break;
                 case "ipc":
                     if (cleanQuery.length > 0) {
                         Noon.callIpc(cleanQuery);
@@ -433,6 +446,9 @@ Scope {
                     return getAppSuggestion();
                 case "search":
                     return getSearchSuggestions();
+                case "calc":
+                    QalcService.calculate(root.query.substring(1))
+                    return QalcService.result
                 case "ipc":
                     return getIpcSuggestion();
                 case "commands":
@@ -672,6 +688,9 @@ Scope {
                                         event.accepted = true;
                                     } else if (root.state === "search" && hintText.text) {
                                         root.query = "?" + hintText.text;
+                                        event.accepted = true;
+                                    } else if (root.state === "calc" && hintText.text) {
+                                        root.query = "=" + hintText.text;
                                         event.accepted = true;
                                     }
                                 }
