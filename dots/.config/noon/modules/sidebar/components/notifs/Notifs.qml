@@ -1,14 +1,11 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Hyprland
-import Quickshell.Wayland
 import Quickshell.Widgets
+import "dialogs"
+import "notifications"
 import qs.modules.common
 import qs.modules.common.widgets
-import qs.modules.sidebar.components.notifs.calendar
-import qs.modules.sidebar.components.notifs.dialogs
-import qs.modules.sidebar.components.notifs.notifications
 import qs.services
 
 Item {
@@ -88,11 +85,6 @@ Item {
 
         NotificationList {
             Layout.fillHeight: true
-            Layout.fillWidth: true
-        }
-
-        CalendarWidget {
-            visible: false
             Layout.fillWidth: true
         }
 

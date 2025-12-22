@@ -1,12 +1,12 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Widgets
 import qs.modules.common
 import qs.modules.common.functions
 import qs.modules.common.widgets
-import qs.modules.sidebar.components.notifs.quickToggles
 import qs.services
+import "quickToggles"
+import "sliders"
 
 Item {
     id: root

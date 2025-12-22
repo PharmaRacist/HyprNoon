@@ -23,8 +23,4 @@ MouseArea {
         font.weight: root.fWeight
     }
 
-    CalendarPopup {
-        hoverTarget: root
-    }
-
 }
