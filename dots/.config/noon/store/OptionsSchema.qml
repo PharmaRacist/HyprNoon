@@ -227,6 +227,7 @@ JsonAdapter {
             property int mode: 2
             property bool showNavTitles: false
             property bool showSliders: true
+            property bool showVolumeInputSlider: false
         }
     }
 

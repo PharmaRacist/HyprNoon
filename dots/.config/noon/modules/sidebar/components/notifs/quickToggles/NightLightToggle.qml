@@ -6,7 +6,7 @@ import qs.services
 QuickToggleButton {
     id: nightLightButton
 
-    buttonName: "NightLight"
+    buttonName: "Night Light"
     buttonIcon: "nightlight"
     toggled: NightLightService.enabled
     onClicked: NightLightService.toggle()

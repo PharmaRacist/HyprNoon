@@ -52,5 +52,7 @@ Item {
         anchors.left: brightnessSlider.left
         anchors.leftMargin: 10
         fill: 1
+        animateChange:true
+
     }
 }

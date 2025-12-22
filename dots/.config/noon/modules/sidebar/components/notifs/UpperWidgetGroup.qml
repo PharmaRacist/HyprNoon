@@ -36,11 +36,12 @@ Item {
             Layout.rightMargin: Padding.normal
 
             BrightnessSlider {
-                Layout.fillWidth: true
             }
 
-            VolumeSlider {
-                Layout.fillWidth: true
+            VolumeOutputSlider {
+            }
+
+            VolumeInputSlider {
             }
 
         }
