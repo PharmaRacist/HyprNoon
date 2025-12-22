@@ -193,6 +193,7 @@ Scope {
         SidebarBubble {
             show: !root.barMode
             rightMode:visualContainer.rightMode
+            selectedCategory:launcherContent.selectedCategory
             anchors {
                 right: !visualContainer.rightMode ? undefined : visualContainer.left
                 left: visualContainer.rightMode ? undefined : visualContainer.right

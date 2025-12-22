@@ -3,10 +3,15 @@ import QtQuick.Layouts
 import Quickshell
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.services
 
 StyledRect {
+    id: root
+
     property bool show
     property bool rightMode
+    property string selectedCategory
+    property alias containsMouse: mouse.containsMouse
 
     visible: width > 0 && !Mem.states.sidebar.behavior.pinned
     enableShadows: true
@@ -15,6 +20,14 @@ StyledRect {
     height: content.implicitHeight + 2 * Padding.large
     width: show ? 55 : 0
 
+    MouseArea {
+        id: mouse
+
+        anchors.fill: parent
+        propagateComposedEvents: true
+        hoverEnabled: true
+    }
+
     ColumnLayout {
         id: content
 
@@ -22,6 +35,14 @@ StyledRect {
 
         anchors {
             centerIn: parent
+        }
+
+        RippleButtonWithIcon {
+            visible: root.selectedCategory === "Walls"
+            materialIcon: "shuffle"
+            releaseAction: () => {
+                return WallpaperService.shuffleWallpapers();
+            }
         }
 
         RippleButtonWithIcon {
