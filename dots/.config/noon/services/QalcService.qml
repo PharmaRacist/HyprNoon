@@ -1,49 +1,40 @@
-pragma Singleton
-pragma ComponentBehavior: Bound
 import QtQuick
-import QtQuick.Controls
 import Quickshell
 import Quickshell.Io
-import qs.modules.common
+pragma Singleton
 
 Singleton {
-    id:root    
+    id: root
+
     property string result: ""
-    property string lastQuery: ""
-    property bool isBusy: false
-    
+    property bool isBusy: calcProcess.running
+
+    function calculate(expression: string) {
+        if (!expression) {
+            root.result = "";
+            return ;
+        }
+        calcProcess.running = false;
+        calcProcess.command = ["qalc", "-terse", expression];
+        calcProcess.running = true;
+    }
+
     Process {
         id: calcProcess
+
         command: ["qalc", "-terse"]
-        
+        onExited: (exitCode, exitStatus) => {
+            if (exitCode !== 0)
+                root.result = "Error: " + exitCode;
+
+        }
+
         stdout: SplitParser {
             onRead: (data) => {
-                root.result = data.trim()
-                root.isBusy = false
+                return root.result = data.trim();
             }
         }
-        
-        onStarted: (pid) => {
-            root.isBusy = true
-        }
-        
-        onExited: (exitCode, exitStatus) => {
-            root.isBusy = false
-            if (exitCode !== 0) {
-                root.result = "Error: " + exitCode
-            }
-        }
+
     }
-    
-    function calculate(expression: string) {
-        if (!expression?.trim()) {
-            root.result = ""
-            return
-        }
-        
-        root.lastQuery = expression.trim()
-        calcProcess.running = false  // Stop previous
-        calcProcess.command = ["qalc", "-terse", root.lastQuery]
-        calcProcess.running = true   // Start new
-    }
+
 }
