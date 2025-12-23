@@ -20,7 +20,7 @@ vscodium-bin
 zathura
 zathura-pdf-mupdf
 perplexity
-opencode-bin
+# opencode-bin
 spotify
 spicetify-cli
 spicetify-marketplace-bin

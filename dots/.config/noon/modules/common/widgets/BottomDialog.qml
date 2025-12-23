@@ -14,11 +14,20 @@ Item {
     property int collapsedHeight: 200
     property int expandedHeight: 400
     property bool expand: false
-    property bool reveal: show || bg.visible
     property bool show: false
+    property bool revealOnWheel: true
+    property bool enableStagedReveal: true
+    property bool bottomAreaReveal: false
+    property int hoverHeight: 100
     property var contentItem
+    property alias backgroundColor: bg.color
+    property alias topRadius: bg.topRadius
+    property alias enableShadows: bg.enableShadows
+    property alias bgAnchors: bg.anchors
+    property alias backgroundOpacity: bg.opacity
+    readonly property bool reveal: show || bg.visible
+    readonly property int targetHeight: show ? (expand && enableStagedReveal ? expandedHeight : collapsedHeight) : 0
 
-    // visible: reveal
     anchors.fill: parent
 
     Rectangle {
@@ -28,41 +37,59 @@ Item {
         anchors.fill: parent
 
         MouseArea {
-            property int scrollSum: 0
-            property int toggleThreshold: 750
-
-            z: -1
-            hoverEnabled: true
             anchors.fill: parent
-            onClicked: root.show = false
-            propagateComposedEvents: true
-            scrollGestureEnabled: true
+            hoverEnabled: true
             acceptedButtons: root.show ? Qt.LeftButton : Qt.NoButton
-            onWheel: function(wheel) {
-                scrollSum += wheel.angleDelta.y;
-                if (scrollSum >= toggleThreshold) {
-                    if (!root.show) {
-                        root.show = true;
-                        root.expand = false;
-                    } else if (!root.expand) {
-                        root.expand = true;
-                    }
-                    scrollSum = 0;
-                } else if (scrollSum <= -toggleThreshold) {
-                    if (root.expand)
-                        root.expand = false;
-                    else if (root.show)
-                        root.show = false;
-                    scrollSum = 0;
-                }
-                wheel.accepted = true;
-            }
+            onClicked: root.show = false
         }
 
         Behavior on opacity {
             Anim {
+                duration: Animations.durations.normal
+                easing.bezierCurve: Animations.curves.emphasized
             }
 
+        }
+
+    }
+
+    MouseArea {
+        property int scrollSum: 0
+        readonly property int threshold: 750
+
+        height: root.bottomAreaReveal ? root.hoverHeight : parent.height
+        hoverEnabled: true
+        acceptedButtons: Qt.NoButton
+        scrollGestureEnabled: root.revealOnWheel
+        onWheel: (wheel) => {
+            if (!root.revealOnWheel) {
+                wheel.accepted = false;
+                return ;
+            }
+            scrollSum += wheel.angleDelta.y;
+            if (Math.abs(scrollSum) >= threshold) {
+                if (scrollSum > 0) {
+                    if (!root.show) {
+                        root.show = true;
+                        root.expand = false;
+                    } else if (!root.expand && root.enableStagedReveal) {
+                        root.expand = true;
+                    }
+                } else {
+                    if (root.expand && root.enableStagedReveal)
+                        root.expand = false;
+                    else if (root.show)
+                        root.show = false;
+                }
+                scrollSum = 0;
+            }
+            wheel.accepted = true;
+        }
+
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
         }
 
     }
@@ -72,13 +99,15 @@ Item {
 
         z: 999
         visible: height > 0
-        height: root.show ? root.expand ? root.expandedHeight : root.collapsedHeight : 0
+        height: root.targetHeight
         topRadius: Rounding.verylarge
-        color: Colors.colLayer2
+        color: Colors.m3.m3surfaceContainerLow
         enableShadows: true
         children: root.contentItem
         Component.onCompleted: {
-            contentItem.anchors.fill = root;
+            if (contentItem)
+                contentItem.anchors.fill = bg;
+
         }
 
         anchors {
@@ -87,8 +116,22 @@ Item {
             bottom: parent.bottom
         }
 
+        Behavior on anchors.rightMargin {
+            Anim {
+            }
+
+        }
+
+        Behavior on anchors.leftMargin {
+            Anim {
+            }
+
+        }
+
         Behavior on height {
             Anim {
+                duration: Animations.durations.normal
+                easing.bezierCurve: Animations.curves.emphasized
             }
 
         }

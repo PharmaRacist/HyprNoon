@@ -257,7 +257,7 @@ StyledListView {
 
         releaseAction: () => {
             Cliphist.wipe()
-            LauncherData.generateHistory()
+            Cliphist.refresh()
         }
 
         materialIcon: switch (selectedCategory) {

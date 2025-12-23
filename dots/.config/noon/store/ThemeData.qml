@@ -6,7 +6,7 @@ import qs.modules.common.widgets
 pragma Singleton
 
 Singleton {
-    readonly property var availableColorPalettes: ["w11", "ayu_dark", "catppuccin_latte", "catppuccin_mocha", "cobalt2", "dracula", "github_dark", "gruvbox_dark", "gruvbox_light", "high_contrast_dark", "high_contrast_light", "material_dark", "material_light", "monokai", "nord", "night_owl", "one_dark", "palen_night", "shades_of_purple", "solarized_dark", "solarized_light", "synthwave84", "tokyo_night"]
+    readonly property var palettes: ["w11", "ayu_dark", "catppuccin_latte", "catppuccin_mocha", "cobalt2", "dracula", "github_dark", "gruvbox_dark", "gruvbox_light", "high_contrast_dark", "high_contrast_light", "material_dark", "material_light", "monokai", "nord", "night_owl", "one_dark", "palen_night", "shades_of_purple", "solarized_dark", "solarized_light", "synthwave84", "tokyo_night"]
     property var themes: [{
         "name": "Monochromatic",
         "value": "bw",

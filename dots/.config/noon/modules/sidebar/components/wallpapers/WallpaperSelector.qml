@@ -191,15 +191,12 @@ Item {
         }
 
         PagePlaceholder {
-            anchors.centerIn: parent
             visible: gridView.model === 0 && root.searchQuery !== ""
             icon: "block"
             title: "Nothing found"
         }
 
         WallpaperControls {
-            expanded: root.expanded
-            onBrowserOpened: GlobalStates.sidebarOpen = false
         }
     }
 

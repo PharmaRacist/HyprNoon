@@ -44,6 +44,19 @@ Rectangle {
     Behavior on opacity {
         Anim {}
     }
+    Behavior on width {
+        Anim {}
+    }
+    Behavior on height {
+        Anim {}
+    }
+
+    Behavior on implicitWidth {
+        Anim {}
+    }
+    Behavior on implicitHeight {
+        Anim {}
+    }
 
     StyledRectangularShadow {
         visible: root.enableShadows

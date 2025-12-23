@@ -1,3 +1,4 @@
 ananicy-cpp
 tlp
 ufw
+auto-cpufreq

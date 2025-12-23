@@ -17,7 +17,7 @@ Singleton {
     readonly property FolderListModel wallpaperModel: _wallpaperModel
     property var _thumbnailCache: ({})
     property string thumbnailSize: "large"
-
+    property alias _generatingThumbnails: thumbnailGenerator.running
     Component.onCompleted: refreshFolderDelayed()
     
     onCurrentWallpaperChanged: Noon.playSound("pressed")

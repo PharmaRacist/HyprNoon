@@ -19,12 +19,14 @@ StyledRect {
     color: Colors.m3.m3surface
     height: content.implicitHeight + 2 * Padding.large
     width: show ? 55 : 0
+    clip: true
 
     MouseArea {
         id: mouse
 
+        acceptedButtons: Qt.NoButton
         anchors.fill: parent
-        propagateComposedEvents: true
+        propagateComposedEvents: false
         hoverEnabled: true
     }
 
@@ -37,12 +39,57 @@ StyledRect {
             centerIn: parent
         }
 
-        RippleButtonWithIcon {
+        ColumnLayout {
             visible: root.selectedCategory === "Walls"
-            materialIcon: "shuffle"
-            releaseAction: () => {
-                return WallpaperService.shuffleWallpapers();
+            spacing: parent.spacing
+
+            RippleButtonWithIcon {
+                materialIcon: "shuffle"
+                releaseAction: () => {
+                    return WallpaperService.shuffleWallpapers();
+                }
             }
+
+            RippleButtonWithIcon {
+                materialIcon: "colorize"
+                releaseAction: () => {
+                    return WallpaperService.pickAccentColor();
+                }
+            }
+
+            RippleButtonWithIcon {
+                materialIcon: "auto_fix_high"
+                releaseAction: () => {
+                    return WallpaperService.upscaleCurrentWallpaper();
+                }
+            }
+
+            RippleButtonWithIcon {
+                enabled: !RemBgService.isBusy
+                materialIcon: RemBgService.isBusy ? "hourglass" : "content_cut"
+                releaseAction: () => {
+                    return RemBgService.process_current_bg();
+                }
+            }
+
+            RippleButtonWithIcon {
+                materialIcon: "palette"
+                releaseAction: () => {
+                    return Mem.options.appearance.colors.palatte = !Mem.options.appearance.colors.palatte;
+                }
+            }
+
+            RippleButtonWithIcon {
+                enabled: !WallpaperService._generatingThumbnails
+                materialIcon: "restart_alt"
+                releaseAction: () => {
+                    return WallpaperService.generateThumbnailsForCurrentFolder();
+                }
+            }
+
+            Separator {
+            }
+
         }
 
         RippleButtonWithIcon {
@@ -53,26 +100,11 @@ StyledRect {
             }
         }
 
-        Separator {
-        }
-
         RippleButtonWithIcon {
             materialIcon: !visualContainer.rightMode && Mem.states.sidebar.behavior.expanded ? "keyboard_double_arrow_left" : "keyboard_double_arrow_right"
             releaseAction: () => {
                 return Mem.states.sidebar.behavior.expanded = !Mem.states.sidebar.behavior.expanded;
             }
-        }
-
-    }
-
-    Behavior on height {
-        Anim {
-        }
-
-    }
-
-    Behavior on width {
-        Anim {
         }
 
     }
