@@ -27,7 +27,13 @@ Item {
     property alias backgroundOpacity: bg.opacity
     readonly property bool reveal: show || bg.visible
     readonly property int targetHeight: show ? (expand && enableStagedReveal ? expandedHeight : collapsedHeight) : 0
+    property var finishAction
 
+    onRevealChanged: {
+        if (!reveal)
+            return finishAction();
+
+    }
     anchors.fill: parent
 
     Rectangle {

@@ -5,51 +5,27 @@ import qs.modules.common
 import qs.modules.common.widgets
 import qs.services
 
-SidebarDialog {
+BottomDialog {
     id: root
 
-    WindowDialogTitle {
-        text: qsTr("KDE Connect")
-    }
+    collapsedHeight: parent.height * 0.64
+    enableStagedReveal: false
+    onShowChanged: GlobalStates.showKdeConnectDialog = show
+    finishAction: GlobalStates.showKdeConnectDialog = reveal
 
-    WindowDialogSeparator {
-    }
+    contentItem: ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: Padding.massive
+        spacing: Padding.large
 
-    ColumnLayout {
-        Layout.fillWidth: true
-        Layout.fillHeight: true
-        spacing: 16
-        anchors.margins: Rounding.large
-
-        // Connection Status
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: 10
-
-            MaterialSymbol {
-                text: KdeConnectService.availableDevices.length > 0 ? "phonelink" : "phonelink_off"
-                font.pixelSize: Fonts.sizes.verylarge
-                color: Colors.colOnSurfaceVariant
-            }
-
-            StyledText {
-                Layout.fillWidth: true
-                text: qsTr("%1 device(s) connected").arg(KdeConnectService.availableDevices.length)
-                color: Colors.colOnSurfaceVariant
-            }
-
-            StyledText {
-                text: KdeConnectService.isRefreshing ? qsTr("Refreshing...") : ""
-                color: Colors.colOnSurfaceVariant
-                opacity: 0.7
-            }
-
+        BottomDialogHeader {
+            title: "Phone Actions"
         }
 
-        WindowDialogSeparator {
+        BottomDialogSeparator {
         }
+        // --- Paired Devices ---
 
-        // Paired Devices Section
         StyledText {
             text: qsTr("Paired Devices")
             color: Colors.colOnSurfaceVariant
@@ -62,17 +38,10 @@ SidebarDialog {
 
             RowLayout {
                 Layout.fillWidth: true
-                spacing: 10
+                spacing: Padding.small
 
                 MaterialSymbol {
-                    text: {
-                        // Online
-
-                        if (KdeConnectService.isDeviceAvailable(modelData.id))
-                            return "phone_android";
-                        else
-                            return "phone_disabled"; // Offline
-                    }
+                    text: KdeConnectService.isDeviceAvailable(modelData.id) ? "phone_android" : "phone_disabled"
                     font.pixelSize: Fonts.sizes.verylarge
                     color: KdeConnectService.isDeviceAvailable(modelData.id) ? Colors.colPrimaryActive : Colors.colOnSurfaceVariant
                 }
@@ -98,10 +67,10 @@ SidebarDialog {
 
         }
 
-        // Empty state for paired devices
+        // --- Empty Paired State ---
         RowLayout {
             Layout.fillWidth: true
-            spacing: 10
+            spacing: Padding.small
             visible: KdeConnectService.devices.length === 0
 
             MaterialSymbol {
@@ -120,241 +89,136 @@ SidebarDialog {
 
         }
 
-        WindowDialogSeparator {
+        BottomDialogSeparator {
         }
 
-        // Discoverable Devices Section
-        StyledText {
-            text: qsTr("Available to Pair")
-            color: Colors.colOnSurfaceVariant
-            font.pixelSize: Fonts.sizes.small
-            opacity: 0.7
-        }
+        // --- Quick Actions + Device Management ---
+        ColumnLayout {
+            Layout.fillWidth: true
+            spacing: Padding.small
+            visible: KdeConnectService.selectedDeviceId !== ""
 
-        Repeater {
-            model: KdeConnectService.discoverableDevices
+            StyledText {
+                text: qsTr("Quick Actions")
+                color: Colors.colOnSurfaceVariant
+                font.pixelSize: Fonts.sizes.small
+                opacity: 0.7
+            }
+
+            Repeater {
+                model: [{
+                    "icon": "notifications_active",
+                    "text": qsTr("Ring Device"),
+                    "action": () => {
+                        return KdeConnectService.ringDevice();
+                    }
+                }, {
+                    "icon": "notifications",
+                    "text": qsTr("Send Ping"),
+                    "action": () => {
+                        return KdeConnectService.pingDevice();
+                    }
+                }, {
+                    "icon": "lock",
+                    "text": qsTr("Lock Device"),
+                    "action": () => {
+                        return KdeConnectService.lockDevice();
+                    }
+                }, {
+                    "icon": "content_paste",
+                    "text": qsTr("Send Clipboard"),
+                    "action": () => {
+                        return KdeConnectService.sendClipboard();
+                    }
+                }]
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: Padding.small
+
+                    MaterialSymbol {
+                        text: modelData.icon
+                        font.pixelSize: Fonts.sizes.verylarge
+                        color: Colors.colOnSurfaceVariant
+                    }
+
+                    StyledText {
+                        Layout.fillWidth: true
+                        text: modelData.text
+                        color: Colors.colOnSurfaceVariant
+                    }
+
+                    RippleButtonWithIcon {
+                        materialIcon: "play_arrow"
+                        onClicked: modelData.action()
+                    }
+
+                }
+
+            }
+
+            BottomDialogSeparator {
+            }
+
+            StyledText {
+                text: qsTr("Device Management")
+                color: Colors.colOnSurfaceVariant
+                font.pixelSize: Fonts.sizes.small
+                opacity: 0.7
+            }
 
             RowLayout {
                 Layout.fillWidth: true
-                spacing: 10
+                spacing: Padding.small
 
                 MaterialSymbol {
-                    text: "phone_in_talk" // New device icon
+                    text: "link"
                     font.pixelSize: Fonts.sizes.verylarge
                     color: Colors.colOnSurfaceVariant
                 }
 
                 StyledText {
                     Layout.fillWidth: true
-                    text: modelData.name
+                    text: qsTr("Send Media")
                     color: Colors.colOnSurfaceVariant
                 }
 
                 RippleButtonWithIcon {
-                    materialIcon: "link"
-                    onClicked: KdeConnectService.pairDevice(modelData.id)
+                    materialIcon: "play_arrow"
+                    onClicked: {
+                        const deviceId = KdeConnectService.selectedDeviceId;
+                        KdeConnectService.shareFile(deviceId);
+                        Noon.callIpc("sidebar_launcher hide");
+                    }
                 }
 
             }
 
-        }
-
-        // Empty state for discoverable
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: 10
-            visible: KdeConnectService.discoverableDevices.length === 0
-
-            MaterialSymbol {
-                text: "info"
-                font.pixelSize: Fonts.sizes.verylarge
-                color: Colors.colOnSurfaceVariant
-                opacity: 0.5
-            }
-
-            StyledText {
+            RowLayout {
                 Layout.fillWidth: true
-                text: qsTr("No new devices found. Make sure KDE Connect is running and visible on your phone.")
-                color: Colors.colOnSurfaceVariant
-                opacity: 0.7
-                wrapMode: Text.WordWrap
-            }
+                spacing: Padding.small
 
-        }
-
-        WindowDialogSeparator {
-        }
-
-        // Quick Actions
-        StyledText {
-            text: qsTr("Quick Actions")
-            color: Colors.colOnSurfaceVariant
-            font.pixelSize: Fonts.sizes.small
-            opacity: 0.7
-            visible: KdeConnectService.selectedDeviceId !== ""
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: 10
-            visible: KdeConnectService.selectedDeviceId !== ""
-
-            MaterialSymbol {
-                text: "notifications_active"
-                font.pixelSize: Fonts.sizes.verylarge
-                color: Colors.colOnSurfaceVariant
-            }
-
-            StyledText {
-                Layout.fillWidth: true
-                text: qsTr("Ring Device")
-                color: Colors.colOnSurfaceVariant
-            }
-
-            RippleButtonWithIcon {
-                materialIcon: "play_arrow"
-                onClicked: KdeConnectService.ringDevice()
-            }
-
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: 10
-            visible: KdeConnectService.selectedDeviceId !== ""
-
-            MaterialSymbol {
-                text: "notifications"
-                font.pixelSize: Fonts.sizes.verylarge
-                color: Colors.colOnSurfaceVariant
-            }
-
-            StyledText {
-                Layout.fillWidth: true
-                text: qsTr("Send Ping")
-                color: Colors.colOnSurfaceVariant
-            }
-
-            RippleButtonWithIcon {
-                materialIcon: "play_arrow"
-                onClicked: KdeConnectService.pingDevice()
-            }
-
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: 10
-            visible: KdeConnectService.selectedDeviceId !== ""
-
-            MaterialSymbol {
-                text: "lock"
-                font.pixelSize: Fonts.sizes.verylarge
-                color: Colors.colOnSurfaceVariant
-            }
-
-            StyledText {
-                Layout.fillWidth: true
-                text: qsTr("Lock Device")
-                color: Colors.colOnSurfaceVariant
-            }
-
-            RippleButtonWithIcon {
-                materialIcon: "play_arrow"
-                onClicked: KdeConnectService.lockDevice()
-            }
-
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: 10
-            visible: KdeConnectService.selectedDeviceId !== ""
-
-            MaterialSymbol {
-                text: "content_paste"
-                font.pixelSize: Fonts.sizes.verylarge
-                color: Colors.colOnSurfaceVariant
-            }
-
-            StyledText {
-                Layout.fillWidth: true
-                text: qsTr("Send Clipboard")
-                color: Colors.colOnSurfaceVariant
-            }
-
-            RippleButtonWithIcon {
-                materialIcon: "play_arrow"
-                onClicked: KdeConnectService.sendClipboard()
-            }
-
-        }
-
-        WindowDialogSeparator {
-            visible: KdeConnectService.selectedDeviceId !== ""
-        }
-
-        // Device Management
-        StyledText {
-            text: qsTr("Device Management")
-            color: Colors.colOnSurfaceVariant
-            font.pixelSize: Fonts.sizes.small
-            opacity: 0.7
-            visible: KdeConnectService.selectedDeviceId !== ""
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: 10
-            visible: KdeConnectService.selectedDeviceId !== ""
-
-            MaterialSymbol {
-                text: "link"
-                font.pixelSize: Fonts.sizes.verylarge
-                color: Colors.colOnSurfaceVariant
-            }
-
-            StyledText {
-                Layout.fillWidth: true
-                text: qsTr("Send Media")
-                color: Colors.colOnSurfaceVariant
-            }
-
-            RippleButtonWithIcon {
-                materialIcon: "play_arrow"
-                onClicked: {
-                    const deviceId = KdeConnectService.selectedDeviceId;
-                    KdeConnectService.shareFile(deviceId);
-                    Noon.callIpc("sidebar_launcher hide");
+                MaterialSymbol {
+                    text: "link_off"
+                    font.pixelSize: Fonts.sizes.verylarge
+                    color: Colors.colOnSurfaceVariant
                 }
-            }
 
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: 10
-            visible: KdeConnectService.selectedDeviceId !== ""
-
-            MaterialSymbol {
-                text: "link_off"
-                font.pixelSize: Fonts.sizes.verylarge
-                color: Colors.colOnSurfaceVariant
-            }
-
-            StyledText {
-                Layout.fillWidth: true
-                text: qsTr("Unpair Device")
-                color: Colors.colOnSurfaceVariant
-            }
-
-            RippleButtonWithIcon {
-                materialIcon: "delete"
-                onClicked: {
-                    const deviceId = KdeConnectService.selectedDeviceId;
-                    KdeConnectService.unpairDevice(deviceId);
-                    KdeConnectService.selectDevice("");
+                StyledText {
+                    Layout.fillWidth: true
+                    text: qsTr("Unpair Device")
+                    color: Colors.colOnSurfaceVariant
                 }
+
+                RippleButtonWithIcon {
+                    materialIcon: "delete"
+                    onClicked: {
+                        const deviceId = KdeConnectService.selectedDeviceId;
+                        KdeConnectService.unpairDevice(deviceId);
+                        KdeConnectService.selectDevice("");
+                    }
+                }
+
             }
 
         }
@@ -363,26 +227,25 @@ SidebarDialog {
             Layout.fillHeight: true
         }
 
-    }
-
-    WindowDialogSeparator {
-    }
-
-    WindowDialogButtonRow {
-        implicitHeight: 48
-
-        Item {
+        // --- Dialog Buttons ---
+        RowLayout {
+            Layout.preferredHeight: 50
             Layout.fillWidth: true
-        }
 
-        DialogButton {
-            buttonText: qsTr("Refresh")
-            onClicked: KdeConnectService.refresh()
-        }
+            Item {
+                Layout.fillWidth: true
+            }
 
-        DialogButton {
-            buttonText: qsTr("Done")
-            onClicked: root.dismiss()
+            DialogButton {
+                buttonText: qsTr("Refresh")
+                onClicked: KdeConnectService.refresh()
+            }
+
+            DialogButton {
+                buttonText: qsTr("Done")
+                onClicked: root.show = false
+            }
+
         }
 
     }

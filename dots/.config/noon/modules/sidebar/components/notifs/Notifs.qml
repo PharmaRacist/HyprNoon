@@ -11,73 +11,62 @@ import qs.services
 Item {
     id: root
 
-    property var dialogConfigs: [{
-        "name": "wifi",
-        "show": GlobalStates.showWifiDialog,
-        "component": wifiComponent,
-        "onCompleted": function() {
-            Network.enableWifi();
-            Network.rescanWifi();
-        }
-    }, {
-        "name": "recording",
-        "show": GlobalStates.showRecordingDialog,
-        "component": recordingComponent
-    }, {
-        "name": "kdeConnect",
-        "show": GlobalStates.showKdeConnectDialog,
-        "component": kdeComponent
-    }, {
-        "name": "caffaine",
-        "show": GlobalStates.showCaffaineDialog,
-        "component": caffaineComponent
-    }, {
-        "name": "bluetooth",
-        "show": GlobalStates.showBluetoothDialog,
-        "component": bluetoothComponent,
-        "onCompleted": function() {
-            BluetoothService.defaultAdapter.enabled = true;
-            BluetoothService.defaultAdapter.discovering = true;
-        }
-    }, {
-        "name": "appearance",
-        "show": GlobalStates.showAppearanceDialog,
-        "component": appearanceComponent
-    }, {
-        "name": "transparency",
-        "show": GlobalStates.showTransparencyDialog,
-        "component": transparencyComponent
-    }, {
-        "name": "temp",
-        "show": GlobalStates.showTempDialog,
-        "component": tempComponent
-    }]
-    property bool showDialogs: dialogConfigs.some((d) => {
-        return d.show;
-    })
+    property var activeDialog: {
+        if (GlobalStates.showWifiDialog)
+            return {
+            "key": "wifi",
+            "component": wifiComponent
+        };
 
-    clip: true
+        if (GlobalStates.showRecordingDialog)
+            return {
+            "key": "recording",
+            "component": recordingComponent
+        };
 
-    Timer {
-        interval: 7000
-        repeat: true
-        running: dialogConfigs.some((d) => {
-            return d.show;
-        })
-        onTriggered: {
-            GlobalStates.showWifiDialog = false;
-            GlobalStates.showRecordingDialog = false;
-            GlobalStates.showCaffaineDialog = false;
-            GlobalStates.showBluetoothDialog = false;
-            GlobalStates.showTransparencyDialog = false;
-            GlobalStates.showTempDialog = false;
-        }
+        if (GlobalStates.showKdeConnectDialog)
+            return {
+            "key": "kdeConnect",
+            "component": kdeComponent
+        };
+
+        if (GlobalStates.showCaffaineDialog)
+            return {
+            "key": "caffaine",
+            "component": caffaineComponent
+        };
+
+        if (GlobalStates.showBluetoothDialog)
+            return {
+            "key": "bluetooth",
+            "component": bluetoothComponent
+        };
+
+        if (GlobalStates.showAppearanceDialog)
+            return {
+            "key": "appearance",
+            "component": appearanceComponent
+        };
+
+        if (GlobalStates.showTransparencyDialog)
+            return {
+            "key": "transparency",
+            "component": transparencyComponent
+        };
+
+        if (GlobalStates.showTempDialog)
+            return {
+            "key": "temp",
+            "component": tempComponent
+        };
+
+        return null;
     }
+    property bool showDialog: activeDialog !== null
 
     ColumnLayout {
         anchors.fill: parent
         spacing: Padding.normal
-        opacity: root.showDialogs ? 0 : 1
 
         UpperWidgetGroup {
             Layout.fillWidth: true
@@ -90,102 +79,42 @@ Item {
 
     }
 
-    Repeater {
-        model: root.dialogConfigs
+    Loader {
+        id: dialogLoader
 
-        Loader {
-            id: dialogLoader
-
-            active: modelData.show
-            sourceComponent: modelData.component
-            onLoaded: {
-                item.show = modelData.show;
-                // Connect dismiss signal
-                item.dismiss.connect(function() {
-                    switch (modelData.name) {
-                    case "wifi":
-                        GlobalStates.showWifiDialog = false;
-                        break;
-                    case "recording":
-                        GlobalStates.showRecordingDialog = false;
-                        break;
-                    case "bluetooth":
-                        GlobalStates.showBluetoothDialog = false;
-                        break;
-                    case "transparency":
-                        GlobalStates.showTransparencyDialog = false;
-                        break;
-                    case "caffaine":
-                        GlobalStates.showCaffaineDialog = false;
-                        break;
-                    case "kdeConnect":
-                        GlobalStates.showKdeConnectDialog = false;
-                    case "appearance":
-                        GlobalStates.showAppearanceDialog = false;
-                    case "temp":
-                        GlobalStates.showTempDialog = false;
-                        break;
-                    }
+        anchors.fill: parent
+        active: root.showDialog || unloadTimer.running
+        sourceComponent: root.activeDialog ? root.activeDialog.component : null
+        opacity: root.showDialog ? 1 : 0
+        onLoaded: {
+            if (item) {
+                item.show = Qt.binding(() => {
+                    return root.showDialog;
                 });
-                if (modelData.onCompleted)
-                    modelData.onCompleted();
-
+                // Initialize services for specific dialogs
+                if (root.activeDialog.key === "wifi") {
+                    Network.enableWifi();
+                    Network.rescanWifi();
+                } else if (root.activeDialog.key === "bluetooth") {
+                    BluetoothService.defaultAdapter.enabled = true;
+                    BluetoothService.defaultAdapter.discovering = true;
+                }
             }
-            states: [
-                State {
-                    name: "hidden"
-                    when: !dialogLoader.active
+        }
 
-                    PropertyChanges {
-                        dialogLoader.height: 0
-                        dialogLoader.opacity: 0
-                    }
+        Timer {
+            id: unloadTimer
 
-                },
-                State {
-                    name: "revealed"
-                    when: dialogLoader.active
+            interval: 600
+        }
 
-                    PropertyChanges {
-                        dialogLoader.height: 1020
-                        dialogLoader.opacity: 1
-                    }
+        Behavior on opacity {
+            Anim {
+                onFinished: {
+                    if (!root.showDialog)
+                        unloadTimer.restart();
 
                 }
-            ]
-            transitions: [
-                Transition {
-                    reversible: true
-                    from: "*"
-                    to: "revealed"
-
-                    FAnim {
-                        properties: "width,height"
-                    }
-
-                    Anim {
-                    }
-
-                },
-                Transition {
-                    reversible: true
-                    from: "*"
-                    to: "hidden"
-
-                    FAnim {
-                        properties: "width,height"
-                    }
-
-                    Anim {
-                    }
-
-                }
-            ]
-
-            anchors {
-                // top: parent.top
-                right: parent.right
-                left: parent.left
             }
 
         }

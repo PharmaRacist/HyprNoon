@@ -5,115 +5,134 @@ import qs.modules.common
 import qs.modules.common.widgets
 import qs.services
 
-SidebarDialog {
+BottomDialog {
     id: root
 
-    WindowDialogTitle {
-        text: qsTr("Nightlight")
-    }
+    collapsedHeight: 380
+    revealOnWheel: true
+    enableStagedReveal: false
+    bottomAreaReveal: true
+    hoverHeight: 100
+    onShowChanged: GlobalStates.showTempDialog = show
+    finishAction: GlobalStates.showTempDialog = reveal
 
-    WindowDialogSeparator {
-    }
+    contentItem: ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: Padding.verylarge
+        spacing: 0
 
-    ColumnLayout {
-        Layout.fillWidth: true
-        Layout.fillHeight: true
-        spacing: 16
-        anchors.margins: Rounding.large
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: 10
-
-            MaterialSymbol {
-                text: "nightlight"
-                font.pixelSize: Fonts.sizes.verylarge
-                color: Colors.colOnSurfaceVariant
-            }
-
-            StyledText {
-                Layout.fillWidth: true
-                text: qsTr("Enable Nightlight")
-                color: Colors.colOnSurfaceVariant
-            }
-
-            StyledSwitch {
-                checked: NightLightService.enabled
-                onToggled: NightLightService.enabled = checked
-            }
-
+        BottomDialogHeader {
+            title: qsTr("Nightlight")
         }
 
-        RowLayout {
-            Layout.fillWidth: true
-
-            MaterialSymbol {
-                text: "night_sight_auto"
-                font.pixelSize: Fonts.sizes.verylarge
-                color: Colors.colOnSurfaceVariant
-            }
-
-            StyledText {
-                Layout.fillWidth: true
-                text: qsTr("Auto")
-                color: Colors.colOnSurfaceVariant
-            }
-
-            StyledSwitch {
-                checked: Mem.options.services.time.autoNightLightCycle
-                onToggled: Mem.options.services.time.autoNightLightCycle = checked
-            }
-
+        BottomDialogSeparator {
         }
 
-        RowLayout {
+        ColumnLayout {
             Layout.fillWidth: true
-
-            MaterialSymbol {
-                text: "nightlight"
-                font.pixelSize: Fonts.sizes.verylarge
-                color: Colors.colOnSurfaceVariant
-            }
-
-            StyledText {
-                Layout.fillWidth: true
-                text: qsTr("Temperature")
-                color: Colors.colOnSurfaceVariant
-            }
-
-            StyledText {
-                text: NightLightService.temperature + "K"
-                color: Colors.colOnSurfaceVariant
-                opacity: 0.7
-            }
-
-        }
-
-        StyledSlider {
-            Layout.fillWidth: true
-            from: 3000
-            to: 6500
-            value: NightLightService.temperature
-            enabled: NightLightService.temperature
-            onMoved: NightLightService.temperature = value
-            enableTooltip: false
-        }
-
-        Item {
             Layout.fillHeight: true
+            Layout.margins: Padding.large
+            spacing: 16
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 10
+
+                MaterialSymbol {
+                    text: "nightlight"
+                    font.pixelSize: Fonts.sizes.verylarge
+                    color: Colors.colOnSurfaceVariant
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: qsTr("Enable Nightlight")
+                    color: Colors.colOnSurfaceVariant
+                }
+
+                StyledSwitch {
+                    checked: NightLightService.enabled
+                    onToggled: NightLightService.enabled = checked
+                }
+
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 10
+
+                MaterialSymbol {
+                    text: "night_sight_auto"
+                    font.pixelSize: Fonts.sizes.verylarge
+                    color: Colors.colOnSurfaceVariant
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: qsTr("Auto")
+                    color: Colors.colOnSurfaceVariant
+                }
+
+                StyledSwitch {
+                    checked: Mem.options.services.time.autoNightLightCycle
+                    onToggled: Mem.options.services.time.autoNightLightCycle = checked
+                }
+
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 10
+
+                MaterialSymbol {
+                    text: "nightlight"
+                    font.pixelSize: Fonts.sizes.verylarge
+                    color: Colors.colOnSurfaceVariant
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: qsTr("Temperature")
+                    color: Colors.colOnSurfaceVariant
+                }
+
+                StyledText {
+                    text: NightLightService.temperature + "K"
+                    color: Colors.colOnSurfaceVariant
+                    opacity: 0.7
+                }
+
+            }
+
+            StyledSlider {
+                Layout.fillWidth: true
+                from: 3000
+                to: 6500
+                value: NightLightService.temperature
+                enabled: NightLightService.temperature
+                onMoved: NightLightService.temperature = value
+                enableTooltip: false
+            }
+
+            Item {
+                Layout.fillHeight: true
+            }
+
         }
 
-    }
+        RowLayout {
+            Layout.preferredHeight: 50
+            Layout.fillWidth: true
 
-    WindowDialogSeparator {
-    }
+            Item {
+                Layout.fillWidth: true
+            }
 
-    WindowDialogButtonRow {
-        implicitHeight: 48
+            DialogButton {
+                buttonText: qsTr("Done")
+                onClicked: root.show = false
+            }
 
-        DialogButton {
-            buttonText: qsTr("Done")
-            onClicked: root.dismiss()
         }
 
     }

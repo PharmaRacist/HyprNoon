@@ -11,4 +11,5 @@ StyledText {
         pixelSize: Fonts.sizes.veryhuge
         family: Fonts.family.main
     }
+
 }
