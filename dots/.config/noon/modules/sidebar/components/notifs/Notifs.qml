@@ -93,8 +93,8 @@ Item {
                 });
                 // Initialize services for specific dialogs
                 if (root.activeDialog.key === "wifi") {
-                    Network.enableWifi();
-                    Network.rescanWifi();
+                    NetworkService.enableWifi();
+                    NetworkService.rescanWifi();
                 } else if (root.activeDialog.key === "bluetooth") {
                     BluetoothService.defaultAdapter.enabled = true;
                     BluetoothService.defaultAdapter.discovering = true;

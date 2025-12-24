@@ -22,11 +22,11 @@ Item {
     readonly property int workspacesShown: rowsNumber * columnsNumber
     readonly property int workspaceGroup: Math.floor(((monitor?.activeWorkspace?.id ?? 1) - 1) / workspacesShown)
     property bool monitorIsFocused: (Hyprland.focusedMonitor?.id === monitor?.id)
-    property var windows: HyprlandData.windowList
-    property var windowByAddress: HyprlandData.windowByAddress
-    property var windowAddresses: HyprlandData.addresses
+    property var windows: HyprlandService.windowList
+    property var windowByAddress: HyprlandService.windowByAddress
+    property var windowAddresses: HyprlandService.addresses
     property real wsWidthMultiplier: 1
-    property var monitorData: HyprlandData.monitors.find(m => m.id === root.monitor?.id) ?? null
+    property var monitorData: HyprlandService.monitors.find(m => m.id === root.monitor?.id) ?? null
     property real scale: 0.18
     property color activeBorderColor: Colors.colSecondary
     property bool expanded: false

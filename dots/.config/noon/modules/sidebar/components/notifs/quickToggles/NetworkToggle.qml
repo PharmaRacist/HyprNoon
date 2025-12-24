@@ -11,9 +11,9 @@ QuickToggleButton {
     property bool showWifiDialog: false
 
     hasDialog: true
-    buttonName: `${Network.networkName} `
-    toggled: Network.networkName.length > 0 && Network.networkName != "lo"
-    buttonIcon: Network.materialSymbol
+    buttonName: `${NetworkService.networkName} `
+    toggled: NetworkService.networkName.length > 0 && NetworkService.networkName != "lo"
+    buttonIcon: NetworkService.materialSymbol
     onRequestDialog: GlobalStates.showWifiDialog = true
     onClicked: {
         toggleNetwork.running = true;
@@ -25,7 +25,7 @@ QuickToggleButton {
         command: ["bash", "-c", "nmcli radio wifi | grep -q enabled && nmcli radio wifi off || nmcli radio wifi on"]
         onRunningChanged: {
             if (!running)
-                Network.update();
+                NetworkService.update();
 
         }
     }

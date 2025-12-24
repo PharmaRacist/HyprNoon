@@ -12,11 +12,11 @@ Singleton {
     property bool isCharging: chargeState == UPowerDeviceState.Charging
     property bool isPluggedIn: isCharging || chargeState == UPowerDeviceState.PendingCharge
     property real percentage: UPower.displayDevice?.percentage ?? 1
-    readonly property bool allowAutomaticSuspend: Mem.options.BatteryService.automaticSuspend
+    readonly property bool allowAutomaticSuspend: Mem.options.battery.automaticSuspend
 
-    property bool isLow: available && (percentage <= Mem.options.BatteryService.low / 100)
-    property bool isCritical: available && (percentage <= Mem.options.BatteryService.critical / 100)
-    property bool isSuspending: available && (percentage <= Mem.options.BatteryService.suspend / 100)
+    property bool isLow: available && (percentage <= Mem.options.battery.low / 100)
+    property bool isCritical: available && (percentage <= Mem.options.battery.critical / 100)
+    property bool isSuspending: available && (percentage <= Mem.options.battery.suspend / 100)
 
     property bool isLowAndNotCharging: isLow && !isCharging
     property bool isCriticalAndNotCharging: isCritical && !isCharging
@@ -39,7 +39,7 @@ Singleton {
 
     onIsCriticalAndNotChargingChanged: {
         if (available && isCriticalAndNotCharging)
-            Quickshell.execDetached(["notify-send", qsTr("Critically low battery"), qsTr("Please charge!\nAutomatic suspend triggers at %1").arg(Mem.options.BatteryService.suspend), "-u", "critical", "-a", "Shell"]);
+            Quickshell.execDetached(["notify-send", qsTr("Critically low battery"), qsTr("Please charge!\nAutomatic suspend triggers at %1").arg(Mem.options.battery.suspend), "-u", "critical", "-a", "Shell"]);
     }
 
     onIsSuspendingAndNotChargingChanged: {

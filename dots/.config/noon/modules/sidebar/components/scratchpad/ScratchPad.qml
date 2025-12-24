@@ -179,7 +179,7 @@ Item {
     }
     // LaTeX render completion handler
     Connections {
-        target: LatexRenderer
+        target: LatexService
         function onRenderFinished(hash, imagePath) {
             const expression = LatexService.processedExpressions[hash];
             handleRenderedLatex(hash);

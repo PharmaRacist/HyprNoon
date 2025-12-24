@@ -24,11 +24,11 @@ Scope {
         }
 
         function inc_brightness() {
-            onPressed: Brightness.increaseBrightness();
+            onPressed: BrightnessService.increaseBrightness();
         }
 
         function dec_brightness() {
-            onPressed: Brightness.decreaseBrightness();
+            onPressed: BrightnessService.decreaseBrightness();
         }
         function clear_clipboard(): void {
             ClipboardService.wipe();

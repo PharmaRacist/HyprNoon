@@ -50,28 +50,28 @@ Scope {
     }
 
     Connections {
-        target: Brightness
+        target: BrightnessService
         function onBrightnessChanged() {
             showOsdValues = false;
         }
     }
 
     Connections {
-        target: Audio.sink?.audio ?? null
+        target: AudioService.sink?.audio ?? null
 
         function onVolumeChanged() {
-            if (Audio.ready)
+            if (AudioService.ready)
                 root.triggerOsd();
         }
 
         function onMutedChanged() {
-            if (Audio.ready)
+            if (AudioService.ready)
                 root.triggerOsd();
         }
     }
 
     Connections {
-        target: Audio
+        target: AudioService
         function onSinkProtectionTriggered(reason) {
             root.protectionMessage = reason;
             root.triggerOsd();
@@ -109,12 +109,12 @@ Scope {
                 implicitWidth: Sizes.osdWidth
                 implicitHeight: Sizes.osdHeight
 
-                value: Audio.sink?.audio.volume ?? 0
-                icon: Audio.sink?.audio.muted ? "volume_off" : "volume_up"
+                value: AudioService.sink?.audio.volume ?? 0
+                icon: AudioService.sink?.audio.muted ? "volume_off" : "volume_up"
 
                 onValueModified: {
-                    if (Audio.sink?.audio)
-                        Audio.sink.audio.volume = newValue;
+                    if (AudioService.sink?.audio)
+                        AudioService.sink.audio.volume = newValue;
                 }
 
                 onInteractionStarted: {

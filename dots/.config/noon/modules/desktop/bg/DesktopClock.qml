@@ -52,7 +52,7 @@ GridLayout {
         color: Colors.colOnLayer0
         font.pixelSize: 40 * Mem.states.desktop.clock.scale
         opacity: 0.75
-        text: DateTime.date
+        text: DateTimeService.date
         renderType: Text.NativeRendering
     }
 
@@ -100,14 +100,14 @@ GridLayout {
             font.variableAxes: Fonts.variableAxes.display
             font.pixelSize: 100 * Mem.states.desktop.clock.scale
             color: Colors.colOnLayer0
-            text: DateTime.cleanHour
+            text: DateTimeService.cleanHour
         }
 
         StyledText {
             font.pixelSize: 100 * Mem.states.desktop.clock.scale
             font.variableAxes: Fonts.variableAxes.display
             color: Colors.colOnLayer0
-            text: DateTime.cleanMinute
+            text: DateTimeService.cleanMinute
         }
 
     }
@@ -122,7 +122,7 @@ GridLayout {
             font.variableAxes: Fonts.variableAxes.display
             color: Colors.colOnLayer0
             font.pixelSize: 100 * Mem.states.desktop.clock.scale
-            text: DateTime.time
+            text: DateTimeService.time
         }
 
         StyledText {
@@ -132,7 +132,7 @@ GridLayout {
             color: clockText.color
             font.pixelSize: 40 * Mem.states.desktop.clock.scale
             opacity: 0.75
-            text: DateTime.date
+            text: DateTimeService.date
             renderType: Text.NativeRendering
         }
 

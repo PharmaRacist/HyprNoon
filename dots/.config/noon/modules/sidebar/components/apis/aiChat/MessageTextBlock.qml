@@ -99,7 +99,7 @@ ColumnLayout {
     // 1. Check if the hash is in the list
     // 2. If it is, replace the expression with the image path
     Connections {
-        target: LatexRenderer
+        target: LatexService
         function onRenderFinished(hash, imagePath) {
             const expression = LatexService.processedExpressions[hash];
             // console.log("Render finished: " + hash + " " + expression);

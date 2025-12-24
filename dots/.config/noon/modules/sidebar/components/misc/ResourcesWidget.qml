@@ -18,20 +18,20 @@ ColumnLayout {
         {
             "icon": "planner_review",
             "name": qsTr("CPU"),
-            "history": ResourceUsage.cpuUsageHistory,
-            "maxAvailableString": ResourceUsage.maxAvailableCpuString
+            "history": ResourcesService.cpuUsageHistory,
+            "maxAvailableString": ResourcesService.maxAvailableCpuString
         },
         {
             "icon": "memory",
             "name": qsTr("RAM"),
-            "history": ResourceUsage.memoryUsageHistory,
-            "maxAvailableString": ResourceUsage.maxAvailableMemoryString
+            "history": ResourcesService.memoryUsageHistory,
+            "maxAvailableString": ResourcesService.maxAvailableMemoryString
         },
         {
             "icon": "swap_horiz",
             "name": qsTr("Swap"),
-            "history": ResourceUsage.swapUsageHistory,
-            "maxAvailableString": ResourceUsage.maxAvailableSwapString
+            "history": ResourcesService.swapUsageHistory,
+            "maxAvailableString": ResourcesService.maxAvailableSwapString
         }
     ]
 
@@ -96,7 +96,7 @@ ColumnLayout {
             Graph {
                 anchors.fill: parent
                 values: resourceSummary.history
-                points: ResourceUsage.historyLength
+                points: ResourcesService.historyLength
                 alignment: Graph.Alignment.Right
             }
         }

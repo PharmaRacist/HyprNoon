@@ -7,7 +7,7 @@ StyledText {
     property bool verticalMode: false
     property real commonIconSize: Fonts.sizes.verylarge
     property color commonIconColor: Colors.colOnLayer1
-    readonly property string currentLayout: HyprlandData.keyboardLayoutShortName
+    readonly property string currentLayout: HyprlandService.keyboardLayoutShortName
 
     text: currentLayout
     color: commonIconColor
@@ -17,7 +17,7 @@ StyledText {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: HyprlandData.switchKeyboardLayout()
+        onClicked: HyprlandService.switchKeyboardLayout()
     }
 
 }

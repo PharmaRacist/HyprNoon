@@ -89,10 +89,10 @@ Item {
             font.pixelSize: commonIconSize
             color: commonIconColor
             text: {
-                if (Network.ethernet)
+                if (NetworkService.ethernet)
                     return "lan";
-                else if (Network.networkName.length > 0 && Network.networkName !== "lo")
-                    return Network.networkStrength > 80 ? "signal_wifi_4_bar" : Network.networkStrength > 60 ? "network_wifi_3_bar" : Network.networkStrength > 40 ? "network_wifi_2_bar" : Network.networkStrength > 20 ? "network_wifi_1_bar" : "signal_wifi_0_bar";
+                else if (NetworkService.networkName.length > 0 && NetworkService.networkName !== "lo")
+                    return NetworkService.networkStrength > 80 ? "signal_wifi_4_bar" : NetworkService.networkStrength > 60 ? "network_wifi_3_bar" : NetworkService.networkStrength > 40 ? "network_wifi_2_bar" : NetworkService.networkStrength > 20 ? "network_wifi_1_bar" : "signal_wifi_0_bar";
                 else
                     return "signal_wifi_off";
             }

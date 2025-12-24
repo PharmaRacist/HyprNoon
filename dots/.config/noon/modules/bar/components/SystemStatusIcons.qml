@@ -29,7 +29,7 @@ Rectangle {
 
         // Muted audio indicator
         Revealer {
-            reveal: Audio.sink?.audio?.muted ?? false
+            reveal: AudioService.sink?.audio?.muted ?? false
             Layout.fillHeight: true
             Layout.rightMargin: reveal ? iconSpacing : 0
 
@@ -46,7 +46,7 @@ Rectangle {
 
         // Muted microphone indicator
         Revealer {
-            reveal: Audio.source?.audio?.muted ?? false
+            reveal: AudioService.source?.audio?.muted ?? false
             Layout.fillHeight: true
             Layout.rightMargin: reveal ? iconSpacing : 0
 
@@ -75,8 +75,8 @@ Rectangle {
             height: commonIconSize
 
             readonly property string networkIcon: {
-                if ((Network.networkName ?? "") !== "" && (Network.networkName ?? "") !== "lo") {
-                    const strength = Network.networkStrength ?? 0;
+                if ((NetworkService.networkName ?? "") !== "" && (NetworkService.networkName ?? "") !== "lo") {
+                    const strength = NetworkService.networkStrength ?? 0;
                     if (strength > 80)
                         return "network-wireless-signal-excellent";
                     if (strength > 60)

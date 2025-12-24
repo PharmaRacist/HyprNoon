@@ -61,12 +61,12 @@ MouseArea {
 
     WheelHandler {
         onWheel: (event) => {
-            const currentVolume = Audio.value
+            const currentVolume = AudioService.value
             const step = currentVolume < 0.1 ? 0.01 : 0.02
             if (event.angleDelta.y < 0)
-                Audio.sink.audio.volume -= step
+                AudioService.sink.audio.volume -= step
             else if (event.angleDelta.y > 0)
-                Audio.sink.audio.volume = Math.min(1, Audio.sink.audio.volume + step)
+                AudioService.sink.audio.volume = Math.min(1, AudioService.sink.audio.volume + step)
             root.lastScrollX = event.x
             root.lastScrollY = event.y
             root.trackingScroll = true
@@ -78,13 +78,13 @@ MouseArea {
     }
 
     Connections {
-        target: Audio.sink?.audio ?? null
+        target: AudioService.sink?.audio ?? null
         function onVolumeChanged() {
-            if (!Audio.ready) return
+            if (!AudioService.ready) return
             root.triggerAutoReveal()
         }
         function onMutedChanged() {
-            if (!Audio.ready) return
+            if (!AudioService.ready) return
             root.triggerAutoReveal()
         }
     }
@@ -106,7 +106,7 @@ MouseArea {
                 anchors.centerIn: parent
 
                     vertical: root.verticalMode
-                    value: Audio.sink?.audio.volume ?? 0
+                    value: AudioService.sink?.audio.volume ?? 0
                     valueBarHeight: 50
                     valueBarWidth: (BarData.currentBarExclusiveSize * 0.55) * BarData.barPadding
                     text: ""
@@ -123,7 +123,7 @@ MouseArea {
                 MaterialSymbol {
                     fill:1
                     font.family: revealer.reveal ?Fonts.family.main  :Fonts.family.iconMaterial
-                    text:revealer.reveal ?  Math.round(100 * Audio.sink?.audio.volume) : Audio.sink?.audio.muted ? "volume_off" : "volume_up"
+                    text:revealer.reveal ?  Math.round(100 * AudioService.sink?.audio.volume) : AudioService.sink?.audio.muted ? "volume_off" : "volume_up"
                     font.pixelSize: revealer.reveal ? verticalMode ? Fonts.sizes.small : Fonts.sizes.normal : BarData.currentBarExclusiveSize / 2
                     color: Colors.colOnLayer1
                     horizontalAlignment: Text.AlignHCenter

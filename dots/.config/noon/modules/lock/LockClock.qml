@@ -27,7 +27,7 @@ ColumnLayout {
             horizontalAlignment: Text.AlignHCenter
             color: Colors.colOnLayer0
             font.pixelSize: 200
-            text: `${DateTime.hour}:${DateTime.minute}`
+            text: `${DateTimeService.hour}:${DateTimeService.minute}`
         }
 
         StyledText {
@@ -38,7 +38,7 @@ ColumnLayout {
             horizontalAlignment: Text.AlignHCenter
             font.pixelSize: 25
             opacity: 0.75
-            text: DateTime.date
+            text: DateTimeService.date
         }
 
     }

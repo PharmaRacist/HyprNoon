@@ -8,11 +8,11 @@ import QtQuick.Layouts
 DialogListItem {
     id: root
     required property WifiAccessPoint wifiNetwork
-    enabled: !(Network.wifiConnectTarget === root.wifiNetwork && !wifiNetwork?.active)
+    enabled: !(NetworkService.wifiConnectTarget === root.wifiNetwork && !wifiNetwork?.active)
 
     active: (wifiNetwork?.askingPassword || wifiNetwork?.active) ?? false
     onClicked: {
-        Network.connectToWifiNetwork(wifiNetwork);
+        NetworkService.connectToWifiNetwork(wifiNetwork);
     }
 
     contentItem: ColumnLayout {
@@ -42,7 +42,7 @@ DialogListItem {
             }
             MaterialSymbol {
                 visible: (root.wifiNetwork?.isSecure || root.wifiNetwork?.active) ?? false
-                text: root.wifiNetwork?.active ? "check" : Network.wifiConnectTarget === root.wifiNetwork ? "settings_ethernet" : "lock"
+                text: root.wifiNetwork?.active ? "check" : NetworkService.wifiConnectTarget === root.wifiNetwork ? "settings_ethernet" : "lock"
                 font.pixelSize: Fonts.sizes.verylarge
                 color: Colors.colOnSurfaceVariant
             }
@@ -63,7 +63,7 @@ DialogListItem {
                 inputMethodHints: Qt.ImhSensitiveData
 
                 onAccepted: {
-                    Network.changePassword(root.wifiNetwork, passwordField.text);
+                    NetworkService.changePassword(root.wifiNetwork, passwordField.text);
                 }
             }
 
@@ -84,7 +84,7 @@ DialogListItem {
                 DialogButton {
                     buttonText: qsTr("Connect")
                     onClicked: {
-                        Network.changePassword(root.wifiNetwork, passwordField.text);
+                        NetworkService.changePassword(root.wifiNetwork, passwordField.text);
                     }
                 }
             }
@@ -103,7 +103,7 @@ DialogListItem {
                     colBackgroundHover: Colors.colLayer4Hover
                     colRipple: Colors.colLayer4Active
                     onClicked: {
-                        Network.openPublicWifiPortal();
+                        NetworkService.openPublicWifiPortal();
                         GlobalStates.sidebarRightOpen = false;
                     }
                 }

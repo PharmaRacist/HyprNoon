@@ -15,7 +15,7 @@ MouseArea {
     property bool userInteracting: false
     property bool autoRevealed: false
     property var focusedScreen: Quickshell.screens.find(s => s.name === Hyprland.focusedMonitor?.name)
-    property var brightnessMonitor: Brightness.getMonitorForScreen(focusedScreen)
+    property var brightnessMonitor: BrightnessService.getMonitorForScreen(focusedScreen)
     property int lastScrollX: 0
     property int lastScrollY: 0
     property bool trackingScroll: false
@@ -80,7 +80,7 @@ MouseArea {
     }
 
     Connections {
-        target: Brightness
+        target: BrightnessService
         function onBrightnessChanged() {
             if (!root.brightnessMonitor.ready)
                 return;
@@ -120,7 +120,7 @@ MouseArea {
         MaterialSymbol {
             fill: 1
             font.family: revealer.reveal ? Fonts.family.main : Fonts.family.iconMaterial
-            text: revealer.reveal ? Math.round(100 * root.brightnessMonitor?.brightness) : Brightness.iconMaterial
+            text: revealer.reveal ? Math.round(100 * root.brightnessMonitor?.brightness) : BrightnessService.iconMaterial
             font.pixelSize: revealer.reveal ? verticalMode ? Fonts.sizes.small : Fonts.sizes.normal : BarData.currentBarExclusiveSize / 2
             color: Colors.colOnLayer1
             horizontalAlignment: Text.AlignHCenter

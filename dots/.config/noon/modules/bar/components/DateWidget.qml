@@ -19,7 +19,7 @@ MouseArea {
         horizontalAlignment: Text.AlignHCenter
         font.pixelSize: root.implicitWidth / 2.3
         color: Colors.colOnLayer1
-        text: DateTime.verticalDate
+        text: DateTimeService.verticalDate
         font.weight: root.fWeight
     }
 

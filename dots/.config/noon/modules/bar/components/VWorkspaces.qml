@@ -170,7 +170,7 @@ Item {
                 readonly property bool isActive: monitor.activeWorkspace?.id === workspaceValue
 
                 readonly property var biggestWindow: {
-                    const windows = HyprlandData.windowList.filter(w => w.workspace?.id === workspaceValue);
+                    const windows = HyprlandService.windowList.filter(w => w.workspace?.id === workspaceValue);
                     return windows.reduce((maxWin, win) => {
                         const maxArea = (maxWin?.size?.[0] ?? 0) * (maxWin?.size?.[1] ?? 0);
                         const winArea = (win?.size?.[0] ?? 0) * (win?.size?.[1] ?? 0);

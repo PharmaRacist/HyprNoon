@@ -72,7 +72,7 @@ Item {
                 id: dateText
 
                 Layout.leftMargin: 125 * Mem.options.desktop.clock.scale
-                text: arabicDayMode ? `${DateTime.hour}:${DateTime.minute}` : DateTime.date
+                text: arabicDayMode ? `${DateTimeService.hour}:${DateTimeService.minute}` : DateTimeService.date
                 font.weight: 600
                 font.pixelSize: clockText.font.pixelSize / 4
                 font.family: clockContainer.font
@@ -108,7 +108,7 @@ Item {
             font.weight: 700
             font.pixelSize: clockItem.width / 4
             color: Colors.colOnBackground
-            text: arabicDayMode ? DateTime.arabicDayName : `${DateTime.hour}:${DateTime.minute}`
+            text: arabicDayMode ? DateTimeService.arabicDayName : `${DateTimeService.hour}:${DateTimeService.minute}`
 
             Behavior on color {
                 CAnim {

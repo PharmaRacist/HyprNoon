@@ -25,7 +25,7 @@ BottomDialog {
         BottomDialogSeparator {}
 
         StyledIndeterminateProgressBar {
-            visible: Network.wifiScanning
+            visible: NetworkService.wifiScanning
             Layout.fillWidth: true
         }
 
@@ -36,7 +36,7 @@ BottomDialog {
             spacing: 0
 
             model: ScriptModel {
-                values: [...Network.wifiNetworks].sort((a, b) => {
+                values: [...NetworkService.wifiNetworks].sort((a, b) => {
                     if (a.active && !b.active) return -1;
                     if (!a.active && b.active) return 1;
                     return b.strength - a.strength;
@@ -66,7 +66,7 @@ BottomDialog {
                 buttonText: qsTr("Details")
                 onClicked: {
                     root.show = false;
-                    const app = Network.ethernet ? 
+                    const app = NetworkService.ethernet ? 
                         Mem.options.apps.networkEthernet : 
                         Mem.options.apps.network;
                     Noon.exec(app);

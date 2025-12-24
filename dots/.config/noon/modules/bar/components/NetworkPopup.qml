@@ -26,7 +26,7 @@ StyledPopup {
                 anchors.verticalCenter: parent.verticalCenter
                 fill: 0
                 font.weight: Font.Medium
-                text: Network.materialSymbol
+                text: NetworkService.materialSymbol
                 font.pixelSize: Fonts.sizes.large
                 color: Colors.m3.m3onSurfaceVariant
             }
@@ -51,7 +51,7 @@ StyledPopup {
             Layout.fillWidth: true
 
             MaterialSymbol {
-                text: Network.ethernet ? "lan" : "wifi"
+                text: NetworkService.ethernet ? "lan" : "wifi"
                 color: Colors.m3.m3onSurfaceVariant
                 font.pixelSize: Fonts.sizes.large
             }
@@ -65,14 +65,14 @@ StyledPopup {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 color: Colors.m3.m3onSurfaceVariant
-                text: Network.ethernet ? "Ethernet" : "Wi-Fi"
+                text: NetworkService.ethernet ? "Ethernet" : "Wi-Fi"
             }
 
         }
 
         // Network Name Row
         RowLayout {
-            property bool rowVisible: Network.networkName.length > 0 && Network.networkName != "lo"
+            property bool rowVisible: NetworkService.networkName.length > 0 && NetworkService.networkName != "lo"
 
             spacing: 5
             Layout.fillWidth: true
@@ -94,7 +94,7 @@ StyledPopup {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 color: Colors.m3.m3onSurfaceVariant
-                text: Network.networkName
+                text: NetworkService.networkName
                 elide: Text.ElideRight
             }
 
@@ -108,7 +108,7 @@ StyledPopup {
 
         // Signal Strength Row (Wi-Fi only)
         RowLayout {
-            property bool rowVisible: Network.wifi && !Network.ethernet && Network.networkStrength > 0
+            property bool rowVisible: NetworkService.wifi && !NetworkService.ethernet && NetworkService.networkStrength > 0
 
             spacing: 5
             Layout.fillWidth: true
@@ -130,7 +130,7 @@ StyledPopup {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 color: Colors.m3.m3onSurfaceVariant
-                text: `${Network.networkStrength}%`
+                text: `${NetworkService.networkStrength}%`
             }
 
             Behavior on opacity {
@@ -161,7 +161,7 @@ StyledPopup {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 color: Colors.m3.m3onSurfaceVariant
-                text: Network.formatSpeed(Network.downloadSpeed)
+                text: NetworkService.formatSpeed(NetworkService.downloadSpeed)
             }
 
         }
@@ -186,7 +186,7 @@ StyledPopup {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 color: Colors.m3.m3onSurfaceVariant
-                text: Network.formatSpeed(Network.uploadSpeed)
+                text: NetworkService.formatSpeed(NetworkService.uploadSpeed)
             }
 
         }

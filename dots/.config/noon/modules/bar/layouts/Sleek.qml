@@ -198,11 +198,11 @@ StyledRect {
     component Levels: RowLayout {
         spacing: 10
         property var focusedScreen: Quickshell.screens.find(s => s.name === Hyprland.focusedMonitor?.name)
-        property var brightnessMonitor: Brightness.getMonitorForScreen(focusedScreen)
+        property var brightnessMonitor: BrightnessService.getMonitorForScreen(focusedScreen)
 
         Resource {
-            percentage: Audio.sink?.audio.volume ?? 0
-            iconName: Audio.sink?.audio.muted ? "volume_off" : "volume_up"
+            percentage: AudioService.sink?.audio.volume ?? 0
+            iconName: AudioService.sink?.audio.muted ? "volume_off" : "volume_up"
         }
 
         Resource {
@@ -226,8 +226,8 @@ StyledRect {
             anchors.centerIn: parent
 
             Resource {
-                iconName: Network.materialSymbol
-                percentage: Network.networkStrength / 100
+                iconName: NetworkService.materialSymbol
+                percentage: NetworkService.networkStrength / 100
                 spacing: 5
             }
 
@@ -236,7 +236,7 @@ StyledRect {
             }
 
             Word {
-                text: `${Network.networkName}`
+                text: `${NetworkService.networkName}`
             }
         }
     }
@@ -253,24 +253,24 @@ StyledRect {
 
             Resource {
                 iconName: "memory"
-                percentage: ResourceUsage.memoryUsedPercentage
+                percentage: ResourcesService.memoryUsedPercentage
             }
 
             Resource {
                 iconName: "swap_horiz"
-                percentage: ResourceUsage.swapUsedPercentage
+                percentage: ResourcesService.swapUsedPercentage
                 visible: percentage > 0
             }
 
             Resource {
                 iconName: "settings_slow_motion"
-                percentage: ResourceUsage.cpuUsage
+                percentage: ResourcesService.cpuUsage
             }
 
             Resource {
                 iconName: "thermometer"
                 percentageSymbol: false
-                percentage: ResourceUsage.avgCpuTemp
+                percentage: ResourcesService.avgCpuTemp
             }
         }
 

@@ -46,14 +46,14 @@ BarGroup {
         Resource {
             iconName: "memory"
             collapsed: !root.revealAll
-            percentage: ResourceUsage.memoryUsedPercentage
+            percentage: ResourcesService.memoryUsedPercentage
             itemSize: root.itemSize
         }
 
         Resource {
             iconName: "swap_horiz"
             collapsed: !root.revealAll
-            percentage: ResourceUsage.swapUsedPercentage
+            percentage: ResourcesService.swapUsedPercentage
             visible: percentage > 0
             itemSize: root.itemSize
         }
@@ -61,16 +61,17 @@ BarGroup {
         Resource {
             collapsed: !root.revealAll
             iconName: "settings_slow_motion"
-            percentage: ResourceUsage.cpuUsage
+            percentage: ResourcesService.cpuUsage
             itemSize: root.itemSize
         }
 
         Resource {
             collapsed: !root.revealAll
             iconName: "thermometer"
-            percentage: ResourceUsage.avgCpuTemp
+            percentage: ResourcesService.avgCpuTemp
             itemSize: root.itemSize
         }
+
     }
 
     component Resource: Item {
@@ -111,6 +112,7 @@ BarGroup {
                     font.pixelSize: root.itemSize * BarData.barPadding
                     color: Colors.m3.m3onSecondaryContainer
                 }
+
             }
 
             Revealer {
@@ -124,11 +126,17 @@ BarGroup {
                     color: Colors.colOnLayer1
                     text: `${Math.round(percentage * 100)}`
                 }
+
             }
+
         }
 
         Behavior on implicitWidth {
-            Anim {}
+            Anim {
+            }
+
         }
+
     }
+
 }

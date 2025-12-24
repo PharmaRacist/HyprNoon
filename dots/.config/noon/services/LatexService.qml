@@ -1,10 +1,12 @@
 pragma Singleton
 pragma ComponentBehavior: Bound
+
 import qs.modules.common.functions
 import qs.modules.common
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Quickshell.Hyprland
 import Qt.labs.platform
 
 /**
@@ -17,7 +19,8 @@ import Qt.labs.platform
 Singleton {
     id: root
 
-    readonly property var renderPadding: 4
+    readonly property var renderPadding: 4 // This is to prevent cutoff in the rendered images
+
     property list<string> processedHashes: []
     property var processedExpressions: ({})
     property var renderedImagePaths: ({})
@@ -28,21 +31,29 @@ Singleton {
     signal renderFinished(string hash, string imagePath)
 
     /**
-     * Requests rendering of a LaTeX expression.
-     * Returns the [hash, isNew]
-     */
+    * Requests rendering of a LaTeX expression.
+    * Returns the [hash, isNew]
+    */
     function requestRender(expression) {
+        // 1. Hash it and initialize necessary variables
         const hash = Qt.md5(expression);
         const imagePath = `${latexOutputPath}/${hash}.svg`;
 
+        // 2. Check if the hash is already processed
         if (processedHashes.includes(hash)) {
+            // console.log("Already processed: " + hash)
             renderFinished(hash, imagePath);
             return [hash, false];
         } else {
             root.processedHashes.push(hash);
             root.processedExpressions[hash] = expression;
+            // console.log("Rendering expression: " + expression)
         }
 
+        // 3. If not, render it with MicroTeX and mark as processed
+        // console.log(`[LatexService] Rendering expression: ${expression} with hash: ${hash}`)
+        // console.log(`                to file: ${imagePath}`)
+        // console.log(`                with command: cd ${microtexBinaryDir} && ./${microtexBinaryName} -headless -input=${StringUtils.shellSingleQuoteEscape(expression)} -output=${imagePath} -textsize=${Fonts.sizes.normal} -padding=${renderPadding} -background=${Colors.m3.m3tertiary} -foreground=${Colors.m3.m3onTertiary} -maxwidth=0.85`)
         const processQml = `
             import Quickshell.Io
             Process {
@@ -53,17 +64,22 @@ Singleton {
                     + "'-output=${imagePath}' "
                     + "'-textsize=${Fonts.sizes.normal}' "
                     + "'-padding=${renderPadding}' "
+                    // + "'-background=${Colors.m3.m3tertiary}' "
                     + "'-foreground=${Colors.colOnLayer1}' "
                     + "-maxwidth=0.85 "
                 ]
+                // stdout: SplitParser {
+                //     onRead: data => { console.log("MicroTeX: " + data) }
+                // }
                 onExited: (exitCode, exitStatus) => {
+                    // console.log("[LatexService] MicroTeX process exited with code: " + exitCode + ", status: " + exitStatus)
                     renderedImagePaths["${hash}"] = "${imagePath}"
                     root.renderFinished("${hash}", "${imagePath}")
                     microtexProcess${hash}.destroy()
                 }
             }
         `;
-
+        // console.log("MicroTeX: " + processQml)
         Qt.createQmlObject(processQml, root, `MicroTeXProcess_${hash}`);
         return [hash, true];
     }

@@ -67,7 +67,7 @@ StyledRect {
             StyledText {
                 anchors.centerIn: parent
                 animateChange: true
-                text: HyprlandData.keyboardLayoutShortName
+                text: HyprlandService.keyboardLayoutShortName
             }
 
         }

@@ -21,7 +21,7 @@ ColumnLayout {
         font.weight: fontWeight
         font.pixelSize: Fonts.sizes.small * fontScale
         color: Colors.colOnLayer1
-        text: DateTime.time
+        text: DateTimeService.time
     }
 
     StyledText {
@@ -32,7 +32,7 @@ ColumnLayout {
         font.weight: fontWeight
         font.pixelSize: Fonts.sizes.verysmall * fontScale
         color: Colors.colSubtext
-        text: DateTime.date
+        text: DateTimeService.date
     }
 
 }

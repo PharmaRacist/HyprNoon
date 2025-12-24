@@ -49,10 +49,10 @@ StyledRect {
         } else {
             switch (event.key) {
                 case Qt.Key_Up:
-                    Audio?.sink?.audio && (Audio.sink.audio.volume = Math.min(1.0, Audio.sink.audio.volume + 0.05));
+                    AudioService?.sink?.audio && (AudioService.sink.audio.volume = Math.min(1.0, AudioService.sink.audio.volume + 0.05));
                     break;
                 case Qt.Key_Down:
-                    Audio?.sink?.audio && (Audio.sink.audio.volume = Math.max(0.0, Audio.sink.audio.volume - 0.05));
+                    AudioService?.sink?.audio && (AudioService.sink.audio.volume = Math.max(0.0, AudioService.sink.audio.volume - 0.05));
                     break;
                 case Qt.Key_Space:
                     player?.togglePlaying();

@@ -47,7 +47,7 @@ MouseArea {
             anchors.centerIn: background
             width: background.width * 0.65
             height: background.height * 0.65
-            source: SysInfoService.distroIcon
+            source: SystemInfo.distroIcon
         }
 
         ColorOverlay {

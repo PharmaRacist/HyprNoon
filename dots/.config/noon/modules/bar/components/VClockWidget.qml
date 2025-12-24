@@ -29,7 +29,7 @@ MouseArea {
             StyledText {
                 font.pixelSize: Fonts.sizes.small
                 color: Colors.colOnLayer1
-                text: DateTime.hour
+                text: DateTimeService.hour
                 font.variableAxes: Fonts.variableAxes.title
                 Layout.alignment: Qt.AlignHCenter
             }
@@ -38,7 +38,7 @@ MouseArea {
                 font.pixelSize: Fonts.sizes.small
                 font.variableAxes: Fonts.variableAxes.title
                 color: Colors.colOnLayer1
-                text: DateTime.minute
+                text: DateTimeService.minute
                 Layout.alignment: Qt.AlignHCenter
             }
 
@@ -47,9 +47,9 @@ MouseArea {
                 font.pixelSize: Fonts.sizes.small
                 font.variableAxes: Fonts.variableAxes.title
                 color: Colors.colOnLayer1
-                text: DateTime.dayTime
+                text: DateTimeService.dayTime
                 Layout.alignment: Qt.AlignHCenter
-                visible: DateTime.dayTime !== "" // Only show if 12-hour format is enabled
+                visible: DateTimeService.dayTime !== "" // Only show if 12-hour format is enabled
             }
 
         }

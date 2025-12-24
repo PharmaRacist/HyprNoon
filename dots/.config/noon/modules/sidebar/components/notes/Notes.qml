@@ -37,7 +37,7 @@ Item {
         repeat: true
         onTriggered: {
             if (!NotesService.isDirty && NotesService.lastSaved)
-                statusLabel.text = "Saved " + DateTime.getRelativeTime(NotesService.lastSaved);
+                statusLabel.text = "Saved " + DateTimeService.getRelativeTime(NotesService.lastSaved);
 
         }
     }
@@ -102,7 +102,7 @@ Item {
                 Label {
                     id: statusLabel
 
-                    text: NotesService.isDirty ? "Unsaved changes..." : (NotesService.lastSaved ? "Saved " + DateTime.getRelativeTime(NotesService.lastSaved) : "Ready")
+                    text: NotesService.isDirty ? "Unsaved changes..." : (NotesService.lastSaved ? "Saved " + DateTimeService.getRelativeTime(NotesService.lastSaved) : "Ready")
                     color: NotesService.isDirty ? Colors.m3.m3tertiary : Colors.m3.m3primary
                     Layout.fillWidth: true
                     font.family: Fonts.family.main

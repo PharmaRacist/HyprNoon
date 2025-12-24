@@ -11,7 +11,7 @@ Item {
     Layout.fillWidth: true
     Layout.preferredHeight: 40
 
-    property var sink: Audio.sink
+    property var sink: AudioService.sink
     property real maxValue: 1
 
     MaterialSymbol {

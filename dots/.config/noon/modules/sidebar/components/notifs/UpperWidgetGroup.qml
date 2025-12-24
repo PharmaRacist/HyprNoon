@@ -100,7 +100,7 @@ Item {
     component UptimeRow: StyledText {
         font.pixelSize: Fonts.sizes.verylarge
         color: Colors.colOnLayer0
-        text: StringUtils.format(qsTr("Awake for {0}"), DateTime.uptime)
+        text: StringUtils.format(qsTr("Awake for {0}"), DateTimeService.uptime)
         Layout.fillWidth: true
         Layout.alignment: Qt.AlignLeft
     }

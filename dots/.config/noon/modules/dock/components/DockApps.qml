@@ -288,7 +288,7 @@ Item {
                                 }
                                 StyledScreencopyView {
                                     id: screencopyView
-                                    captureSource: HyprlandData.isHyprland && previewPopup ? windowButton.modelData : null
+                                    captureSource: HyprlandService.isHyprland && previewPopup ? windowButton.modelData : null
                                     live: true
                                     radius: Rounding.small
                                     paintCursor: true

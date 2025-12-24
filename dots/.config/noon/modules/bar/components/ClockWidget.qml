@@ -23,7 +23,7 @@ MouseArea {
             horizontalAlignment: Text.AlignHCenter
             font.pixelSize: Fonts.sizes.large
             color: Colors.colOnLayer1
-            text: DateTime.gnomeClockWidgetFormat
+            text: DateTimeService.gnomeClockWidgetFormat
         }
 
     }

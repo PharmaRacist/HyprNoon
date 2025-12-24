@@ -32,7 +32,9 @@ StyledPopup {
                     font.pixelSize: Fonts.sizes.large
                     font.weight: Font.Medium
                 }
+
             }
+
         }
 
         RowLayout {
@@ -55,8 +57,9 @@ StyledPopup {
                 horizontalAlignment: Text.AlignRight
                 font.weight: Font.Medium
                 color: Colors.m3.m3onSurfaceVariant
-                text: `${(ResourceUsage.cpuUsagePercentage).toFixed(1)}%`
+                text: `${(ResourcesService.cpuUsagePercentage).toFixed(1)}%`
             }
+
         }
 
         RowLayout {
@@ -78,8 +81,9 @@ StyledPopup {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 color: Colors.m3.m3onSurfaceVariant
-                text: `${(ResourceUsage.avgCpuTemp * 100).toFixed(1)} °C`
+                text: `${(ResourcesService.avgCpuTemp * 100).toFixed(1)} °C`
             }
+
         }
 
         RowLayout {
@@ -101,8 +105,9 @@ StyledPopup {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 color: Colors.m3.m3onSurfaceVariant
-                text: `${ResourceUsage.cpuClockGHz.toFixed(2)} GHz`
+                text: `${ResourcesService.cpuClockGHz.toFixed(2)} GHz`
             }
+
         }
 
         RowLayout {
@@ -124,14 +129,15 @@ StyledPopup {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 color: Colors.m3.m3onSurfaceVariant
-                text: `${(ResourceUsage.memoryUsedPercentage * 100).toFixed(1)}% (${(ResourceUsage.memoryUsed / 1073741824).toFixed(1)} / ${(ResourceUsage.memoryTotal / 1073741824).toFixed(1)} GB)`
+                text: `${(ResourcesService.memoryUsedPercentage * 100).toFixed(1)}% (${(ResourcesService.memoryUsed / 1073741824).toFixed(1)} / ${(ResourcesService.memoryTotal / 1073741824).toFixed(1)} GB)`
             }
+
         }
 
         RowLayout {
             spacing: 5
             Layout.fillWidth: true
-            visible: ResourceUsage.swapTotal > 0
+            visible: ResourcesService.swapTotal > 0
 
             MaterialSymbol {
                 text: "sync_alt"
@@ -148,12 +154,13 @@ StyledPopup {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 color: Colors.m3.m3onSurfaceVariant
-                text: `${(ResourceUsage.swapUsedPercentage * 100).toFixed(1)}% (${(ResourceUsage.swapUsed / 1073741824).toFixed(1)} / ${(ResourceUsage.swapTotal / 1073741824).toFixed(1)} GB)`
+                text: `${(ResourcesService.swapUsedPercentage * 100).toFixed(1)}% (${(ResourcesService.swapUsed / 1073741824).toFixed(1)} / ${(ResourcesService.swapTotal / 1073741824).toFixed(1)} GB)`
             }
+
         }
 
         Repeater {
-            model: ResourceUsage.gpus
+            model: ResourcesService.gpus
 
             Column {
                 spacing: 4
@@ -194,6 +201,7 @@ StyledPopup {
                         color: Colors.m3.m3onSurfaceVariant
                         text: `${(modelData.utilization * 100).toFixed(1)}%`
                     }
+
                 }
 
                 RowLayout {
@@ -217,6 +225,7 @@ StyledPopup {
                         color: Colors.m3.m3onSurfaceVariant
                         text: `${(modelData.temperature * 100).toFixed(1)} °C`
                     }
+
                 }
 
                 RowLayout {
@@ -240,6 +249,7 @@ StyledPopup {
                         color: Colors.m3.m3onSurfaceVariant
                         text: `${(modelData.memoryPercentage * 100).toFixed(1)}% (${modelData.memoryUsed} / ${modelData.memoryTotal} MB)`
                     }
+
                 }
 
                 RowLayout {
@@ -264,8 +274,13 @@ StyledPopup {
                         color: Colors.m3.m3onSurfaceVariant
                         text: modelData.powerDraw !== null ? `${modelData.powerDraw.toFixed(1)} / ${modelData.powerLimit.toFixed(0)} W` : "N/A"
                     }
+
                 }
+
             }
+
         }
+
     }
+
 }

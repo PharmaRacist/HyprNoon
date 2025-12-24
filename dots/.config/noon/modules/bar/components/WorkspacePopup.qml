@@ -13,7 +13,7 @@ import Quickshell.Hyprland
 
 StyledPopup {
     id: popup
-    active: HyprlandData.isHyprland && hoverTarget && hoverTarget.containsMouse
+    active: HyprlandService.isHyprland && hoverTarget && hoverTarget.containsMouse
     Item {
         id: root
         clip: true
@@ -33,7 +33,7 @@ StyledPopup {
         implicitWidth: preview.implicitWidth
         visible: preview.hasContent
         Loader {
-            active: HyprlandData.isHyprland
+            active: HyprlandService.isHyprland
             anchors {
                 fill: parent
                 margins: 9

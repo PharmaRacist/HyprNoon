@@ -14,7 +14,7 @@ Scope {
     property bool showOsdValues: false
     property bool userInteracting: false
     property var focusedScreen: Quickshell.screens.find(s => s.name === Hyprland.focusedMonitor?.name)
-    property var brightnessMonitor: Brightness.getMonitorForScreen(focusedScreen)
+    property var brightnessMonitor: BrightnessService.getMonitorForScreen(focusedScreen)
 
     function triggerOsd() {
         showOsdValues = true;
@@ -50,7 +50,7 @@ Scope {
     }
 
     Connections {
-        target: Brightness
+        target: BrightnessService
         function onBrightnessChanged() {
             if (!root.brightnessMonitor.ready)
                 return;
@@ -90,7 +90,7 @@ Scope {
                 implicitWidth: Sizes.osdWidth
                 implicitHeight: Sizes.osdHeight
                 value: root.brightnessMonitor?.brightness ?? 50
-                icon: Brightness.iconMaterial
+                icon: BrightnessService.iconMaterial
 
                 // If interaction for brightness is added later (e.g. scroll/drag)
                 onInteractionStarted: {

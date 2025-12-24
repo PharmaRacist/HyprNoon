@@ -13,7 +13,7 @@ MouseArea {
     readonly property bool isCharging: BatteryService.isCharging
     readonly property bool isPluggedIn: BatteryService.isPluggedIn
     readonly property real percentage: BatteryService.percentage
-    readonly property bool isLow: percentage <= Mem.options.BatteryService.low / 100
+    readonly property bool isLow: percentage <= Mem.options.battery.low / 100
     property bool verticalMode: false
     property bool enablePopup: true
 

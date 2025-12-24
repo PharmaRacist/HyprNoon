@@ -12,7 +12,7 @@ Item {
     Layout.fillWidth: true
     Layout.preferredHeight: 40
 
-    property var source: Audio.source
+    property var source: AudioService.source
     property real maxValue: 1
 
     MaterialSymbol {

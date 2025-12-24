@@ -15,7 +15,7 @@ Item {
     Layout.preferredHeight: 40
 
     property var focusedScreen: Quickshell.screens.find(s => s.name === Hyprland.focusedMonitor?.name)
-    property var brightnessMonitor: Brightness.getMonitorForScreen(focusedScreen)
+    property var brightnessMonitor: BrightnessService.getMonitorForScreen(focusedScreen)
     StyledSlider {
         id: brightnessSlider
         anchors.fill: parent

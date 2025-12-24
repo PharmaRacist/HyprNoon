@@ -17,7 +17,7 @@ MouseArea {
     height: rotatedContainer.height
     width: BarData.currentBarExclusiveSize
     Loader {
-        active: HyprlandData.isHyprland && Mem.states.services.wm.hypr
+        active: HyprlandService.isHyprland && Mem.states.services.wm.hypr
         sourceComponent: WorkspacePopup {
             hoverTarget: root
         }
