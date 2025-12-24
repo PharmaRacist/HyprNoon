@@ -49,7 +49,7 @@ ColumnLayout {
         spacing: Padding.normal
 
         BottomInfo {
-            text: `${Math.round(Battery.percentage * 100, 2)}%`
+            text: `${Math.round(BatteryService.percentage * 100, 2)}%`
             icon: "battery_full"
         }
 

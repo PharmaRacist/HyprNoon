@@ -74,13 +74,13 @@ Singleton {
     property list<var> savedChats: []
 
     property var promptSubstitutions: {
-        "{DISTRO}": SystemInfo.distroName,
+        "{DISTRO}": SysInfoService.distroName,
         "{DATETIME}": `${DateTime.time}, ${DateTime.collapsedCalendarFormat}`,
         "{WINDOWCLASS}": `${ToplevelManager.activeToplevel?.appId} ${ToplevelManager.activeToplevel?.title}` ?? "Unknown",
-        "{DE}": `${SystemInfo.desktopEnvironment} (${SystemInfo.windowingSystem})`,
+        "{DE}": `${SysInfoService.desktopEnvironment} (${SysInfoService.windowingSystem})`,
         "{TASKS}": formatTasks(),
         "{TIMERS}": formatTimers(),
-        "{USER}": SystemInfo.username,
+        "{USER}": SysInfoService.username,
         "{LOCATION}": Mem.options.services.location,
         "{NOTES}": NotesService.content,
         "{PLAYING}": `title:${BeatsService.cleanedTitle}  artist:${BeatsService.artist}`,

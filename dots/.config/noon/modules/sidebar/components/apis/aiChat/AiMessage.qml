@@ -137,7 +137,7 @@ Rectangle {
                             elide: Text.ElideRight
                             font.pixelSize: Fonts.sizes.normal
                             color: Colors.m3.m3onSecondaryContainer
-                            text: messageData?.role == 'assistant' ? Ai.models[messageData?.model].name : (messageData?.role == 'user' && SystemInfo.username) ? SystemInfo.username : qsTr("Interface")
+                            text: messageData?.role == 'assistant' ? Ai.models[messageData?.model].name : (messageData?.role == 'user' && SysInfoService.username) ? SysInfoService.username : qsTr("Interface")
                         }
                     }
                 }

@@ -49,7 +49,7 @@ ColumnLayout {
             let expression = match[1] || match[2] || match[3] || match[4] || match[5] || match[6] || match[7] || match[8];
             if (expression) {
                 Qt.callLater(() => {
-                    const [renderHash, isNew] = LatexRenderer.requestRender(expression.trim());
+                    const [renderHash, isNew] = LatexService.requestRender(expression.trim());
                     if (!renderedLatexHashes.includes(renderHash)) {
                         renderedLatexHashes.push(renderHash);
                     }
@@ -60,10 +60,10 @@ ColumnLayout {
 
     function handleRenderedLatex(hash, force = false) {
         if (renderedLatexHashes.includes(hash) || force) {
-            const imagePath = LatexRenderer.renderedImagePaths[hash];
+            const imagePath = LatexService.renderedImagePaths[hash];
             const markdownImage = `![latex](${imagePath})`;
 
-            const expression = LatexRenderer.processedExpressions[hash];
+            const expression = LatexService.processedExpressions[hash];
             renderedSegmentContent = renderedSegmentContent.replace(expression, markdownImage);
         }
     }
@@ -101,7 +101,7 @@ ColumnLayout {
     Connections {
         target: LatexRenderer
         function onRenderFinished(hash, imagePath) {
-            const expression = LatexRenderer.processedExpressions[hash];
+            const expression = LatexService.processedExpressions[hash];
             // console.log("Render finished: " + hash + " " + expression);
             handleRenderedLatex(hash);
         }

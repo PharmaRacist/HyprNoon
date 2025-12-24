@@ -113,7 +113,7 @@ Item {
             let expression = match[1] || match[2] || match[3] || match[4];
             if (expression) {
                 Qt.callLater(() => {
-                    const [renderHash, isNew] = LatexRenderer.requestRender(expression.trim());
+                    const [renderHash, isNew] = LatexService.requestRender(expression.trim());
                     if (!renderedLatexHashes.includes(renderHash)) {
                         renderedLatexHashes.push(renderHash);
                     }
@@ -123,9 +123,9 @@ Item {
     }
     function handleRenderedLatex(hash, force = false) {
         if (renderedLatexHashes.includes(hash) || force) {
-            const imagePath = LatexRenderer.renderedImagePaths[hash];
+            const imagePath = LatexService.renderedImagePaths[hash];
             const markdownImage = `![latex](${imagePath})`;
-            const expression = LatexRenderer.processedExpressions[hash];
+            const expression = LatexService.processedExpressions[hash];
             renderedSegmentContent = renderedSegmentContent.replace(expression, markdownImage);
         }
     }
@@ -181,7 +181,7 @@ Item {
     Connections {
         target: LatexRenderer
         function onRenderFinished(hash, imagePath) {
-            const expression = LatexRenderer.processedExpressions[hash];
+            const expression = LatexService.processedExpressions[hash];
             handleRenderedLatex(hash);
         }
     }

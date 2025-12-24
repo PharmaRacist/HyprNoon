@@ -46,7 +46,7 @@ StyledPopup {
         }
 
         StyledText {
-            text: Math.round(Battery.percentage * 100) + "%"
+            text: Math.round(BatteryService.percentage * 100) + "%"
 
             font {
                 pixelSize: Fonts.sizes.huge
@@ -58,9 +58,9 @@ StyledPopup {
 
         RowLayout {
             property bool rowVisible: {
-                let timeValue = Battery.isCharging ? Battery.timeToFull : Battery.timeToEmpty;
-                let power = Battery.energyRate;
-                return !(Battery.chargeState == 4 || timeValue <= 0 || power <= 0.01);
+                let timeValue = BatteryService.isCharging ? BatteryService.timeToFull : BatteryService.timeToEmpty;
+                let power = BatteryService.energyRate;
+                return !(BatteryService.chargeState == 4 || timeValue <= 0 || power <= 0.01);
             }
 
             spacing: 5
@@ -75,7 +75,7 @@ StyledPopup {
             }
 
             StyledText {
-                text: Battery.isCharging ? qsTr("Time to full:") : qsTr("Time to empty:")
+                text: BatteryService.isCharging ? qsTr("Time to full:") : qsTr("Time to empty:")
                 color: Colors.m3.m3onSurfaceVariant
             }
 
@@ -93,21 +93,23 @@ StyledPopup {
                 horizontalAlignment: Text.AlignRight
                 color: Colors.m3.m3onSurfaceVariant
                 text: {
-                    if (Battery.isCharging)
-                        return formatTime(Battery.timeToFull);
+                    if (BatteryService.isCharging)
+                        return formatTime(BatteryService.timeToFull);
                     else
-                        return formatTime(Battery.timeToEmpty);
+                        return formatTime(BatteryService.timeToEmpty);
                 }
             }
 
             Behavior on opacity {
-                FAnim {}
+                FAnim {
+                }
+
             }
 
         }
 
         RowLayout {
-            property bool rowVisible: !(Battery.chargeState != 4 && Battery.energyRate == 0)
+            property bool rowVisible: !(BatteryService.chargeState != 4 && BatteryService.energyRate == 0)
 
             spacing: 5
             Layout.fillWidth: true
@@ -122,9 +124,9 @@ StyledPopup {
 
             StyledText {
                 text: {
-                    if (Battery.chargeState == 4)
+                    if (BatteryService.chargeState == 4)
                         return qsTr("Fully charged");
-                    else if (Battery.chargeState == 1)
+                    else if (BatteryService.chargeState == 1)
                         return qsTr("Charging:");
                     else
                         return qsTr("Discharging:");
@@ -137,15 +139,16 @@ StyledPopup {
                 horizontalAlignment: Text.AlignRight
                 color: Colors.m3.m3onSurfaceVariant
                 text: {
-                    if (Battery.chargeState == 4)
+                    if (BatteryService.chargeState == 4)
                         return "";
                     else
-                        return `${Battery.energyRate.toFixed(2)}W`;
+                        return `${BatteryService.energyRate.toFixed(2)}W`;
                 }
             }
 
             Behavior on opacity {
-                FAnim {}
+                FAnim {
+                }
 
             }
 

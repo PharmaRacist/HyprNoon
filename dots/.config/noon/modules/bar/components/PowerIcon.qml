@@ -14,7 +14,7 @@ MaterialShapeWrappedMaterialSymbol {
     //     content: PowerService.modeName
     // }
 
-    visible: Battery.available
+    visible: BatteryService.available
     text: PowerService.icon
     // Cycle through shapes based on mode
     shape: {

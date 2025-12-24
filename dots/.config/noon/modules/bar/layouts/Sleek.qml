@@ -13,13 +13,13 @@ StyledRect {
     id: barBackground
     property var barRoot
     readonly property bool isLaptop: UPower.displayDevice.isLaptopBattery
-    readonly property bool isLow: isLaptop ? Battery.isLow : false
+    readonly property bool isLow: isLaptop ? BatteryService.isLow : false
     readonly property int mode: Mem.options.bar.appearance.mode
     readonly property bool bottomMode: Mem.options.bar.behavior.position === "bottom"
     property bool showResources: true
     property bool shownNetworkInfo: true
     property bool showLogo: true
-    property string bgColor: isLow ? Battery.isCharging ? Colors.m3.m3successContainer : Colors.m3.m3errorContainer : Colors.colLayer0
+    property string bgColor: isLow ? BatteryService.isCharging ? Colors.m3.m3successContainer : Colors.m3.m3errorContainer : Colors.colLayer0
 
     color: bgColor
     implicitWidth: Screen.width
