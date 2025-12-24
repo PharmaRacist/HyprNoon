@@ -1,4 +1,5 @@
 ananicy-cpp
 tlp
 ufw
+sddm
 auto-cpufreq

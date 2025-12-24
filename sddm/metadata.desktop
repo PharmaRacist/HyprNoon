@@ -1,0 +1,12 @@
+[SddmGreeterTheme]
+Name=Noon
+Description=Noon SDDM Theme
+Author=Pharmaracist
+Copyright=(c) 2025 Pharmaracist
+License=MIT
+Type=greeter
+Version=1.0
+MainScript=Main.qml
+ConfigFile=theme.conf
+Theme-Id=noon
+Theme-API=2.0

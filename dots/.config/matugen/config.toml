@@ -82,3 +82,7 @@ post_hook = "pkill -USR1 cava"
 [templates.zathura]
 input_path = '~/.config/matugen/templates/applications/zathura'
 output_path = '~/.config/zathura/zathurarc'
+
+[templates.sddm]
+input_path = '~/.config/matugen/templates/sddm.conf'
+output_path = '/tmp/sddm_colors.conf'

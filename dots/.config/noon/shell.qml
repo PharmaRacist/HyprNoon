@@ -17,7 +17,6 @@ import qs.modules.dock
 import qs.modules.lock
 import qs.modules.notificationPopup
 import qs.modules.onScreenDisplay
-import qs.modules.greetd
 import qs.modules.sidebar
 import qs.modules.beam
 
@@ -37,11 +36,6 @@ ShellRoot {
     WidgetLoader {
         enabled: true
         Sidebar {}
-    }
-
-    WidgetLoader {
-        enabled: Mem.options.desktop.greetd.enabled
-        Greetd {}
     }
 
     WidgetLoader {
