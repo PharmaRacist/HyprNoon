@@ -350,7 +350,7 @@ Singleton {
             break;
         case "Emojis":
             Noon.exec(`wl-copy '${StringUtils.shellSingleQuoteEscape(app.bigText)}'`);
-            Emojis.recordEmojiUse(app.cliphistRawString);
+            EmojisService.recordEmojiUse(app.cliphistRawString);
             hideIfNotAux();
             break;
         case "History":

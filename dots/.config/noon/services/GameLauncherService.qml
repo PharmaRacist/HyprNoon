@@ -1,4 +1,3 @@
-// GameManager.qml - Singleton for managing games
 pragma Singleton
 pragma ComponentBehavior: Bound
 import qs.modules.common

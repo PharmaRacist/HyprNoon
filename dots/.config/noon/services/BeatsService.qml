@@ -12,7 +12,7 @@ import Qt.labs.folderlistmodel
 
 Singleton {
     id: musicPlayerService
-
+    
     // Player management
     property int selectedPlayerIndex: Mem.states.services.mediaPlayer.selectedPlayerIndex
     property bool hasPlasmaIntegration: true

@@ -15,7 +15,7 @@ import qs.store
 
 StyledRect {
     id: root
-    readonly property var meaningfulPlayers: MusicPlayerService.meaningfulPlayers
+    readonly property var meaningfulPlayers: BeatsService.meaningfulPlayers
     property int selectedPlayerIndex: Mem.states.services.mediaPlayer.selectedPlayerIndex
     readonly property MprisPlayer player: meaningfulPlayers[selectedPlayerIndex]
     visible: player && player.trackTitle
@@ -36,7 +36,7 @@ StyledRect {
             blur: true
             retainWhileLoading: true
             anchors.fill: parent
-            source: MusicPlayerService.activePlayer?.trackArtUrl ?? ""
+            source: BeatsService.activePlayer?.trackArtUrl ?? ""
             asynchronous: true
         }
         Controls {
@@ -52,7 +52,7 @@ StyledRect {
         id: root
         anchors.centerIn: parent
         property int btnSize: 30
-        readonly property var player: MusicPlayerService.activePlayer
+        readonly property var player: BeatsService.activePlayer
         property color accentColor
         RowLayout {
             spacing: 8

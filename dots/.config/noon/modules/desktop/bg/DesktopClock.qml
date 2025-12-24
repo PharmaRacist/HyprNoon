@@ -140,7 +140,7 @@ GridLayout {
 
     component MediaIndicator: RowLayout {
         visible: opacity > 0.1
-        opacity: MusicPlayerService.activePlayer ? 1 : 0
+        opacity: BeatsService.activePlayer ? 1 : 0
         spacing: Padding.huge
         Layout.leftMargin: 5
         Layout.preferredHeight: 120
@@ -160,7 +160,7 @@ GridLayout {
                 font.family: Fonts.family.variable
                 font.variableAxes: Fonts.variableAxes.display
                 color: Colors.colOnLayer0
-                text: MusicPlayerService.title
+                text: BeatsService.title
                 elide: Text.ElideRight
                 animateChange: true
 
@@ -181,7 +181,7 @@ GridLayout {
                 font.family: Fonts.family.variable
                 font.variableAxes: Fonts.variableAxes.display
                 font.pixelSize: 20
-                text: MusicPlayerService.artist
+                text: BeatsService.artist
                 elide: Text.ElideRight
                 animateChange: true
             }

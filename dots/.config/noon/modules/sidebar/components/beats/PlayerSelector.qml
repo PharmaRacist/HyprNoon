@@ -6,8 +6,8 @@ import QtQuick.Layouts
 
 StyledRect {
     id: root
-    property int selectedPlayerIndex: MusicPlayerService.selectedPlayerIndex
-    onSelectedPlayerIndexChanged: MusicPlayerService.selectedPlayerIndex = selectedPlayerIndex
+    property int selectedPlayerIndex: BeatsService.selectedPlayerIndex
+    onSelectedPlayerIndexChanged: BeatsService.selectedPlayerIndex = selectedPlayerIndex
 
     Layout.alignment: Qt.AlignHCenter
     Layout.preferredWidth: playerSelector.width + 10
@@ -16,7 +16,7 @@ StyledRect {
     radius: 15
     enableShadows: true
     color: TrackColorsService.colors.colSecondaryContainer
-    visible: MusicPlayerService.meaningfulPlayers.length > 1
+    visible: BeatsService.meaningfulPlayers.length > 1
 
     function getPlayerIcon(dbus) {
         if (!dbus) return "music_note";
@@ -37,10 +37,10 @@ StyledRect {
         anchors.centerIn: parent
         spacing: 4
         rows: 1
-        columns: MusicPlayerService.meaningfulPlayers.length
+        columns: BeatsService.meaningfulPlayers.length
 
         Repeater {
-            model: MusicPlayerService.meaningfulPlayers
+            model: BeatsService.meaningfulPlayers
             delegate: RippleButtonWithIcon {
                 implicitSize: 20
                 buttonRadius: Rounding.full

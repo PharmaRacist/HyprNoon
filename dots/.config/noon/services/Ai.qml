@@ -83,7 +83,7 @@ Singleton {
         "{USER}": SystemInfo.username,
         "{LOCATION}": Mem.options.services.location,
         "{NOTES}": NotesService.content,
-        "{PLAYING}": `title:${MusicPlayerService.cleanedTitle}  artist:${MusicPlayerService.artist}`,
+        "{PLAYING}": `title:${BeatsService.cleanedTitle}  artist:${BeatsService.artist}`,
         "{WEATHER}": WeatherService.weatherData.currentTemp,
         "{ALARMS}": AlarmService.alarms
     }

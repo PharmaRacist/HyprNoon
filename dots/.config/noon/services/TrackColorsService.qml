@@ -1,18 +1,10 @@
 pragma Singleton
-import Qt5Compat.GraphicalEffects
-import QtQuick.Effects
 import QtQuick
-import QtQuick.Layouts
-import QtQuick.Controls
 import Quickshell
 import Quickshell.Io
-import Quickshell.Services.Mpris
 import Quickshell.Widgets
-import Quickshell.Hyprland
-import qs.services
 import qs.modules.common
 import qs.modules.common.utils
-import qs.modules.common.widgets
 import qs.modules.common.functions
 
 Singleton {
@@ -27,7 +19,7 @@ Singleton {
     Loader {
         id: quantizerLoader
         active: adaptiveTheme
-        onLoaded:item && item !== null ? art.source : MusicPlayerService.artUrl
+        onLoaded:item && item !== null ? art.source : BeatsService.artUrl
         sourceComponent: ColorQuantizer {
             id: colorQuantizer
             depth: 0
@@ -37,7 +29,7 @@ Singleton {
 
     CoverArtDownloader {
         id: art
-        url: MusicPlayerService.artUrl
+        url: BeatsService.artUrl
     }
     readonly property QtObject colors: QtObject {
         property color colLayer0: root.adaptiveTheme ? ColorUtils.mix(Colors.colLayer0, Qt.darker(root.artDominantColor, 2), 0.1) : Colors.colLayer0

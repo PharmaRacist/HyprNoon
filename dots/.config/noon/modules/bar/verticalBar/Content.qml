@@ -99,8 +99,6 @@ ColumnLayout {
                     return unicodeWsComponent;
                 case "nightlight":
                     return nightlightComponent;
-                case "niriWs":
-                    return niriWsComponent;
                 case "progressWs":
                     return progressWsComponent;
                 case "systemStatusIcons":
@@ -273,14 +271,6 @@ ColumnLayout {
                 }
             }
 
-            Component {
-                id: niriWsComponent
-
-                NiriWs {
-                    bar: barRoot
-                    vertical: true
-                }
-            }
             Component {
                 id: iiWsComponent
 

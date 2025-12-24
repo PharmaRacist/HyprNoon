@@ -46,7 +46,7 @@ Menu {
         height: 40
         onTriggered: () => {
             if (trackPath)
-                MusicPlayerService.playTrack(trackPath, musicModel);
+                BeatsService.playTrack(trackPath, musicModel);
 
         }
 
@@ -84,7 +84,7 @@ Menu {
         height: 40
         onTriggered: {
             if (trackPath && onRefresh)
-                MusicPlayerService.isolateTrack(trackPath, onRefresh);
+                BeatsService.isolateTrack(trackPath, onRefresh);
 
         }
 

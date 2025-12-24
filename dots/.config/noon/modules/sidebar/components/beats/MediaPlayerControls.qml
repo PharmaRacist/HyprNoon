@@ -12,7 +12,7 @@ Item {
     implicitWidth: mediaControls.width
 
     property bool showDownload: true
-    readonly property MprisPlayer player: MusicPlayerService.player
+    readonly property MprisPlayer player: BeatsService.player
     readonly property bool isPlaying: player?.playbackState === MprisPlaybackState.Playing
 
     component DockMediaButton: RippleButtonWithIcon {
@@ -73,23 +73,23 @@ Item {
             enabled: root.player?.canControl
             opacity: root.player ? 1 : 0.5
             toggled: root.player?.loopState !== MprisLoopState.None
-            onClicked: MusicPlayerService.cycleRepeat()
+            onClicked: BeatsService.cycleRepeat()
             StyledToolTip {
                 content: root.player?.loopState === MprisLoopState.Track ? "Repeat Track" : root.player?.loopState === MprisLoopState.Playlist ? "Repeat Playlist" : "Repeat Off"
             }
         }
 
         DockMediaButton {
-            visible: MusicPlayerService.isCurrentPlayer()
+            visible: BeatsService.isCurrentPlayer()
             materialIcon: "close"
-            onClicked: MusicPlayerService.stopPlayer()
+            onClicked: BeatsService.stopPlayer()
         }
 
         DockMediaButton {
-            visible: root.showDownload && !MusicPlayerService.isCurrentPlayer()
+            visible: root.showDownload && !BeatsService.isCurrentPlayer()
             materialIcon: "download"
-            enabled: !YtDLP.isDownloading
-            onClicked: MusicPlayerService.downloadCurrentSong()
+            // enabled: !BeatsService.isDownloading
+            onClicked: BeatsService.downloadCurrentSong()
         }
     }
 }

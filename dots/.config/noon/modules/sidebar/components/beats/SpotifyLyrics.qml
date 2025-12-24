@@ -46,7 +46,7 @@ Item {
     function getCurrentIndex() {
         if (!displayLines?.length || !syncedLines.length) return -1;
         
-        const progress = MusicPlayerService.currentTrackProgress;
+        const progress = BeatsService.currentTrackProgress;
         for (let i = displayLines.length - 1; i >= 0; i--) {
             if (progress >= displayLines[i].lineTime) return i;
         }
@@ -103,7 +103,7 @@ Item {
         
         altAction: LyricsService.fetchFromAPI
         onClicked: hasError ? 
-            LyricsService.fetchLyrics(MusicPlayerService.artist || "", MusicPlayerService.title || "") :
+            LyricsService.fetchLyrics(BeatsService.artist || "", BeatsService.title || "") :
             (revealer.reveal = !revealer.reveal)
 
         Timer {

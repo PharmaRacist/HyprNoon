@@ -28,7 +28,7 @@ Item {
     TextMetrics {
         id: textMetrics
         font: textItem.font
-        text: `${MusicPlayerService.cleanedTitle}${MusicPlayerService?.artist ? ' • ' + MusicPlayerService?.artist : ''}`
+        text: `${BeatsService.cleanedTitle}${BeatsService?.artist ? ' • ' + BeatsService?.artist : ''}`
     }
 
     // Smooth height animation
@@ -56,7 +56,7 @@ Item {
             ClippedFilledCircularProgress {
                 id: progress
                 implicitSize: Math.min(BarData.currentBarExclusiveSize, 35) * 0.75
-                value: MusicPlayerService.currentTrackProgressRatio
+                value: BeatsService.currentTrackProgressRatio
                 colSecondary: Colors.colSecondaryContainer
                 colPrimary: Colors.m3.m3onSecondaryContainer
                 rotation: 90
@@ -64,7 +64,7 @@ Item {
                     anchors.centerIn: parent
                     fill: 1
                     font.pixelSize: progress.implicitSize * BarData.barPadding
-                    text: MusicPlayerService?.isPlaying ? "pause" : "music_note"
+                    text: BeatsService?.isPlaying ? "pause" : "music_note"
                     color: Colors.m3.m3onSecondaryContainer
                 }
             }
@@ -83,7 +83,7 @@ Item {
                     font.pixelSize: BarData.currentBarExclusiveSize * BarData.barPadding / 1.5
                     elide: Text.ElideRight
                     color: Colors.colOnLayer1
-                    text: `${MusicPlayerService.title}${MusicPlayerService.artist ? ' • ' + MusicPlayerService.artist : ''}`
+                    text: `${BeatsService.title}${BeatsService.artist ? ' • ' + BeatsService.artist : ''}`
                 }
             }
         }
@@ -98,11 +98,11 @@ Item {
         acceptedButtons: Qt.MiddleButton | Qt.BackButton | Qt.ForwardButton | Qt.RightButton | Qt.LeftButton
         onPressed: event => {
             if (event.button === Qt.MiddleButton) {
-                MusicPlayerService.activePlayer.togglePlaying();
+                BeatsService.activePlayer.togglePlaying();
             } else if (event.button === Qt.BackButton) {
-                MusicPlayerService.activePlayer.previous();
+                BeatsService.activePlayer.previous();
             } else if (event.button === Qt.ForwardButton || event.button === Qt.RightButton) {
-                MusicPlayerService.activePlayer.next();
+                BeatsService.activePlayer.next();
             } else if (event.button === Qt.LeftButton)
             {}
         }

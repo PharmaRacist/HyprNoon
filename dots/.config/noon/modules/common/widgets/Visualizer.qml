@@ -13,7 +13,7 @@ import Quickshell.Io
 
 Item {
     id: root
-    property bool active: MusicPlayerService.activePlayer !== 0
+    property bool active: BeatsService.activePlayer !== 0
     property list<real> visualizerPoints: []
     property real maxVisualizerValue: mode === "crystal" ? 1000 : 2000
     property int visualizerSmoothing: 3

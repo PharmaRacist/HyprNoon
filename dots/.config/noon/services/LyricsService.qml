@@ -224,21 +224,21 @@ Singleton {
     Timer {
         id: fetchDelayTimer
         interval: 50
-        onTriggered: fetchLyrics(MusicPlayerService.artist || "", MusicPlayerService.title || "")
+        onTriggered: fetchLyrics(BeatsService.artist || "", BeatsService.title || "")
     }
 
     Connections {
-        target: MusicPlayerService
+        target: BeatsService
         
         function onTitleChanged() {
-            if (MusicPlayerService?.title) {
+            if (BeatsService?.title) {
                 fetchDelayTimer.restart();
             }
         }
 
         function onCurrentTrackProgressChanged() {
             if (state === LyricsService.HasSyncedLyrics) {
-                const syncedLine = getSyncedLyrics(MusicPlayerService.currentTrackProgress);
+                const syncedLine = getSyncedLyrics(BeatsService.currentTrackProgress);
                 if (syncedLine && syncedLine !== lyrics) {
                     lyrics = syncedLine;
                 }
@@ -247,8 +247,8 @@ Singleton {
     }
 
     Component.onCompleted: {
-        if (MusicPlayerService?.title) {
-            fetchLyrics(MusicPlayerService.artist || "", MusicPlayerService.title || "");
+        if (BeatsService?.title) {
+            fetchLyrics(BeatsService.artist || "", BeatsService.title || "");
         }
     }
 }

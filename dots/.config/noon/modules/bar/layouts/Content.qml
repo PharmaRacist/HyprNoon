@@ -128,8 +128,6 @@ RowLayout {
                     return batteryComponent;
                     case "separator":
                         return separatorComponent;
-                    case "niriWs":
-                    return niriWsComponent;
                 default:
                     return null;
                 }
@@ -254,11 +252,6 @@ RowLayout {
                 id: clockComponent
 
                 ClockWidget {}
-            }
-            Component {
-                id: niriWsComponent
-
-                NiriWs {}
             }
             Component {
                 id: powerComponent

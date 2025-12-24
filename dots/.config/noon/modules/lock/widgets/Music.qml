@@ -16,9 +16,10 @@ StyledRect {
     enableShadows: true
     color: Colors.colLayer1
     radius: Rounding.verylarge
-    visible: MusicPlayerService.artist.length > 0
+    visible: BeatsService.artist.length > 0
 
-    Visualizer {}
+    Visualizer {
+    }
 
     RowLayout {
         spacing: Padding.massive
@@ -34,7 +35,7 @@ StyledRect {
             z: 99
             Layout.fillHeight: true
             Layout.preferredWidth: height
-            source: MusicPlayerService.artUrl
+            source: BeatsService.artUrl
             mipmap: true
             radius: root.radius
         }
@@ -52,8 +53,8 @@ StyledRect {
                 elide: Text.ElideRight
                 color: Colors.colOnLayer3
                 text: {
-                    if (MusicPlayerService.player.trackTitle)
-                        return MusicPlayerService.player.trackTitle;
+                    if (BeatsService.player.trackTitle)
+                        return BeatsService.player.trackTitle;
                     else
                         return "No players available";
                 }
@@ -67,12 +68,15 @@ StyledRect {
                 elide: Text.ElideRight
                 horizontalAlignment: Text.AlignLeft
                 text: {
-                    if (MusicPlayerService.player.trackArtist)
-                        return MusicPlayerService.player.trackArtist;
+                    if (BeatsService.player.trackArtist)
+                        return BeatsService.player.trackArtist;
                     else
                         return "No players available";
                 }
             }
+
         }
+
     }
+
 }

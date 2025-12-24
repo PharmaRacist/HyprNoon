@@ -90,7 +90,7 @@ FocusScope {
             return ;
         }
         const params = {
-            "frequentEmojis": Emojis.frequentEmojis,
+            "frequentEmojis": EmojisService.frequentEmojis,
             "horizontalLayouts": BarData.horizontalLayouts,
             "verticalLayouts": BarData.verticalLayouts,
             "isVerticalBar": BarData.verticalBar,

@@ -16,18 +16,18 @@ StyledRect {
     radius: Rounding.verylarge
     color: "transparent"
     
-    readonly property bool playing: MusicPlayerService.player?.playbackState === MprisPlaybackState.Playing
+    readonly property bool playing: BeatsService.player?.playbackState === MprisPlaybackState.Playing
     readonly property bool displayingLyrics: LyricsService.lyrics.length > 0
 
     Keys.onPressed: event => {
         const ctrl = event.modifiers & Qt.ControlModifier;
         const shift = event.modifiers & Qt.ShiftModifier;
-        const player = MusicPlayerService.player;
+        const player = BeatsService.player;
         
         if (ctrl && shift) {
             switch (event.key) {
                 case Qt.Key_R:
-                    LyricsService.fetchLyrics(MusicPlayerService.artist || "", MusicPlayerService.title || "");
+                    LyricsService.fetchLyrics(BeatsService.artist || "", BeatsService.title || "");
                     break;
                 case Qt.Key_Right:
                     player?.canControl && player.next();
@@ -36,7 +36,7 @@ StyledRect {
                     player?.canControl && player.previous();
                     break;
                 case Qt.Key_D:
-                    MusicPlayerService.downloadCurrentSong();
+                    BeatsService.downloadCurrentSong();
                     break;
                 case Qt.Key_S:
                     player && (player.shuffle = !player.shuffle);
@@ -45,7 +45,7 @@ StyledRect {
                     return;
             }
         } else if (ctrl && event.key === Qt.Key_R) {
-            MusicPlayerService.cycleRepeat();
+            BeatsService.cycleRepeat();
         } else {
             switch (event.key) {
                 case Qt.Key_Up:
@@ -76,7 +76,7 @@ StyledRect {
         anchors.fill: parent
         sourceComponent: BlurImage {
             anchors.fill: parent
-            source: MusicPlayerService.artUrl
+            source: BeatsService.artUrl
             asynchronous: true
             blur: true
             tint: true
@@ -136,7 +136,7 @@ StyledRect {
                         visible: parent.reveal
                         anchors.centerIn: parent
                         z: 99
-                        source: MusicPlayerService.artUrl
+                        source: BeatsService.artUrl
                         sourceSize: Qt.size(width, height)
                         mipmap: true
                         radius: Rounding.normal
@@ -156,7 +156,7 @@ StyledRect {
                         font.weight: Font.Medium
                         color: TrackColorsService.colors.colOnLayer0
                         elide: Text.ElideRight
-                        text: MusicPlayerService.player?.trackTitle || "No players available"
+                        text: BeatsService.player?.trackTitle || "No players available"
                         horizontalAlignment:Text.AlignLeft
                     }
 
@@ -165,7 +165,7 @@ StyledRect {
                         font.pixelSize: 17
                         color: TrackColorsService.colors.colSubtext
                         elide: Text.ElideRight
-                        text: MusicPlayerService.player?.trackArtist || "No players available"
+                        text: BeatsService.player?.trackArtist || "No players available"
                         horizontalAlignment:Text.AlignLeft
 
                     }
@@ -179,14 +179,14 @@ StyledRect {
                 StyledProgressBar {
                     sperm: true
                     anchors.fill: parent
-                    value: MusicPlayerService.currentTrackProgressRatio
+                    value: BeatsService.currentTrackProgressRatio
                     highlightColor: TrackColorsService.colors.colPrimary
                     trackColor: TrackColorsService.colors.colSecondaryContainer
                 }
 
                 MouseArea {
                     anchors.fill: parent
-                    enabled: MusicPlayerService.player?.canSeek && MusicPlayerService.player?.length > 0
+                    enabled: BeatsService.player?.canSeek && BeatsService.player?.length > 0
                     hoverEnabled: true
                     property bool isDragging: false
 
@@ -198,7 +198,7 @@ StyledRect {
                     onReleased: isDragging = false
 
                     function seekTo(x) {
-                        const player = MusicPlayerService.player;
+                        const player = BeatsService.player;
                         if (!player?.canSeek || !player?.length) return;
                         player.position = Math.max(0, Math.min(1, x / width)) * player.length;
                     }
@@ -207,7 +207,7 @@ StyledRect {
 
             MediaPlayerControls {
                 Layout.alignment: Qt.AlignHCenter
-                showDownload: !(MusicPlayerService.player?.dbusName?.includes("vlc") ?? false)
+                showDownload: !(BeatsService.player?.dbusName?.includes("vlc") ?? false)
             }
         }
     }
@@ -235,7 +235,7 @@ StyledRect {
                 Layout.margins: Padding.large
 
                 StyledText {
-                    text: `${MusicPlayerService.filteredIndices.length} Tracks`
+                    text: `${BeatsService.filteredIndices.length} Tracks`
                     font.pixelSize: Fonts.sizes.subTitle
                     color: Colors.colOnLayer2
                 }
@@ -260,7 +260,7 @@ StyledRect {
             //     Layout.rightMargin: Padding.large
             //     searchInput.placeholderText: "Search Tracks"
             //     color: "transparent"
-            //     onSearchTextChanged: MusicPlayerService.updateSearchFilter(searchText)
+            //     onSearchTextChanged: BeatsService.updateSearchFilter(searchText)
             // }
             StyledListView {
                 visible: bottomDialog.expand
@@ -269,16 +269,16 @@ StyledRect {
                 Layout.margins: Padding.large
                 spacing: 8
                 clip: true
-                model: MusicPlayerService.filteredTracksCount
+                model: BeatsService.filteredTracksCount
 
-                Component.onCompleted: MusicPlayerService.initializeTracks()
+                Component.onCompleted: BeatsService.initializeTracks()
 
                 delegate: StyledDelegateItem {
                     required property int index
 
-                    readonly property var trackInfo: MusicPlayerService.getFilteredTrackInfo(index)
+                    readonly property var trackInfo: BeatsService.getFilteredTrackInfo(index)
                     readonly property string trackPath: trackInfo.path || ""
-                    readonly property bool currentlyPlaying: trackPath === MusicPlayerService.currentTrackPath
+                    readonly property bool currentlyPlaying: trackPath === BeatsService.currentTrackPath
 
                     title: trackInfo.name || "Unknown Track"
                     subtext: trackInfo.extension ? `${trackInfo.extension} Audio` : ""
@@ -293,7 +293,7 @@ StyledRect {
                         parentButton: parent
                     }
 
-                    releaseAction: () => trackPath && MusicPlayerService.playTrackByPath(trackPath)
+                    releaseAction: () => trackPath && BeatsService.playTrackByPath(trackPath)
                     altAction: () => trackPath && trackContextMenu.showMenu()
                 }
             }

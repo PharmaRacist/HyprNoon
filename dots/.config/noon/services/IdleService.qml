@@ -21,14 +21,7 @@ Singleton {
             id: inhibitorWindow
 
             visible: true
-            implicitWidth: 0
-            implicitHeight: 0
             color: "transparent"
-
-            anchors {
-                right: true
-                bottom: true
-            }
 
             mask: Region {
                 item: null
