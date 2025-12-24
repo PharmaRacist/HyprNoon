@@ -236,36 +236,6 @@ StyledListView {
         }
     }
 
-    RippleButtonWithIcon {
-        id: fab
-        visible: root.selectedCategory === "History"
-        anchors {
-            bottom: parent.bottom
-            right: parent.right
-            margins: 30
-        }
-
-        StyledRectangularShadow {
-            target: fab
-            radius: fab.buttonRadius
-        }
-
-        implicitSize: 55
-        iconSize: Fonts.sizes.huge
-        buttonRadius: Rounding.large
-        colBackground: Colors.colSecondaryContainer
-
-        releaseAction: () => {
-            ClipboardService.wipe()
-            ClipboardService.refresh()
-        }
-
-        materialIcon: switch (selectedCategory) {
-            case "History":
-                return "clear_all";
-        }
-    }
-
     Rectangle {
         anchors.fill: parent
         z: -1

@@ -657,6 +657,7 @@ Scope {
                                     bottom: parent.bottom
                                     rightMargin: Padding.normal
                                 }
+                                animateChange:true
                                 horizontalAlignment: Text.AlignRight
                                 width: 450
                                 elide: Text.ElideRight
