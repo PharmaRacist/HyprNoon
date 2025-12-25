@@ -87,6 +87,15 @@ StyledRect {
                 ClipboardService.wipe();
             }
         }]
+    }, {
+        "cat": "Tasks",
+        "bubbles": [{
+            "key": "sync",
+            "icon": TodoService.SyncState.Offline ? "cloud_off" : TodoService.SyncState.Error ? "error" : "sync",
+            "action": function() {
+                TodoService.syncWithTodoist();
+            }
+        }]
     }]
 
     visible: width > 0 && !Mem.states.sidebar.behavior.pinned

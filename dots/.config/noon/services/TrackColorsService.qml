@@ -10,7 +10,6 @@ import qs.modules.common.functions
 Singleton {
     id: root
 
-    // ─────── Properties ───────
     property bool adaptiveTheme: Mem.options.mediaPlayer.adaptiveTheme
     property color artDominantColor: quantizerLoader.item?.colors[0] ?? Colors.m3.m3secondaryContainer
     property color gradColor: Qt.darker(ColorUtils.mix(colors.colSecondary, root.artDominantColor, 0.2), 1.4)
@@ -27,10 +26,6 @@ Singleton {
         }
     }
 
-    CoverArtDownloader {
-        id: art
-        url: BeatsService.artUrl
-    }
     readonly property QtObject colors: QtObject {
         property color colLayer0: root.adaptiveTheme ? ColorUtils.mix(Colors.colLayer0, Qt.darker(root.artDominantColor, 2), 0.1) : Colors.colLayer0
         property color colLayer1: root.adaptiveTheme ? ColorUtils.mix(Colors.colLayer1, Qt.darker(root.artDominantColor, 1.2), 0.35) : Colors.colLayer1

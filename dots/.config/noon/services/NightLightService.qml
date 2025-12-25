@@ -135,14 +135,14 @@ Singleton {
     function enable() {
         if (enabled)
             return;
-        Noon.exec(`hyprsunset -t ${temperature}`);
+        Noon.execDetached(`hyprsunset -t ${temperature}`);
         enabled = true;
     }
 
     function disable() {
         if (!enabled)
             return;
-        Noon.exec("pkill -9 hyprsunset");
+        Noon.execDetached("pkill -9 hyprsunset");
         enabled = false;
     }
 
@@ -163,6 +163,6 @@ Singleton {
     function applyTemperature() {
         if (!enabled)
             return;
-        Noon.exec(`pkill -9 hyprsunset; hyprsunset -t ${temperature}`);
+        Noon.execDetached(`pkill -9 hyprsunset; hyprsunset -t ${temperature}`);
     }
 }

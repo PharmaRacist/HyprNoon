@@ -46,7 +46,7 @@ Rectangle {
             } else if (event.button === Qt.ForwardButton || event.button === Qt.RightButton) {
                 activePlayer.next();
             } else if (event.button === Qt.LeftButton) {
-                Noon.callIpc("sidebar_launcher reveal Beats");
+                Noon.callIpc("sidebar reveal Beats");
             }
         }
     }

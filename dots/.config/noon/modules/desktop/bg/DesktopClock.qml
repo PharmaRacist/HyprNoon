@@ -168,7 +168,7 @@ GridLayout {
                     id: titleMouse
 
                     anchors.fill: parent
-                    onPressed: Noon.callIpc("sidebar_launcher Beats")
+                    onPressed: Noon.callIpc("sidebar Beats")
                     cursorShape: Qt.PointingHandCursor
                 }
 

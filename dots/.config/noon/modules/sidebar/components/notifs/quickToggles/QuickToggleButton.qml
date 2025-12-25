@@ -26,7 +26,7 @@ GroupButton {
 
     Layout.fillWidth: showButtonName
     Layout.fillHeight: false
-    baseWidth: !showButtonName ? 48 : (LauncherData.sizePresets.quarter / 2.5) - Padding.normal
+    baseWidth: !showButtonName ? 48 : (SidebarData.sizePresets.quarter / 2.5) - Padding.normal
     baseHeight: 48
     clip: true
     clickedWidth: implicitWidth

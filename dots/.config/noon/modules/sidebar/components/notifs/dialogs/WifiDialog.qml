@@ -93,7 +93,7 @@ BottomDialog {
                         Mem.options.apps.networkEthernet : 
                         Mem.options.apps.network;
                     Noon.exec(app);
-                    Noon.callIpc("sidebar_launcher hide");
+                    Noon.callIpc("sidebar hide");
                 }
             }
 

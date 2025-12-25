@@ -118,23 +118,23 @@ binds {
     Mod+Alt+X { spawn-sh "qs -c ~/.config/noon ipc call bar swap_position"; }
 
     // Sidebar Launcher Binds
-    Ctrl+Alt+X { spawn-sh "qs -c ~/.config/noon ipc call sidebar_launcher reveal Bars"; }
-    Mod+W { spawn-sh "qs -c ~/.config/noon ipc call sidebar_launcher reveal Walls"; }
-    Mod+Ctrl+N { spawn-sh "qs -c ~/.config/noon ipc call sidebar_launcher reveal Scratch"; }
-    Mod+Ctrl+G { spawn-sh "qs -c ~/.config/noon ipc call sidebar_launcher reveal Games"; }
-    // Mod+Tab { spawn-sh "qs -c ~/.config/noon ipc call sidebar_launcher reveal View"; }
-    Mod+M { spawn-sh "qs -c ~/.config/noon ipc call sidebar_launcher reveal Beats"; }
-    Mod+Ctrl+T { spawn-sh "qs -c ~/.config/noon ipc call sidebar_launcher reveal Tasks"; }
-    Mod+Alt+G { spawn-sh "qs -c ~/.config/noon ipc call sidebar_launcher reveal Gallery"; }
-    Mod+A { spawn-sh "qs -c ~/.config/noon ipc call sidebar_launcher reveal API"; }
-    Mod+Grave { spawn-sh "qs -c ~/.config/noon ipc call sidebar_launcher reveal Misc"; }
-    Mod+I { spawn-sh "qs -c ~/.config/noon ipc call sidebar_launcher reveal Tweaks"; }
-    Mod+Shift+X { spawn-sh "qs -c ~/.config/noon ipc call sidebar_launcher reveal Tweaks"; }
-    Mod+N { spawn-sh "qs -c ~/.config/noon ipc call sidebar_launcher reveal Notifs"; }
-    Mod+V { spawn-sh "qs -c ~/.config/noon ipc call sidebar_launcher reveal History"; }
-    Mod+Space { spawn-sh "qs -c ~/.config/noon ipc call sidebar_launcher reveal Apps"; }
-    Ctrl+Alt+Delete { spawn-sh "qs -c ~/.config/noon ipc call sidebar_launcher reveal Session"; }
-    Mod+Shift+Period { spawn-sh "qs -c ~/.config/noon ipc call sidebar_launcher reveal Emojis"; }
+    Ctrl+Alt+X { spawn-sh "qs -c ~/.config/noon ipc call sidebar reveal Bars"; }
+    Mod+W { spawn-sh "qs -c ~/.config/noon ipc call sidebar reveal Walls"; }
+    Mod+Ctrl+N { spawn-sh "qs -c ~/.config/noon ipc call sidebar reveal Scratch"; }
+    Mod+Ctrl+G { spawn-sh "qs -c ~/.config/noon ipc call sidebar reveal Games"; }
+    // Mod+Tab { spawn-sh "qs -c ~/.config/noon ipc call sidebar reveal View"; }
+    Mod+M { spawn-sh "qs -c ~/.config/noon ipc call sidebar reveal Beats"; }
+    Mod+Ctrl+T { spawn-sh "qs -c ~/.config/noon ipc call sidebar reveal Tasks"; }
+    Mod+Alt+G { spawn-sh "qs -c ~/.config/noon ipc call sidebar reveal Gallery"; }
+    Mod+A { spawn-sh "qs -c ~/.config/noon ipc call sidebar reveal API"; }
+    Mod+Grave { spawn-sh "qs -c ~/.config/noon ipc call sidebar reveal Misc"; }
+    Mod+I { spawn-sh "qs -c ~/.config/noon ipc call sidebar reveal Tweaks"; }
+    Mod+Shift+X { spawn-sh "qs -c ~/.config/noon ipc call sidebar reveal Tweaks"; }
+    Mod+N { spawn-sh "qs -c ~/.config/noon ipc call sidebar reveal Notifs"; }
+    Mod+V { spawn-sh "qs -c ~/.config/noon ipc call sidebar reveal History"; }
+    Mod+Space { spawn-sh "qs -c ~/.config/noon ipc call sidebar reveal Apps"; }
+    Ctrl+Alt+Delete { spawn-sh "qs -c ~/.config/noon ipc call sidebar reveal Session"; }
+    Mod+Shift+Period { spawn-sh "qs -c ~/.config/noon ipc call sidebar reveal Emojis"; }
     XF86MonBrightnessUp allow-when-locked=true { spawn-sh "qs -c ~/.config/noon ipc call brightness increment || brightnessctl set +5%"; }
     XF86MonBrightnessDown allow-when-locked=true { spawn-sh "qs -c ~/.config/noon ipc call brightness decrement || brightnessctl set 5%-"; }
     Mod+Ctrl+R { spawn-sh "killall qs -c ~/.config/noon ; qs -c ~/.config/noon &"; }

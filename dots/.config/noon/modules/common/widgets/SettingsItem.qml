@@ -504,7 +504,7 @@ Rectangle {
                 releaseAction: function() {
                     let cmd = Directories.scriptsDir + "/" + root.actionName;
                     Noon.execDetached(cmd);
-                    Noon.callIpc("sidebar_launcher hide");
+                    Noon.callIpc("sidebar hide");
                 }
 
                 MaterialSymbol {

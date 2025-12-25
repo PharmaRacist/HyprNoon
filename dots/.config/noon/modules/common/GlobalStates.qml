@@ -30,6 +30,7 @@ Singleton {
     property bool showTransparencyDialog: false
     property bool showTempDialog: false
     property bool showKdeConnectDialog: false
+    
     onSuperReleaseMightTriggerChanged: superHeld.stop()
     Timer {
         id: superHeldTimer
@@ -48,10 +49,10 @@ Singleton {
         }
     }
     function handle_init() {
-        ColorsService.reapplyTheme();
+        ColorsService.themeFileView.reload();
         NightLightService.applyTemperature();
         KeyringStorage.fetchKeyringData();
-        Noon.playSound("device_unlocked");
         ClipboardService.refresh()
+        Noon.playSound("device_unlocked");
     }
 }

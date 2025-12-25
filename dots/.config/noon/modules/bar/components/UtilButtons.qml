@@ -56,7 +56,7 @@ Rectangle {
 
         CircleUtilButton {
             Layout.alignment: Qt.AlignVCenter
-            onClicked: Noon.callIpc("sidebar_launcher reveal Walls")
+            onClicked: Noon.callIpc("sidebar reveal Walls")
 
             MaterialSymbol {
                 horizontalAlignment: Qt.AlignHCenter

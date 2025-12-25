@@ -60,7 +60,7 @@ Item {
                 acceptedButtons: Qt.RightButton
                 onClicked: (event) => {
                     if (event.button === Qt.RightButton)
-                        Noon.callIpc("sidebar_launcher reveal View");
+                        Noon.callIpc("sidebar reveal View");
 
                 }
             }

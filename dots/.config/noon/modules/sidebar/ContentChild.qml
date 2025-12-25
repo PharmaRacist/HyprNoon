@@ -17,7 +17,7 @@ Item {
     required property var parentRoot
     required property bool isAux
     property bool showContent
-    property bool effectiveSearchable: category ? LauncherData.isSearchable(category) : false
+    property bool effectiveSearchable: category ? SidebarData.isSearchable(category) : false
     property alias searchInput: searchInput
     property real contentYOffset: 0
     property real contentOpacity: 1
@@ -33,7 +33,7 @@ Item {
         if (!oldCat || !newCat || oldCat === newCat)
             return 1;
 
-        const categories = LauncherData.enabledCategories || [];
+        const categories = SidebarData.enabledCategories || [];
         const oldIndex = categories.indexOf(oldCat);
         const newIndex = categories.indexOf(newCat);
         if (oldIndex !== -1 && newIndex !== -1)
@@ -54,7 +54,7 @@ Item {
         if (category) {
             contentLoader.sourceComponent = null;
             Qt.callLater(() => {
-                const componentName = LauncherData.getComponent(category);
+                const componentName = SidebarData.getComponent(category);
                 contentLoader.sourceComponent = componentMap[componentName] || null;
             });
         }
@@ -94,7 +94,7 @@ Item {
                 if (!category)
                     return null;
 
-                const componentName = LauncherData.getComponent(category);
+                const componentName = SidebarData.getComponent(category);
                 return componentMap[componentName] || null;
             }
             onLoaded: {
@@ -154,11 +154,11 @@ Item {
                 }
 
                 function onAltLaunched(app) {
-                    LauncherData.altLaunch(app, isAux);
+                    SidebarData.altLaunch(app, isAux);
                 }
 
                 function onAppLaunched(app) {
-                    LauncherData.launch(category, app, parentRoot.switchToLayout, isAux);
+                    SidebarData.launch(category, app, parentRoot.switchToLayout, isAux);
                 }
 
                 target: contentLoader.item
@@ -179,7 +179,7 @@ Item {
             clip: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter
-            Layout.maximumWidth: LauncherData.sizePresets.quarter
+            Layout.maximumWidth: SidebarData.sizePresets.quarter
             Layout.preferredHeight: effectiveSearchable ? 45 : 0
             Layout.margins: effectiveSearchable ? Padding.normal : 0
             radius: Rounding.normal
@@ -202,7 +202,7 @@ Item {
                     anchors.centerIn: parent
                     anchors.horizontalCenterOffset: Padding.tiny
                     font.pixelSize: 20
-                    text: LauncherData.getIcon(category) || "apps"
+                    text: SidebarData.getIcon(category) || "apps"
                     color: Colors.colOnSecondary
                     opacity: 0.6
                 }
@@ -229,7 +229,7 @@ Item {
                     visible: effectiveSearchable
                     enabled: effectiveSearchable
                     text: searchText
-                    placeholderText: LauncherData.getPlaceholder(category) || "Search..."
+                    placeholderText: SidebarData.getPlaceholder(category) || "Search..."
                     background: null
                     selectionColor: Colors.colSecondaryContainer
                     selectedTextColor: Colors.m3.m3onSecondaryContainer
@@ -332,7 +332,7 @@ Item {
     }
 
     PagePlaceholder {
-        visible: dataModel.count === 0 && LauncherData.hasModel(category) && showContent
+        visible: dataModel.count === 0 && SidebarData.hasModel(category) && showContent
         opacity: visible ? contentOpacity : 0
         icon: "block"
         shape: MaterialShape.Clover4Leaf

@@ -106,7 +106,7 @@ Item {
                 hoverEnabled: true
                 onClicked: {
                     delayReveal.mode = "";
-                    Noon.callIpc("sidebar_launcher reveal Notifs");
+                    Noon.callIpc("sidebar reveal Notifs");
                     delayReveal.mode = "wifi";
                     delayReveal.restart();
                 }
@@ -136,7 +136,7 @@ Item {
                 hoverEnabled: true
                 onClicked: {
                     delayReveal.mode = "";
-                    Noon.callIpc("sidebar_launcher reveal Notifs");
+                    Noon.callIpc("sidebar reveal Notifs");
                     delayReveal.mode = "bluetooth";
                     delayReveal.restart();
                 }

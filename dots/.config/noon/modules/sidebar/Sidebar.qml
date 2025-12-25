@@ -19,7 +19,7 @@ StyledPanel {
     property bool pinned: Mem.states.sidebar.behavior.pinned
     property bool barMode: true
     property bool seekOnSuper: Mem.options.sidebar.behavior.superHeldReveal
-    property int sidebarWidth: LauncherData.currentSize(barMode, launcherContent.expanded, launcherContent.selectedCategory) + (launcherContent.auxVisible && !barMode ? LauncherData.sizePresets.contentQuarter : 0)
+    property int sidebarWidth: SidebarData.currentSize(barMode, sidebarContent.expanded, sidebarContent.selectedCategory) + (sidebarContent.auxVisible && !barMode ? SidebarData.sizePresets.contentQuarter : 0)
     property bool reveal: (hoverArea.containsMouse && barMode) || _isTransitioning || (seekOnSuper ? GlobalStates.superHeld : null) || PolkitService.flow !== null
     property bool _isTransitioning: false
     property bool noExlusiveZone: Mem.options.bar.appearance.mode === 0 && (Mem.options.bar.behavior.position === "top" || Mem.options.bar.behavior.position === "bottom")
@@ -28,7 +28,7 @@ StyledPanel {
     exclusiveZone: !barMode && pinned ? implicitWidth - visualContainer.rounding : noExlusiveZone ? -1 : 0
     aboveWindows: true
     kbFocus: GlobalStates.sidebarOpen && !barMode
-    WlrLayershell.layer: LauncherData?.isOverlay(launcherContent.selectedCategory) ? WlrLayer.Overlay : WlrLayer.Top
+    WlrLayershell.layer: SidebarData?.isOverlay(sidebarContent.selectedCategory) ? WlrLayer.Overlay : WlrLayer.Top
     
     anchors {
         left: !visualContainer.rightMode || !pinned
@@ -37,7 +37,7 @@ StyledPanel {
         bottom: true
     }
     
-    function hideLauncher() {
+    function hideSidebar() {
         if (_isTransitioning) return;
         
         _isTransitioning = true;
@@ -45,13 +45,13 @@ StyledPanel {
         finalizeHide();
     }
 
-    function showLauncher() {
+    function showSidebar() {
         if (_isTransitioning) return;
         
         barMode = false;
         GlobalStates.sidebarOpen = true;
         Mem.states.sidebar.behavior.expanded = true;
-        launcherContent.forceActiveFocus();
+        sidebarContent.forceActiveFocus();
     }
 
     function finalizeHide() {
@@ -63,7 +63,7 @@ StyledPanel {
             reveal = Qt.binding(() => (hoverArea.containsMouse && barMode) || _isTransitioning || (seekOnSuper ? GlobalStates.superHeld : null) || PolkitService.flow !== null);
         }
         
-        if (launcherContent.clearSearch) launcherContent.clearSearch();
+        if (sidebarContent.clearSearch) sidebarContent.clearSearch();
     }
     
     function togglePin() {
@@ -77,7 +77,7 @@ StyledPanel {
     }
     
     Binding {
-        target: LauncherData
+        target: SidebarData
         property: "sidebarWidth"
         value: sidebarWidth
     }
@@ -88,34 +88,6 @@ StyledPanel {
         value: !barMode
     }
 
-    RoundCorner {
-        id: c1
-        visible: visualContainer.mode === 2
-        corner: visualContainer.rightMode ? cornerEnum.bottomRight : cornerEnum.bottomLeft
-        color: visualContainer.color
-        size: visualContainer.rounding
-        
-        anchors {
-            left: visualContainer.rightMode ? undefined : visualContainer.right
-            right: visualContainer.rightMode ? visualContainer.left : undefined
-            bottom: visualContainer.bottom
-            bottomMargin: Mem.options.bar.behavior.position === "bottom" ? 0 : Sizes.frameThickness
-        }
-    }
-
-    RoundCorner {
-        visible: c1.visible
-        corner: visualContainer.rightMode ? cornerEnum.topRight : cornerEnum.topLeft
-        color: visualContainer.color
-        size: c1.size
-        
-        anchors {
-            top: visualContainer.top
-            left: visualContainer.rightMode ? undefined : visualContainer.right
-            right: visualContainer.rightMode ? visualContainer.left : undefined
-            topMargin: Mem.options.bar.behavior.position === "top" ? 0 : Sizes.frameThickness
-        }
-    }
 
     Item {
         id: interactiveContainer
@@ -138,7 +110,7 @@ StyledPanel {
             
             enableShadows: true
             width: sidebarWidth
-            color: launcherContent.contentColor
+            color: sidebarContent.contentColor
             
             topRightRadius: !rightMode && mode === 1 ? rounding : 0
             bottomRightRadius: !rightMode && mode === 1 ? rounding : 0
@@ -167,7 +139,7 @@ StyledPanel {
             }
 
             Content {
-                id: launcherContent
+                id: sidebarContent
                 rightMode: visualContainer.rightMode
                 panelWindow: root
                 showContent: !barMode
@@ -215,7 +187,7 @@ StyledPanel {
             id: bubble
             show: !barMode
             rightMode: visualContainer.rightMode
-            selectedCategory: launcherContent.selectedCategory
+            selectedCategory: sidebarContent.selectedCategory
             
             anchors {
                 right: !visualContainer.rightMode ? undefined : visualContainer.left
@@ -224,22 +196,51 @@ StyledPanel {
                 margins: Padding.verylarge
             }
         }
+    RoundCorner {
+        id: c1
+        visible: visualContainer.mode === 2
+        corner: visualContainer.rightMode ? cornerEnum.bottomRight : cornerEnum.bottomLeft
+        color: visualContainer.color
+        size: visualContainer.rounding
+        
+        anchors {
+            left: visualContainer.rightMode ? undefined : visualContainer.right
+            right: visualContainer.rightMode ? visualContainer.left : undefined
+            bottom: visualContainer.bottom
+            bottomMargin: Mem.options.bar.behavior.position === "bottom" ? 0 : Sizes.frameThickness
+        }
+    }
+
+    RoundCorner {
+        visible: c1.visible
+        corner: visualContainer.rightMode ? cornerEnum.topRight : cornerEnum.topLeft
+        color: visualContainer.color
+        size: c1.size
+        
+        anchors {
+            top: visualContainer.top
+            left: visualContainer.rightMode ? undefined : visualContainer.right
+            right: visualContainer.rightMode ? visualContainer.left : undefined
+            topMargin: Mem.options.bar.behavior.position === "top" ? 0 : Sizes.frameThickness
+        }
+    }
+
     }
 
     HyprlandFocusGrab {
         windows: [root]
         active: GlobalStates.sidebarOpen && !barMode
-        onCleared: if (!pinned) hideLauncher()
+        onCleared: if (!pinned) hideSidebar()
     }
     
     mask: Region { item: interactiveContainer }
 
     Connections {
-        target: launcherContent
+        target: sidebarContent
         
         function onHideBarRequested() {
             GlobalStates.sidebarOpen = false;
-            hideLauncher();
+            hideSidebar();
         }
 
         function onAppLaunched() {
@@ -247,28 +248,28 @@ StyledPanel {
                 reveal = false;
                 reveal = Qt.binding(() => hoverArea.containsMouse && barMode && GlobalStates.sidebarOpen);
             } else {
-                hideLauncher();
+                hideSidebar();
             }
         }
 
         function onDismiss() {
-            hideLauncher();
+            hideSidebar();
         }
 
         function onContentToggleRequested() {
-            barMode ? showLauncher() : hideLauncher();
+            barMode ? showSidebar() : hideSidebar();
         }
     }
     
     IpcHandler {
-        target: "sidebar_launcher"
+        target: "sidebar"
         
         function reveal_aux(cat: string) {
-            launcherContent.auxReveal(cat);
+            sidebarContent.auxReveal(cat);
         }
         
         function reveal(cat: string) {
-            launcherContent.requestCategoryChange(cat);
+            sidebarContent.requestCategoryChange(cat);
         }
         
         function pin() {
@@ -276,7 +277,7 @@ StyledPanel {
         }
         
         function hide() {
-            hideLauncher();
+            hideSidebar();
         }
     }
 }

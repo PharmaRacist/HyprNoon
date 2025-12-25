@@ -49,8 +49,7 @@ Singleton {
           customSize: sizePresets.half, enabled: Mem.options.sidebar.content.notes },
         { id: "View", name: "View", icon: "ad", component: "OverviewWidget", expandable: true, preExpand: true, 
           customSize: sizePresets.overview, enabled: Mem.options.sidebar.content.overview },
-        { id: "Beats", name: "Beats", icon: "music_note", component: "Beats", expandable: true, 
-          customSize: sizePresets.half, preExpand: false, enabled: Mem.options.sidebar.content.beats },
+        { id: "Beats", name: "Beats", icon: "music_note", component: "Beats", expandable: false, preExpand: false, enabled: Mem.options.sidebar.content.beats },
         { id: "Bars", name: "Bars", icon: "format_paint", placeholder: qsTr("Search bar layouts..."), 
           component: "AppListView", searchable: true, hasModel: true, useListView: true, 
           customSize: sizePresets.quarter, enabled: Mem.options.sidebar.content.barSwitcher },
@@ -189,7 +188,7 @@ Singleton {
             for (let idx = 0; idx < layouts.length; idx++) {
                 const name = layouts[idx].replace('Layout', '');
                 const isActive = isActiveCheck && currentLayout === idx;
-                const icon = isActive ? 'radio_button_checked' : 'radio_button_unchecked';
+                const icon = isActive ? 'check' : 'radio_button_unchecked';
                 allLayouts.push({
                     name: `${name} (${isVert ? 'Vertical' : 'Horizontal'})`,
                     displayName: name,
@@ -330,7 +329,7 @@ Singleton {
     function launch(catId, app, layoutSwitcher, isAux = false) {
         if (!app) return;
         
-        const hideIfNotAux = () => { if (!isAux) Noon.callIpc("sidebar_launcher hide"); };
+        const hideIfNotAux = () => { if (!isAux) Noon.callIpc("sidebar hide"); };
         
         switch (catId) {
         case "Apps":
@@ -366,13 +365,13 @@ Singleton {
         const cat = _categoryMap[selectedCategory];
         if (cat?.altLaunch) {
             cat.altLaunch(app, switchToLayout);
-            if (!isAux) Noon.callIpc("sidebar_launcher hide");
+            if (!isAux) Noon.callIpc("sidebar hide");
         }
     }
 
     function launchApp(app, isAux = false) {
         if (!app) return;
-        const hideIfNotAux = () => { if (!isAux) Noon.callIpc("sidebar_launcher hide"); };
+        const hideIfNotAux = () => { if (!isAux) Noon.callIpc("sidebar hide"); };
         
         if (app.execute) { app.execute(); hideIfNotAux(); return; }
         if (app.onClick) { app.onClick(); hideIfNotAux(); return; }

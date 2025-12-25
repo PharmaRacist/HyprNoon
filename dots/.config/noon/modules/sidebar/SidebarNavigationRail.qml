@@ -10,7 +10,7 @@ StyledRect {
 
     required property string selectedCategory
 
-    implicitWidth: LauncherData.sizePresets.bar - Padding.large
+    implicitWidth: SidebarData.sizePresets.bar - Padding.large
     color: "transparent"
     Layout.fillHeight: true
 
@@ -25,7 +25,7 @@ StyledRect {
         spacing: sleek ? Padding.small : Padding.large
 
         Repeater {
-            model: LauncherData.enabledCategories
+            model: SidebarData.enabledCategories
 
             NavigationRailButton {
                 required property int index
@@ -36,7 +36,7 @@ StyledRect {
                 baseSize: navContainer.implicitWidth
                 implicitWidth: navContainer.implicitWidth
                 toggled: navContainer.selectedCategory === modelData && showContent
-                buttonIcon: LauncherData.getIcon(modelData)
+                buttonIcon: SidebarData.getIcon(modelData)
                 buttonText: modelData
                 highlightColor: navContainer.selectedCategory === "Beats" ? TrackColorsService.colors.colSecondaryContainer : Colors.colSecondaryContainer
                 highlightColorHover: navContainer.selectedCategory === "Beats" ? TrackColorsService.colors.colSecondaryContainerHover : Colors.colSecondaryContainerHover

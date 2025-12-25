@@ -30,7 +30,7 @@ FocusScope {
     property string selectedCategory: "Apps"
     property bool expanded: false
     property bool _manualExpandedToggle: false
-    property bool effectiveSearchable: LauncherData.isSearchable(selectedCategory)
+    property bool effectiveSearchable: SidebarData.isSearchable(selectedCategory)
     property bool pinned: false
     property color contentColor: selectedCategory === "Beats" && Mem.options.mediaPlayer.adaptiveTheme ? TrackColorsService.colors.colLayer0 : Colors.colLayer0
     required property var panelWindow
@@ -85,7 +85,7 @@ FocusScope {
 
             return ;
         }
-        if (!LauncherData.hasModel(category)) {
+        if (!SidebarData.hasModel(category)) {
             model.clear();
             return ;
         }
@@ -97,7 +97,7 @@ FocusScope {
             "currentHorizontalLayout": Mem.options.bar.currentLayout,
             "currentVerticalLayout": Mem.options.bar.currentVerticalLayout
         };
-        const results = LauncherData.generateData(category, query.trim(), params);
+        const results = SidebarData.generateData(category, query.trim(), params);
         model.clear();
         for (let i = 0; i < results.length; ++i) {
             model.append(results[i]);
@@ -105,7 +105,7 @@ FocusScope {
     }
 
     function auxReveal(category) {
-        if (!category || (category !== "Auth" && !LauncherData.enabledCategories.includes(category))) {
+        if (!category || (category !== "Auth" && !SidebarData.enabledCategories.includes(category))) {
             console.warn("Category not enabled:", category);
             return ;
         }
@@ -122,7 +122,7 @@ FocusScope {
         auxCategory = category;
         auxSearchText = "";
         auxVisible = true;
-        if (LauncherData.hasModel(category)) {
+        if (SidebarData.hasModel(category)) {
             auxModel.clear();
             auxDelayedRefresh.restart();
         }
@@ -136,7 +136,7 @@ FocusScope {
     }
 
     function requestCategoryChange(newCategory, initialQuery = "") {
-        if (newCategory !== "Auth" && !LauncherData.enabledCategories.includes(newCategory)) {
+        if (newCategory !== "Auth" && !SidebarData.enabledCategories.includes(newCategory)) {
             console.warn("Category not enabled:", newCategory);
             return ;
         }
@@ -182,9 +182,9 @@ FocusScope {
         if (key === Qt.Key_Tab || key === Qt.Key_Backtab) {
             let targetCategory;
             if (mods === Qt.ShiftModifier || mods === (Qt.ControlModifier | Qt.ShiftModifier))
-                targetCategory = LauncherData.getPreviousEnabledCategory(selectedCategory);
+                targetCategory = SidebarData.getPreviousEnabledCategory(selectedCategory);
             else if (mods === 0)
-                targetCategory = LauncherData.getNextEnabledCategory(selectedCategory);
+                targetCategory = SidebarData.getNextEnabledCategory(selectedCategory);
             if (targetCategory) {
                 requestCategoryChange(targetCategory);
                 event.accepted = true;
@@ -192,7 +192,7 @@ FocusScope {
             }
         }
         if (mods === Qt.ControlModifier) {
-            if (key === Qt.Key_O && LauncherData.isExpandable(selectedCategory)) {
+            if (key === Qt.Key_O && SidebarData.isExpandable(selectedCategory)) {
                 // Don't allow manual collapse when aux is visible
                 if (auxVisible && expanded) {
                     event.accepted = true;
@@ -227,7 +227,7 @@ FocusScope {
             if (key === Qt.Key_Return || key === Qt.Key_Enter) {
                 const firstApp = mainModel.get(0);
                 if (firstApp && effectiveSearchable) {
-                    LauncherData.launchApp(firstApp);
+                    SidebarData.launchApp(firstApp);
                     event.accepted = true;
                     return true;
                 }
@@ -273,14 +273,14 @@ FocusScope {
     onSelectedCategoryChanged: {
         mainModel.clear();
         resetSearch("");
-        if (LauncherData.hasModel(selectedCategory))
+        if (SidebarData.hasModel(selectedCategory))
             delayedRefresh.restart();
 
     }
     onAuxCategoryChanged: {
         auxModel.clear();
         auxSearchText = "";
-        if (auxCategory && LauncherData.hasModel(auxCategory))
+        if (auxCategory && SidebarData.hasModel(auxCategory))
             auxDelayedRefresh.restart();
 
     }
@@ -328,7 +328,7 @@ FocusScope {
                 return true;
 
             // Otherwise use category's pre-expand setting
-            return LauncherData.usePreExpand(selectedCategory) && LauncherData.isExpandable(selectedCategory);
+            return SidebarData.usePreExpand(selectedCategory) && SidebarData.isExpandable(selectedCategory);
         }
         when: !_manualExpandedToggle
     }
@@ -339,7 +339,7 @@ FocusScope {
         interval: Mem.options.hacks.arbitraryRaceConditionDelay ?? 100
         repeat: false
         onTriggered: {
-            if (LauncherData.hasModel(selectedCategory))
+            if (SidebarData.hasModel(selectedCategory))
                 updateAppList(false);
 
         }
@@ -351,7 +351,7 @@ FocusScope {
         interval: Mem.options.hacks.arbitraryRaceConditionDelay ?? 100
         repeat: false
         onTriggered: {
-            if (auxCategory && LauncherData.hasModel(auxCategory))
+            if (auxCategory && SidebarData.hasModel(auxCategory))
                 updateAppList(true);
 
         }
@@ -359,7 +359,7 @@ FocusScope {
 
     Connections {
         function onFlowChanged() {
-            const authRegistry = LauncherData.registry["Auth"];
+            const authRegistry = SidebarData.registry["Auth"];
             if (!authRegistry)
                 return ;
 
@@ -414,14 +414,14 @@ FocusScope {
                     Layout.fillWidth: index === 0
                     Layout.preferredWidth: {
                         // if (index === 0) {
-                        //     const baseWidth = LauncherData.sizePresets.contentThreeQuarter || 600;
-                        //     const expandWidth = root.expanded ? LauncherData.sizePresets.contentQuarter : 0;
+                        //     const baseWidth = SidebarData.sizePresets.contentThreeQuarter || 600;
+                        //     const expandWidth = root.expanded ? SidebarData.sizePresets.contentQuarter : 0;
                         //     return baseWidth + expandWidth;
                         // }
-                        return LauncherData.sizePresets.contentQuarter;
+                        return SidebarData.sizePresets.contentQuarter;
                     }
                     Layout.margins: visible ? Padding.normal : 0
-                    Layout.maximumWidth: isAux ? LauncherData.sizePresets.contentQuarter : Number.POSITIVE_INFINITY
+                    Layout.maximumWidth: isAux ? SidebarData.sizePresets.contentQuarter : Number.POSITIVE_INFINITY
                     visible: index === 0 ? true : auxVisible
                     category: index === 0 ? selectedCategory : auxCategory
                     searchText: index === 0 ? root.searchText : auxSearchText

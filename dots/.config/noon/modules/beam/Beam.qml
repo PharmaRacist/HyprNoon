@@ -290,7 +290,7 @@ Scope {
                 if (GlobalStates.sidebarOpen)
                     return;
                 Mem.states.sidebar.apis.selectedTab = 0;
-                Noon.callIpc("sidebar_launcher reveal API");
+                Noon.callIpc("sidebar reveal API");
             }
 
             function handleImage(autoSend = false) {
@@ -376,7 +376,7 @@ Scope {
                         TimerService.startTimer(id);
                         if (root.revealLauncherOnAction) {
                             Mem.states.sidebar.misc.selectedTabIndex = 2;
-                            Noon.callIpc("sidebar_launcher reveal Misc");
+                            Noon.callIpc("sidebar reveal Misc");
                         }
                     }
                     break;
@@ -427,7 +427,7 @@ Scope {
                     AlarmService.addTimer(cleanQuery, "Beam Timer");
                     if (root.revealLauncherOnAction) {
                         Mem.states.sidebar.misc.selectedTabIndex = 3;
-                        Noon.callIpc("sidebar_launcher reveal Misc");
+                        Noon.callIpc("sidebar reveal Misc");
                     }
                     break;
                 }
