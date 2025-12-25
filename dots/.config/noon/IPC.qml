@@ -34,7 +34,7 @@ Scope {
             ClipboardService.wipe();
         }
         function update_clipboard(): void {
-            ClipboardService.refresh();
+            ClipboardService.reload();
         }
         function refresh_appearance() {
             WallpaperService.refreshTheme();

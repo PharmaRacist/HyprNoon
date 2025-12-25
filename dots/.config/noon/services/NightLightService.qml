@@ -159,10 +159,12 @@ Singleton {
         temperature = value;
         debounceTimer.restart();
     }
-
+    function reload(){
+        applyTemperature()
+    }
     function applyTemperature() {
         if (!enabled)
             return;
-        Noon.execDetached(`pkill -9 hyprsunset; hyprsunset -t ${temperature}`);
+        Noon.execDetached(`hyprsunset -t ${temperature}`);
     }
 }

@@ -1026,7 +1026,7 @@ Singleton {
             const model = models[modelId];
             // Fetch API keys if needed
             if (model?.requires_key)
-                KeyringStorage.fetchKeyringData();
+                KeyringStorage.reload();
             // See if policy prevents online models
             if (Mem.options.policies.ai === 2 && !model.endpoint.includes("localhost")) {
                 root.addMessage(qsTr("Online models disallowed\n\nControlled by `policies.ai` config option"), root.interfaceRole);

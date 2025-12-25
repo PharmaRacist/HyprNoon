@@ -1,15 +1,12 @@
-pragma Singleton
-pragma ComponentBehavior: Bound
-import qs.modules.common.widgets
-import qs.modules.common
-import qs.services
 import QtQuick
 import Quickshell
-import Quickshell.Hyprland
-import Quickshell.Io
+import qs.modules.common.widgets
+import qs.services
+pragma Singleton
 
 Singleton {
     id: root
+
     property bool locked: false
     property bool playlistOpen: false
     property bool oskOpen: false
@@ -19,9 +16,8 @@ Singleton {
     property bool sidebarOpen: true
     property bool sidebarHovered: false
     property bool exposeView: false
-    property bool showOsdValues:false
-    property bool showBeam:false
-    property string beamState:""
+    property bool showOsdValues: false
+    property bool showBeam: false
     property bool showAppearanceDialog: false
     property bool showCaffaineDialog: false
     property bool showBluetoothDialog: false
@@ -30,30 +26,32 @@ Singleton {
     property bool showTransparencyDialog: false
     property bool showTempDialog: false
     property bool showKdeConnectDialog: false
-    
+
+    function handle_init() {
+        ColorsService.reload();
+        ClipboardService.reload();
+        AmbientSoundsService.reload();
+        KeyringStorage.reload();
+        NightLightService.reload();
+        Noon.playSound("device_unlocked");
+    }
+
     onSuperReleaseMightTriggerChanged: superHeld.stop()
+
     Timer {
         id: superHeldTimer
+
         interval: Mem.options.hacks.superHeldInterval
-        repeat: false
         onTriggered: superHeld = true
     }
 
     CustomShortcut {
         name: "superHeld"
         onPressed: superHeldTimer.start()
-
         onReleased: {
             superHeldTimer.stop();
             superHeld = false;
         }
     }
-    function handle_init() {
-        ColorsService.themeFileView.reload();
-        NightLightService.applyTemperature();
-        KeyringStorage.fetchKeyringData();
-        ClipboardService.refresh()
-        Noon.playSound("device_unlocked");
-        AmbientSoundsService.init()
-    }
+
 }

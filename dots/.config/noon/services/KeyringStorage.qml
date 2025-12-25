@@ -60,9 +60,7 @@ Singleton {
         saveKeyringData();
     }
 
-    function fetchKeyringData() {
-        // console.log("[KeyringStorage] Fetching keyring data...");
-        // console.log("[KeyringStorage] getData command:'" + getData.command.join("' '") + "'");
+    function reload() {
         getData.running = true;
     }
 

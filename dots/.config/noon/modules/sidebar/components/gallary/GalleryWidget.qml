@@ -36,7 +36,7 @@ Item {
         if (KeyringStorage.loaded && storedPassword.length > 0)
         // Password already set, ready to use
         {} else {
-            KeyringStorage.fetchKeyringData();  // Load if not already
+            KeyringStorage.reload();  // Load if not already
         }
     }
 

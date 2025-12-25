@@ -161,7 +161,7 @@ Singleton {
 
     // === Private Functions ===
 
-    function init() {
+    function reload() {
         loadState()
         if (availableSounds.length === 0) {
             audioFolderModel.folder = Qt.resolvedUrl(root.audioDir)

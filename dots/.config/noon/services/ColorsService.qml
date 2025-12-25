@@ -36,6 +36,10 @@ Singleton {
         colors.darkmode = (colors.m3background.hslLightness < 0.5);
     }
 
+    function relaod() {
+        themeFileView.reload();
+    }
+
     Timer {
         id: delayedFileRead
 

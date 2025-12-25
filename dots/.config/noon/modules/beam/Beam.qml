@@ -217,7 +217,7 @@ Scope {
             Connections {
                 target: ScreenShotService
                 function onScreenshotCompleted() {
-                    ClipboardService.refresh();
+                    ClipboardService.reload();
                     screenshotProcessTimer.start();
                 }
             }

@@ -40,7 +40,7 @@ Singleton {
         root.imageDecoded("");
     }
 
-    function refresh() {
+    function reload() {
         if (listProc.running) return;
         listProc.buffer = [];
         listProc.running = true;
