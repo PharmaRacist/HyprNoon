@@ -272,7 +272,7 @@ Singleton {
 
         const reordered = allPaths.slice(startIndex).concat(allPaths.slice(0, startIndex));
         const joined = reordered.map(p => `'${p.replace(/'/g, `'\\''`)}'`).join(" ");
-        Noon.exec(`vlc --intf dummy --no-video '${joined}'`);
+        Noon.execDetached(`vlc --intf dummy --no-video '${joined}'`);
     }
 
     function playFirstFilteredTrack() {

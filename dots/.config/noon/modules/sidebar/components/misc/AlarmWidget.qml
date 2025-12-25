@@ -62,30 +62,14 @@ FocusScope {
 
     }
 
-    RippleButtonWithIcon {
-        id: addButton
-
-        materialIcon: "add"
-        implicitSize: 55
-        buttonRadius: Rounding.full
-        releaseAction: () => {
-            console.log("Add alarm clicked");
-            bottomDialog.show = true;
-        }
-
-        anchors {
-            bottom: parent.bottom
-            right: parent.right
-            margins: 30
-        }
-
-    }
-
     BottomDialog {
         id: bottomDialog
 
         show: revealAddDialog
-        collapsedHeight: expandedHeight
+        collapsedHeight: 380
+        enableStagedReveal: false
+        bottomAreaReveal: true
+        hoverHeight: 200
         onShowChanged: root.revealAddDialog = bottomDialog.show
         expand: true
 

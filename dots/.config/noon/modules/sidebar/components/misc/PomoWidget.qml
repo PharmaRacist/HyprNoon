@@ -43,25 +43,19 @@ Item {
             }
         }
     }
-    RippleButtonWithIcon {
-        anchors {
-            bottom: parent.bottom
-            right: parent.right
-            margins: 30
-        }
-        materialIcon: "add"
-        implicitSize: 55
-        releaseAction: () => addDialog.show = true
-    }
+
     BottomDialog {
         id: addDialog
         expandedHeight: 640
         collapsedHeight: 360
+        enableStagedReveal:true
+        bottomAreaReveal:true
+        hoverHeight: 200
+
         show: root.revealAddDialog
         expand: false
         function addPomo() {
             const duration = TimerService.parseTimeString(`${timePicker.hour}h  ${timePicker.minute}m`);
-            console.log(duration);
             TimerService.addTimer(nameField.text, duration);
             addDialog.show = false;
         }

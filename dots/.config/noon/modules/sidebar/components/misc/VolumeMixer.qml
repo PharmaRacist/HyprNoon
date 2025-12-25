@@ -89,7 +89,10 @@ Item {
     BottomDialog {
         id: bottomDialog
         show: root.showDeviceSelector
-        expandedHeight: 180 + dialogFlickable.contentHeight
+        collapsedHeight: 180 + dialogFlickable.contentHeight
+        enableStagedReveal:false
+        bottomAreaReveal:true
+        hoverHeight: 300
         contentItem: Item { // The dialog
             id: dialog
             anchors.fill: parent
