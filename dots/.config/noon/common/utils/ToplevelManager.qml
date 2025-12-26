@@ -1,4 +1,0 @@
-import Quickshell.Wayland
-
-ToplevelManager {
-}
