@@ -12,8 +12,8 @@
 
 ### Install
 ```bash
-  git clone https://github.com/pharmaracist/hyprnoon ~/hyprnoon
-  cd ~/hyprnoon
+  git clone https://github.com/PharmaRacist/Noon ~/.cache/Noon
+  cd ~/.cache/Noon
   ./setup.sh install
 ```
 
