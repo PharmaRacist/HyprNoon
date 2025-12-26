@@ -344,12 +344,6 @@ Inline w/ backslash and round brackets \\(e^{i\\pi} + 1 = 0\\)
                 }
             }
 
-            ScrollEdgeFade {
-                z: 1
-                target: messageListView
-                vertical: true
-            }
-
             StyledListView { // Message list
                 id: messageListView
                 z: 0

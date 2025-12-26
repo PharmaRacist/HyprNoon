@@ -24,7 +24,7 @@ ShellRoot {
     Component.onCompleted:GlobalStates.handle_init()
 
     WidgetLoader {
-        enabled: Mem.states.desktop.bg.currentBg.length > 1 && !ToplevelManager?.activeToplevel?.fullscreen && !Mem.states.desktop.bg.isLive
+        enabled: Mem.options.desktop.bg.useQs && Mem.states.desktop.bg.currentBg.length > 1 && !ToplevelManager?.activeToplevel?.fullscreen && !Mem.states.desktop.bg.isLive
         Bg {}
     }
 

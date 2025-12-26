@@ -12,6 +12,8 @@ import qs.modules.sidebar
 
 RippleButton {
     id: root
+    property alias shapePadding:m3shape.padding
+    property alias shape:m3shape.shape
     property color colActiveColor:Colors.colPrimaryContainer
     property color colActiveItemColor:Colors.colPrimary
     property alias title: title.text
@@ -23,31 +25,25 @@ RippleButton {
     implicitHeight: 64
     colBackground: Colors.colLayer2
     buttonRadius: Rounding.large
-
-    StyledRect {
-        id: sideRect
-        color: colActiveColor
-        leftRadius: Rounding.large
-        implicitWidth: 60
+    MaterialShapeWrappedMaterialSymbol {
+        id:m3shape
         anchors {
             left: parent.left
-            top: parent.top
-            bottom: parent.bottom
-        }
-        MaterialSymbol {
-            text: root.materialIcon
-            font.pixelSize: 30
-            fill: 1
-            anchors.horizontalCenterOffset: Padding.tiny
-            color: colActiveItemColor
-            anchors.centerIn: parent
-        }
-    }
+            leftMargin:Padding.huge
+            verticalCenter:parent.verticalCenter
 
+        }
+        shape:MaterialShape.Cookie6Sided
+        padding:Padding.large
+        iconSize:parent.height / 2.5
+        colSymbol:colActiveItemColor
+        text:root.materialIcon
+    }
+    
     // Wrapper Item to handle anchors
     Item {
         anchors {
-            left: sideRect.right
+            left: m3shape.right
             leftMargin: Padding.large
             right: parent.right
             top: parent.top

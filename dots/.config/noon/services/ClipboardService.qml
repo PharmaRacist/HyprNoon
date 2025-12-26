@@ -120,8 +120,8 @@ Singleton {
     Timer {
         id: refreshTimer
         interval: 300
-        onTriggered: root.refresh()
+        onTriggered: root.reload()
     }
 
-    Component.onCompleted: refresh()
+    Component.onCompleted: reload()
 }

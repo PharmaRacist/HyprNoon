@@ -28,6 +28,7 @@ Scope {
             property bool reveal: GlobalStates.showBeam || (hoverReveal && beamMouseArea.containsMouse) || (Mem.options.beam.behavior.revealOnEmpty && !ToplevelManager.activeToplevel.activated)
             property bool addSeparatorForNotes: true
             property int expandedLitterThreshhold: 10
+            property int mainRounding: Rounding.huge
             property int elevationValue: Mem.options.bar.behavior.position === "bottom" ? BarData.currentBarSize + Sizes.elevationValue : Sizes.elevationMargin
             property bool clearAiChatBeforeSearch: Mem.options.beam.behavior.clearAiChatBeforeSearch ?? false
             property string currentSearchSubstate: "search"
@@ -530,8 +531,8 @@ Scope {
                                 PropertyChanges {
                                     target: bg
                                     anchors.bottomMargin: elevationValue
-                                    bottomRadius: Rounding.large
-                                    topRadius: Rounding.large
+                                    bottomRadius: Rounding.huge
+                                    topRadius: Rounding.huge
                                     enableBorders: true
                                 }
                                 PropertyChanges {
@@ -546,7 +547,7 @@ Scope {
                                     target: bg
                                     anchors.bottomMargin: -1
                                     bottomRadius: 0
-                                    topRadius: Rounding.large
+                                    topRadius: Rounding.huge
                                     enableBorders: true
                                 }
                                 PropertyChanges {
@@ -719,7 +720,7 @@ Scope {
                         RowLayout {
                             id: buttonsRow
                             z: 10
-                            spacing: Padding.small
+                            spacing: Padding.verysmall
                             anchors {
                                 top: bg.top
                                 bottom: bg.bottom
@@ -730,6 +731,7 @@ Scope {
                             RippleButtonWithIcon {
                                 id: sendButton
                                 releaseAction: () => root.sendMessage()
+                                buttonRadius:root.mainRounding
                                 visible: opacity > 0
                                 opacity: inputField.text.length > 0 ? 1 : 0
                                 materialIcon: "send"
@@ -741,6 +743,7 @@ Scope {
 
                             RippleButtonWithIcon {
                                 id: osrButton
+                                buttonRadius:root.mainRounding
                                 releaseAction: () => root.handleImage(false)
                                 materialIcon: "screenshot_region"
                                 implicitSize: bg.height * 0.75
@@ -755,7 +758,7 @@ Scope {
                     RoundCorner {
                         id:c1
                         corner:cornerEnum.bottomLeft
-                        size:Rounding.verylarge
+                        size:root.mainRounding
                         anchors {
                             bottom:bg.bottom
                             left:bg.right
@@ -765,7 +768,7 @@ Scope {
                         id:c2
                         visible:c1.visible
                         corner:cornerEnum.bottomRight
-                        size:Rounding.verylarge
+                        size:root.mainRounding
                         anchors {
                             bottom:bg.bottom
                             right:bg.left

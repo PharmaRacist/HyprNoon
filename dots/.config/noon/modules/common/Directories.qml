@@ -28,8 +28,6 @@ Singleton {
     readonly property string hyprlandConfPath: FileUtils.trimFileProtocol(`${root.config}/noon/hyprland/`)
     readonly property string venv: state + "/.venv"
     readonly property string sounds: FileUtils.trimFileProtocol(`${assets}/sounds/`)
-    readonly property string pfp: FileUtils.trimFileProtocol(assets + '/chad.png')
-    readonly property string chad: FileUtils.trimFileProtocol(assets + '/pfp.png')
     readonly property string aiChats: FileUtils.trimFileProtocol(`${state}/user/generated/ai`)
     readonly property string generatedMaterialThemePath: FileUtils.trimFileProtocol(`${state}/user/generated/colors.json`)
     readonly property string depthCache: FileUtils.trimFileProtocol(`${cache}/user/generated/depth/`)

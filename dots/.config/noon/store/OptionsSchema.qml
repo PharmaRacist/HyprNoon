@@ -164,9 +164,6 @@ JsonAdapter {
         ambientSounds: JsonObject {}
     }
 
-    property JsonObject resources: JsonObject {
-        property int updateInterval: 10000
-    }
 
     property JsonObject battery: JsonObject {
         property bool automaticSuspend: true
@@ -310,7 +307,6 @@ JsonAdapter {
 
         lock: JsonObject {
             property bool enabled: true
-            property string pfp: ".face.png"
         }
 
         greetd: JsonObject {
@@ -377,12 +373,12 @@ JsonAdapter {
         }
 
         workspaces: JsonObject {
-            property int shownWs: 3
+            property int shownWs: 4
             property bool showAppIcons: true
             property string displayMode: "normal"
             property string customFallback: "●"
             property list<string> avilableModes: ["normal", "japanese", "roman", "custom"]
-            property list<string> customMapping: ["○", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"]
+            property list<string> customMapping: []
         }
     }
 

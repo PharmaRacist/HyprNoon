@@ -15,7 +15,7 @@ Item {
     anchors.fill: parent
     z: -1
     
-    property int coverArtSize: 300
+    property int coverArtSize: 320
     
     readonly property real scale: (parent.height + parent.width) / 1000
     readonly property var displayLines: syncedLines.length > 0 ? syncedLines : plainLines
@@ -158,8 +158,9 @@ Item {
         active: !loading && !displayLines.length
         sourceComponent: MusicCoverArt {
             anchors.fill: parent
-            clip: false
-            enableShadows: false
+            clip: true
+            radius:Rounding.massive
+            enableShadows: true
             enableBorders: false
         }
     }

@@ -49,8 +49,8 @@ Item {
         id: addDialog
         expandedHeight: 640
         collapsedHeight: 360
-        enableStagedReveal:true
-        bottomAreaReveal:true
+        enableStagedReveal: true
+        bottomAreaReveal: true
         hoverHeight: 200
 
         show: root.revealAddDialog

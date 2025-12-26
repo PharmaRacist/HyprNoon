@@ -27,7 +27,13 @@ ListView {
     property real touchpadScrollFactor: Mem.options.interactions.scrolling.touchpadScrollFactor ?? 100
     property real mouseScrollFactor: Mem.options.interactions.scrolling.mouseScrollFactor ?? 50
     property real mouseScrollDeltaThreshold: Mem.options.interactions.scrolling.mouseScrollDeltaThreshold ?? 120
+    property bool hint: true
 
+    ScrollEdgeFade {
+        visible: root.hint
+        target: root
+        vertical: true
+    }
     function resetDrag() {
         root.dragIndex = -1;
         root.dragDistance = 0;
@@ -40,7 +46,6 @@ ListView {
     onContentYChanged: {
         if (!scrollAnim.running)
             root.scrollTargetY = root.contentY;
-
     }
     layer.enabled: root.clip
 
@@ -54,7 +59,7 @@ ListView {
         visible: Mem.options.interactions.scrolling.fasterTouchpadScroll
         anchors.fill: parent
         acceptedButtons: Qt.NoButton
-        onWheel: function(wheelEvent) {
+        onWheel: function (wheelEvent) {
             const delta = wheelEvent.angleDelta.y / root.mouseScrollDeltaThreshold;
             var scrollFactor = Math.abs(wheelEvent.angleDelta.y) >= root.mouseScrollDeltaThreshold ? root.mouseScrollFactor : root.touchpadScrollFactor;
             const maxY = Math.max(0, root.contentHeight - root.height);
@@ -66,8 +71,7 @@ ListView {
         }
     }
 
-    ScrollBar.vertical: StyledScrollBar {
-    }
+    ScrollBar.vertical: StyledScrollBar {}
 
     Behavior on contentY {
         Anim {
@@ -77,7 +81,6 @@ ListView {
             easing.type: Easing.BezierSpline
             easing.bezierCurve: Animations.curves.expressiveFastSpatial
         }
-
     }
 
     add: Transition {
@@ -89,7 +92,6 @@ ListView {
             easing.type: Easing.BezierSpline
             easing.bezierCurve: Animations.curves.expressiveFastSpatial
         }
-
     }
 
     addDisplaced: Transition {
@@ -107,7 +109,6 @@ ListView {
             easing.type: Easing.BezierSpline
             easing.bezierCurve: Animations.curves.expressiveFastSpatial
         }
-
     }
 
     displaced: Transition {
@@ -126,9 +127,7 @@ ListView {
                 easing.type: Easing.BezierSpline
                 easing.bezierCurve: Animations.curves.expressiveFastSpatial
             }
-
         }
-
     }
 
     move: Transition {
@@ -147,9 +146,7 @@ ListView {
                 easing.type: Easing.BezierSpline
                 easing.bezierCurve: Animations.curves.expressiveFastSpatial
             }
-
         }
-
     }
 
     moveDisplaced: Transition {
@@ -168,9 +165,7 @@ ListView {
                 easing.type: Easing.BezierSpline
                 easing.bezierCurve: Animations.curves.expressiveFastSpatial
             }
-
         }
-
     }
 
     remove: Transition {
@@ -190,9 +185,7 @@ ListView {
                 easing.type: Easing.BezierSpline
                 easing.bezierCurve: Animations.curves.expressiveFastSpatial
             }
-
         }
-
     }
 
     // This is movement when something is removed, not removing animation!
@@ -206,9 +199,7 @@ ListView {
                 properties: root.popin ? "opacity,scale" : "opacity"
                 to: 1
             }
-
         }
-
     }
 
     layer.effect: OpacityMask {
@@ -218,7 +209,5 @@ ListView {
             height: root.height
             radius: root.radius
         }
-
     }
-
 }

@@ -87,6 +87,10 @@ Scope {
         function open_beats() {
             GlobalStates.playlistOpen = true;
         }
+
+        function edit_json(){
+            Noon.exec(`${Quickshell.env('EDITOR')} ${Quickshell.env('SHELL_CONFIG_PATH')}`)
+        }
         function lock() {
             GlobalStates.locked = true;
             IdleService.idleMonitor.reset();

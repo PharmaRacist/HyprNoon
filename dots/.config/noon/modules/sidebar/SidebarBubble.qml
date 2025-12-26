@@ -11,39 +11,33 @@ StyledRect {
     property bool show
     property bool rightMode
     property string selectedCategory
-    property alias containsMouse: mouse.containsMouse
     property var bubbles: [{
         "cat": "Walls",
         "bubbles": [{
-            "key": "pickColor",
             "icon": "colorize",
             "enabled": true,
             "action": function() {
                 WallpaperService.pickAccentColor();
             }
         }, {
-            "key": "shuffle",
             "icon": "shuffle",
             "enabled": true,
             "action": function() {
                 WallpaperService.shuffleWallpapers();
             }
         }, {
-            "key": "upscale",
             "icon": GowallService.isBusy ? "hourglass" : "auto_fix_high",
             "enabled": !GowallService.isBusy,
             "action": function() {
                 GowallService.upscaleCurrentWallpaper();
             }
         }, {
-            "key": "depthWall",
             "enabled": !RemBgService.isBusy,
             "icon": RemBgService.isBusy ? "hourglass" : "content_cut",
             "action": function() {
                 RemBgService.process_current_bg();
             }
         }, {
-            "key": "cache",
             "icon": WallpaperService._generatingThumbnails ? "hourglass" : "restart_alt",
             "enabled": !WallpaperService._generatingThumbnails,
             "action": function() {
@@ -54,25 +48,21 @@ StyledRect {
         "cat": "API",
         "extraVisibleCondition": Mem.states.sidebar.apis.selectedTab === 0,
         "bubbles": [{
-            "key": "clear",
             "icon": "clear_all",
             "action": function() {
                 Ai.clearMessages();
             }
         }, {
-            "key": "regenerate",
             "icon": "restart_alt",
             "action": function() {
                 Ai.regenerate(Ai.messageIDs.length - 1);
             }
         }, {
-            "key": "save",
             "icon": "save",
             "action": function() {
                 Ai.saveChat("lastSession");
             }
         }, {
-            "key": "load",
             "icon": "upload",
             "action": function() {
                 Ai.loadChat("lastSession");
@@ -81,7 +71,6 @@ StyledRect {
     }, {
         "cat": "History",
         "bubbles": [{
-            "key": "clear_history",
             "icon": "clear_all",
             "action": function() {
                 ClipboardService.wipe();
@@ -90,10 +79,24 @@ StyledRect {
     }, {
         "cat": "Tasks",
         "bubbles": [{
-            "key": "sync",
             "icon": TodoService.SyncState.Offline ? "cloud_off" : TodoService.SyncState.Error ? "error" : "sync",
             "action": function() {
                 TodoService.syncWithTodoist();
+            }
+        }]
+    }, {
+        "cat": "Beats",
+        "bubbles": [{
+            "icon": "download",
+            "extraVisibleCondition": !BeatsService.isCurrentPlayer(),
+            "action": function() {
+                BeatsService.downloadCurrentSong();
+            }
+        }, {
+            "icon": "close",
+            "extraVisibleCondition": BeatsService.isCurrentPlayer(),
+            "action": function() {
+                BeatsService.stopPlayer();
             }
         }]
     }]
@@ -116,14 +119,6 @@ StyledRect {
     }
 
     ColumnLayout {
-        // RippleButtonWithIcon {
-        //     toggled: Mem.states.sidebar.behavior.pinned
-        //     materialIcon: "push_pin"
-        //     releaseAction: () => {
-        //         Mem.states.sidebar.behavior.pinned = !Mem.states.sidebar.behavior.pinned;
-        //     }
-        // }
-
         id: content
 
         spacing: Padding.verysmall
@@ -134,7 +129,7 @@ StyledRect {
 
             ColumnLayout {
                 spacing: parent.spacing
-                visible: modelData.cat === root.selectedCategory && (modelData.extraVisibleCondition ?? true)
+                visible: modelData.cat === root.selectedCategory
 
                 ColumnLayout {
                     spacing: parent.spacing
@@ -143,6 +138,7 @@ StyledRect {
                         model: modelData.bubbles
 
                         RippleButtonWithIcon {
+                            visible: modelData.extraVisibleCondition
                             Layout.fillWidth: true
                             enabled: modelData.enabled !== undefined ? modelData.enabled : true
                             materialIcon: modelData.icon

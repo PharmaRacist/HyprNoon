@@ -17,8 +17,9 @@ BarGroup {
     property bool revealAll: false
     property int itemSize: Math.min(BarData.currentBarExclusiveSize, 35) * 0.75
 
-    width: content.implicitWidth + (verticalMode ? 0 : 8)
-    height: content.implicitHeight + (verticalMode ? 8 : 0)
+    implicitWidth: content.implicitWidth + (verticalMode ? 0 : revealAll ? 20 : 0)
+    implicitHeight: content.implicitHeight + (verticalMode ? revealAll ? 20 : 0 : 0)
+    clip: false
 
     MouseArea {
         id: mouse
@@ -38,8 +39,8 @@ BarGroup {
         property bool verticalMode: root.verticalMode
 
         anchors.centerIn: parent
-        rowSpacing: 10
-        columnSpacing: 10
+        rowSpacing: Padding.normal
+        columnSpacing: Padding.normal
         rows: !verticalMode ? 1 : -1
         columns: verticalMode ? 1 : -1
 
@@ -54,7 +55,7 @@ BarGroup {
             iconName: "swap_horiz"
             collapsed: !root.revealAll
             percentage: (ResourcesService.stats.swap_total - ResourcesService.stats.swap_free) / ResourcesService.stats.swap_total
-            visible: percentage > 0
+            // visible: percentage > 0
             itemSize: root.itemSize
         }
 

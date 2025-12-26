@@ -97,6 +97,7 @@ Singleton {
     }
 
     Timer {
+        id: uptimeRefresh
         interval: 10
         running: true
         repeat: true
@@ -119,8 +120,8 @@ Singleton {
             if (minutes > 0 || !formatted)
                 formatted += `${formatted ? ", " : ""}${minutes}m`;
             uptime = formatted;
-
-            interval = Mem.options.resources?.updateInterval ?? 3000;
+            // Every 10 min
+            interval = 60 *1000 ;
         }
     }
 

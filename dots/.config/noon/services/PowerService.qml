@@ -13,11 +13,16 @@ Singleton {
     property var modes: Mem.states.services?.power?.modes || []
     property string currentMode: Mem.states.services?.power?.mode || "power-saver"
 
-    function cycleMode() {
+    function cycleMode(reverse) { 
         if (!controller || !modes.length)
             return
-        const next = modes[(modes.indexOf(currentMode) + 1) % modes.length]
-        Noon.execDetached(["bash", "-c", `${Directories.scriptsDir}/power_service.sh set ${next}`])
+        
+        const currentIndex = modes.indexOf(currentMode)
+        const next = modes[(currentIndex + 1) % modes.length]
+        const previous = modes[(currentIndex - 1 + modes.length) % modes.length]
+        const mode = reverse ? previous : next
+        
+        Noon.exec(`${Directories.scriptsDir}/power_service.sh set ${mode}`)
     }
 
     function getModeDisplayName(mode) {

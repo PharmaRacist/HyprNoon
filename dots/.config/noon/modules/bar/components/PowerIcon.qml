@@ -1,22 +1,12 @@
-import Qt5Compat.GraphicalEffects
 import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
 import Quickshell
-import Quickshell.Hyprland
 import qs.modules.common
 import qs.modules.common.widgets
 import qs.services
 
 MaterialShapeWrappedMaterialSymbol {
-    // StyledToolTip {
-    //     extraVisibleCondition: mouse.containsMouse
-    //     content: PowerService.modeName
-    // }
-
     visible: BatteryService.available
     text: PowerService.icon
-    // Cycle through shapes based on mode
     shape: {
         switch (PowerService.modeName) {
         case "Power Saver":
@@ -61,7 +51,12 @@ MaterialShapeWrappedMaterialSymbol {
 
         hoverEnabled: true
         anchors.fill: parent
-        onClicked: PowerService.cycleMode()
+        onPressed: (event) => {
+            if (event.button === Qt.RightButton)
+                PowerService.cycleMode(true);
+            else
+                PowerService.cycleMode();
+        }
     }
 
 }

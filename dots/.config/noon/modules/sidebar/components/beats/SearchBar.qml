@@ -2,9 +2,6 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Hyprland
-import Quickshell.Io
-import Quickshell.Wayland
 import Quickshell.Widgets
 import qs.modules.common
 import qs.modules.common.functions
@@ -14,17 +11,14 @@ import qs.store
 StyledRect {
     id: searchBar
 
-    property bool show
     property alias searchText: searchInput.text
     property alias searchInput: searchInput
     property var searchBehavior
 
-    visible: opacity > 0
     Layout.fillWidth: true
-    Layout.preferredHeight: searchBar.show ? 39 : 0
+    Layout.preferredHeight: 40
     radius: Rounding.normal
     color: ColorUtils.transparentize(Colors.colLayer0, 0.9)
-    opacity: searchBar.show ? 1 : 0
 
     RowLayout {
         anchors.fill: parent
@@ -46,8 +40,6 @@ StyledRect {
             Layout.fillWidth: true
             Layout.fillHeight: true
             objectName: "searchInput"
-            visible: searchBar.show
-            enabled: searchBar.show
             text: searchText
             placeholderText: "Search..."
             background: null
@@ -75,8 +67,8 @@ StyledRect {
                 searchInput.clear();
                 if (!isAux)
                     Qt.callLater(() => {
-                        return searchInput.forceActiveFocus();
-                    });
+                    return searchInput.forceActiveFocus();
+                });
 
             }
 

@@ -42,7 +42,7 @@ Singleton {
         property color colOnLayer0: root.adaptiveTheme ? ColorUtils.mix(Colors.colOnLayer0, root.artDominantColor, 0.7) : Colors.colOnLayer0
         property color colOnLayer1: root.adaptiveTheme ? ColorUtils.mix(Colors.colOnLayer1, root.artDominantColor, 0.5) : Colors.colOnLayer1
         property color colOnLayer2: root.adaptiveTheme ? ColorUtils.mix(Colors.colOnLayer2, root.artDominantColor, 0.45) : Colors.colOnLayer2
-        property color colSubtext: root.adaptiveTheme ? ColorUtils.mix(Colors.colOnLayer1, root.artDominantColor, 0.7) : Colors.colOnLayer1
+        property color colSubtext: root.adaptiveTheme ? ColorUtils.mix(Colors.colOnLayer1, root.artDominantColor, 0.7) : Colors.colSubtext
 
         // Primary colors
         property color colPrimary: root.adaptiveTheme ? ColorUtils.mix(ColorUtils.adaptToAccent(Colors.colPrimary, root.artDominantColor), root.artDominantColor, 1) : Colors.colPrimary
