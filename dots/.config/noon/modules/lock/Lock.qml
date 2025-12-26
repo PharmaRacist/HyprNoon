@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Window
 import Quickshell
 import Quickshell.Hyprland
-import Quickshell.Io
 import Quickshell.Services.Pam
 import Quickshell.Wayland
 import qs.modules.common

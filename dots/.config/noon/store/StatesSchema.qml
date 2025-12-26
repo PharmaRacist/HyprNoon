@@ -1,11 +1,4 @@
-pragma ComponentBehavior: Bound
-import qs.modules.common
-import qs.services
-import QtQuick
-import Quickshell
-import Quickshell.Io
-import Quickshell.Wayland
-import Quickshell.Widgets
+import qs.modules.common.utils
 
 JsonAdapter {
     property JsonObject desktop: JsonObject {

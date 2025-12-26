@@ -6,7 +6,6 @@ import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
-import Quickshell.Io
 import Quickshell.Services.Mpris
 import Quickshell.Wayland
 import Quickshell.Widgets

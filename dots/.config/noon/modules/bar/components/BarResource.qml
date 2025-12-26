@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Io
 import qs.modules.common
 import qs.modules.common.widgets
 
@@ -46,7 +45,8 @@ ColumnLayout {
                     radius: height / 2
 
                     Behavior on width {
-                        Anim {}
+                        Anim {
+                        }
 
                     }
 
@@ -96,7 +96,8 @@ ColumnLayout {
                     radius: height / 2
 
                     Behavior on width {
-                        Anim {}
+                        Anim {
+                        }
 
                     }
 
@@ -146,7 +147,8 @@ ColumnLayout {
                     radius: height / 2
 
                     Behavior on width {
-                        Anim {}
+                        Anim {
+                        }
 
                     }
 
@@ -196,7 +198,8 @@ ColumnLayout {
                     radius: height / 2
 
                     Behavior on width {
-                        Anim {}
+                        Anim {
+                        }
 
                     }
 

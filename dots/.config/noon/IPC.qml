@@ -1,11 +1,8 @@
 import QtQuick
-import QtQuick.Layouts
 import Quickshell
-import Quickshell.Hyprland
-import Quickshell.Io
-import Quickshell.Wayland
 import Quickshell.Services.Mpris
 import qs.modules.common
+import qs.modules.common.utils
 import qs.modules.view
 import qs.modules.common.functions
 import qs.modules.common.widgets

@@ -1,53 +1,26 @@
-pragma Singleton
 import QtQuick
 import Quickshell
-import Quickshell.Io
 import qs.modules.common
+import qs.modules.common.utils
+pragma Singleton
 
-/* Wrapper for the firefox bookmarks script */
+// Wrapper for the firefox bookmarks script
 Singleton {
     id: root
 
     // Properties
     property var bookmarks: Mem.states.services.bookmarks.firefoxBookmarks ?? []
-    property var bookmarkTitles: bookmarks.map(b => b.title)
-    property var bookmarkUrls: bookmarks.map(b => b.url)
+    property var bookmarkTitles: bookmarks.map((b) => {
+        return b.title;
+    })
+    property var bookmarkUrls: bookmarks.map((b) => {
+        return b.url;
+    })
     property bool isLoading: false
     property string error: ""
     property bool autoRefresh: true
-    property int refreshInterval: 6000000 // 10 minutes in milliseconds
+    property int refreshInterval: 6e+06 // 10 minutes in milliseconds
     readonly property string scriptPath: Directories.scriptsDir + "/bookmarks_service.py"
-
-    Component.onCompleted: {
-        refresh();
-        Qt.callLater(fetchFavicons);
-        if (autoRefresh) {
-            refreshTimer.start();
-        }
-    }
-    Timer {
-        id: refreshTimer
-        interval: root.refreshInterval
-        repeat: true
-        running: false
-        onTriggered: root.loadBookmarks()
-    }
-
-    // Watch for autoRefresh changes
-    onAutoRefreshChanged: {
-        if (autoRefresh) {
-            refreshTimer.start();
-        } else {
-            refreshTimer.stop();
-        }
-    }
-
-    // Watch for interval changes
-    onRefreshIntervalChanged: {
-        if (refreshTimer.running) {
-            refreshTimer.restart();
-        }
-    }
 
     // Public API
     function refresh() {
@@ -65,19 +38,23 @@ Singleton {
 
     function removeBookmark(bookmarkId) {
         if (!bookmarkId)
-            return;
+            return ;
+
         Quickshell.execDetached(["python3", scriptPath, "remove", bookmarkId.toString()]);
     }
 
     function openUrl(url) {
         if (!url)
-            return;
+            return ;
+
         Quickshell.execDetached(["python3", scriptPath, "open", url]);
     }
 
     function searchBookmarks(query) {
         const q = (query || "").toLowerCase();
-        return bookmarks.filter(b => (b.title && b.title.toLowerCase().includes(q)) || (b.url && b.url.toLowerCase().includes(q)));
+        return bookmarks.filter((b) => {
+            return (b.title && b.title.toLowerCase().includes(q)) || (b.url && b.url.toLowerCase().includes(q));
+        });
     }
 
     // Internal functions
@@ -87,9 +64,40 @@ Singleton {
         loadBookmarksProcess.running = true;
     }
 
+    Component.onCompleted: {
+        refresh();
+        Qt.callLater(fetchFavicons);
+        if (autoRefresh)
+            refreshTimer.start();
+
+    }
+    // Watch for autoRefresh changes
+    onAutoRefreshChanged: {
+        if (autoRefresh)
+            refreshTimer.start();
+        else
+            refreshTimer.stop();
+    }
+    // Watch for interval changes
+    onRefreshIntervalChanged: {
+        if (refreshTimer.running)
+            refreshTimer.restart();
+
+    }
+
+    Timer {
+        id: refreshTimer
+
+        interval: root.refreshInterval
+        repeat: true
+        running: false
+        onTriggered: root.loadBookmarks()
+    }
+
     // Process: Load all bookmarks
     Process {
         id: loadBookmarksProcess
+
         command: ["python3", root.scriptPath, "list"]
         running: false
 
@@ -117,16 +125,18 @@ Singleton {
 
         stderr: StdioCollector {
             onStreamFinished: {
-                if (this.text.trim()) {
+                if (this.text.trim())
                     console.error("FirefoxBookmarksService: stderr:", this.text);
-                }
+
             }
         }
+
     }
 
     // Process: Fetch all favicons
     Process {
         id: fetchFaviconsProcess
+
         command: ["python3", root.scriptPath, "fetch-favicons"]
         running: false
 
@@ -134,15 +144,18 @@ Singleton {
             onStreamFinished: {
                 try {
                     const result = JSON.parse(this.text.trim());
-                    if (result.downloaded > 0) {
+                    if (result.downloaded > 0)
                         loadBookmarks();
-                    }
+
                 } catch (e) {
                     console.error("FirefoxBookmarksService: Failed to parse favicon fetch result:", e);
                 }
             }
         }
 
-        stderr: StdioCollector {}
+        stderr: StdioCollector {
+        }
+
     }
+
 }

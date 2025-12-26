@@ -10,7 +10,6 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Hyprland
-import Quickshell.Io
 import Quickshell.Widgets
 import Qt5Compat.GraphicalEffects
 

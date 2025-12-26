@@ -5,7 +5,6 @@ import qs.modules.common.widgets
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import Quickshell.Io
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Hyprland

@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
-import Quickshell.Io
 import qs.modules.common
+import qs.modules.common.utils
 pragma Singleton
 
 // Wrapper for the icon_theme_manager.py

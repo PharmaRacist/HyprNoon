@@ -5,7 +5,6 @@ import qs.modules.common.widgets
 import qs.modules.common.functions
 import QtQuick
 import Quickshell
-import Quickshell.Io
 import Quickshell.Hyprland
 import Quickshell.Services.Mpris
 import Qt.labs.folderlistmodel

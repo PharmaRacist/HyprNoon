@@ -1,14 +1,14 @@
-import qs.modules.common
-import qs.modules.common.widgets
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Io
+import qs.modules.common
+import qs.modules.common.widgets
 
 Item {
     required property string iconName
     required property double percentage
     property bool shown: true
+
     clip: true
     visible: width > 0 && height > 0
     implicitWidth: resourceRowLayout.x < 0 ? 0 : childrenRect.width
@@ -17,6 +17,7 @@ Item {
 
     RowLayout {
         id: resourceRowLayout
+
         spacing: 4
         x: shown ? 0 : -resourceRowLayout.width
 
@@ -35,6 +36,7 @@ Item {
                 iconSize: Fonts.sizes.normal
                 color: Colors.m3.m3onSecondaryContainer
             }
+
         }
 
         StyledText {
@@ -44,11 +46,17 @@ Item {
         }
 
         Behavior on x {
-            Anim {}
+            Anim {
+            }
+
         }
+
     }
 
     Behavior on implicitWidth {
-        Anim {}
+        Anim {
+        }
+
     }
+
 }

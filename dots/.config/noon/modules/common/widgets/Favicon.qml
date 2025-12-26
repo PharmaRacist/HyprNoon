@@ -1,13 +1,10 @@
-import Qt.labs.platform
 import Qt5Compat.GraphicalEffects
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
-import Quickshell.Hyprland
-import Quickshell.Io
 import Quickshell.Widgets
 import qs.modules.common
 import qs.modules.common.functions
+import qs.modules.common.utils
 import qs.modules.common.widgets
 import qs.services
 

@@ -1,6 +1,5 @@
 import QtQuick
 import Quickshell
-import Quickshell.Io
 import qs.modules.common
 
 FileView {
@@ -12,6 +11,15 @@ FileView {
     property alias data: root.adapter
     property Timer reloadTimer: timer.createObject(root)
     property bool state: false
+    property Component timer
+
+    timer: Timer {
+        id: reloadTimer
+
+        interval: 100
+        onTriggered: root.reload()
+    }
+
     filePath: (state ? Directories.state + "/" : Directories.shellConfigs) + fileName + ".json"
     preload: true
     printErrors: true
@@ -19,14 +27,9 @@ FileView {
     path: filePath
     onFileChanged: reloadTimer.restart()
     onAdapterUpdated: root.writeAdapter()
-    onLoadFailed: function (error) {
-        if (autoCreateOnError && error === FileViewError.FileNotFound) {
+    onLoadFailed: function(error) {
+        if (autoCreateOnError && error === FileViewError.FileNotFound)
             root.writeAdapter();
-        }
-    }
-    property Component timer: Timer {
-        id: reloadTimer
-        interval: 100
-        onTriggered: root.reload()
+
     }
 }

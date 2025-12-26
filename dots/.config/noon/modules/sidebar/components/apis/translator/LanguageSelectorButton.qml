@@ -3,7 +3,6 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
-import Quickshell.Io
 import qs.modules.common
 import qs.modules.common.widgets
 import qs.services
@@ -44,6 +43,9 @@ RippleButton {
                 text: "arrow_drop_down"
                 color: Colors.colOnLayer2
             }
+
         }
+
     }
+
 }

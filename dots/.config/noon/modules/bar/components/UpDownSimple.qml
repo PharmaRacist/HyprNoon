@@ -1,62 +1,31 @@
 import QtQuick
 import Quickshell
-import Quickshell.Io
 
 Item {
     id: networkModule
-    width: networkText.width + 20
-    height: 24
 
-    property real uploadSpeed: 0.0
-    property real downloadSpeed: 0.0
+    property real uploadSpeed: 0
+    property real downloadSpeed: 0
     property string networkInterface: "enp34s0"
     property int previousRxBytes: 0
     property int previousTxBytes: 0
     property int previousTime: 0
 
-    // Read RX bytes
-    FileView {
-        id: rxFile
-        path: "/sys/class/net/" + networkInterface + "/statistics/rx_bytes"
-
-        // onContentChanged: {
-        //     console.log("RX file changed:", content);
-        //     calculateSpeed();
-        // }
-    }
-
-    // Read TX bytes
-    FileView {
-        id: txFile
-        path: "/sys/class/net/" + networkInterface + "/statistics/tx_bytes"
-
-        // onContentChanged: {
-        //     console.log("TX file changed:", content);
-        //     calculateSpeed();
-        // }
-    }
-
     function calculateSpeed() {
         if (!rxFile.content || !txFile.content) {
             console.log("Missing file content");
-            return;
+            return ;
         }
-
         const currentRxBytes = parseInt(rxFile.content.trim());
         const currentTxBytes = parseInt(txFile.content.trim());
         const currentTime = Date.now();
-
         console.log("Current RX:", currentRxBytes, "Current TX:", currentTxBytes);
-
         if (previousTime > 0 && previousRxBytes > 0 && previousTxBytes > 0) {
-            const timeDiff = (currentTime - previousTime) / 1000.0;
-
+            const timeDiff = (currentTime - previousTime) / 1000;
             if (timeDiff > 0) {
                 const rxDiff = currentRxBytes - previousRxBytes;
                 const txDiff = currentTxBytes - previousTxBytes;
-
                 console.log("Time diff:", timeDiff, "RX diff:", rxDiff, "TX diff:", txDiff);
-
                 if (rxDiff >= 0 && txDiff >= 0) {
                     downloadSpeed = rxDiff / timeDiff;
                     uploadSpeed = txDiff / timeDiff;
@@ -64,7 +33,6 @@ Item {
                 }
             }
         }
-
         // Update previous values
         previousRxBytes = currentRxBytes;
         previousTxBytes = currentTxBytes;
@@ -72,15 +40,41 @@ Item {
     }
 
     function formatSpeed(bytesPerSecond) {
-        if (bytesPerSecond < 1024) {
+        if (bytesPerSecond < 1024)
             return Math.round(bytesPerSecond) + "B/s";
-        } else if (bytesPerSecond < 1024 * 1024) {
+        else if (bytesPerSecond < 1024 * 1024)
             return (bytesPerSecond / 1024).toFixed(1) + "K/s";
-        } else if (bytesPerSecond < 1024 * 1024 * 1024) {
+        else if (bytesPerSecond < 1024 * 1024 * 1024)
             return (bytesPerSecond / (1024 * 1024)).toFixed(1) + "M/s";
-        } else {
+        else
             return (bytesPerSecond / (1024 * 1024 * 1024)).toFixed(1) + "G/s";
-        }
+    }
+
+    width: networkText.width + 20
+    height: 24
+
+    // Read RX bytes
+    FileView {
+        // onContentChanged: {
+        //     console.log("RX file changed:", content);
+        //     calculateSpeed();
+        // }
+
+        id: rxFile
+
+        path: "/sys/class/net/" + networkInterface + "/statistics/rx_bytes"
+    }
+
+    // Read TX bytes
+    FileView {
+        // onContentChanged: {
+        //     console.log("TX file changed:", content);
+        //     calculateSpeed();
+        // }
+
+        id: txFile
+
+        path: "/sys/class/net/" + networkInterface + "/statistics/tx_bytes"
     }
 
     // Force refresh every second
@@ -99,6 +93,7 @@ Item {
 
     StyledText {
         id: networkText
+
         anchors.centerIn: parent
         text: "↑" + formatSpeed(uploadSpeed) + " ↓" + formatSpeed(downloadSpeed)
         color: (uploadSpeed > 0 || downloadSpeed > 0) ? "#4ecdc4" : "#95a5a6"
@@ -118,4 +113,5 @@ Item {
             downloadSpeed = 0;
         }
     }
+
 }

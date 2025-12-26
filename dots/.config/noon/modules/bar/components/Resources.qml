@@ -1,10 +1,9 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Io
-import Quickshell.Services.Mpris
 import Quickshell.Services.UPower
 import qs.modules.common
+import qs.modules.common.utils
 import qs.modules.common.widgets
 import qs.services
 import qs.store

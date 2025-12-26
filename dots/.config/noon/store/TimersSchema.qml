@@ -1,9 +1,4 @@
-pragma ComponentBehavior: Bound
-import QtQuick
-import Quickshell
-import Quickshell.Io
-import Quickshell.Wayland
-import Quickshell.Widgets
+import qs.modules.common.utils
 
 JsonAdapter {
     property var timers: []

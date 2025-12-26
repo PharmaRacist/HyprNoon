@@ -1,13 +1,14 @@
-pragma Singleton
-pragma ComponentBehavior: Bound
-import Quickshell
-import Quickshell.Io
-import Quickshell.Hyprland
-import qs.modules.common.functions
-import qs.modules.common
 import QtQuick
+import Quickshell
+import Quickshell.Hyprland
+import qs.modules.common
+import qs.modules.common.functions
+import qs.modules.common.utils
+pragma Singleton
 
 Singleton {
+    // Replace the startRecording() function with this corrected version:
+
     id: root
 
     // Enums for recording options
@@ -25,34 +26,36 @@ Singleton {
     }
 
     enum Quality {
-        Low,    // 720p, 30fps
+        Low, // 720p, 30fps
         Medium, // 1080p, 30fps
-        High,   // 1080p, 60fps
-        Ultra   // 4K, 60fps
+        High, // 1080p, 60fps
+        Ultra // 4K, 60fps
     }
 
     // Public properties
     property bool isRecording: false
     property string lastError: ""
     property int recordingDuration: 0
-
     // Recording settings (persistent via Config)
     property int recordingMode: Mem.options.services.recording.recordingMode ?? RecordingService.RecordingMode.FullScreen
     property int audioMode: Mem.options.services.recording.audioMode ?? RecordingService.AudioMode.SystemAudio
     property int quality: Mem.options.services.recording.quality ?? RecordingService.Quality.Medium
     property bool showCursor: Mem.options.services.recording.showCursor ?? true
     property int customFramerate: Mem.options.services.recording.customFramerate ?? 0
-
     // Internal
     property Process recordingProcess: null
-    property Timer stateCheckTimer: Timer {
+    property Timer stateCheckTimer
+
+    stateCheckTimer: Timer {
         interval: 1000
         running: true
         repeat: true
         onTriggered: checkRecordingState()
     }
 
-    property Timer durationTimer: Timer {
+    property Timer durationTimer
+
+    durationTimer: Timer {
         interval: 1000
         running: root.isRecording
         repeat: true
@@ -60,20 +63,18 @@ Singleton {
     }
 
     // Signals
-    signal recordingStarted
-    signal recordingStopped
+    signal recordingStarted()
+    signal recordingStopped()
     signal recordingError(string error)
 
     // Check if wf-recorder is running
     function checkRecordingState() {
-        const wasRecording = root.isRecording;
-
-        // Simple check using pidof
-        const result = Noon.exec("pidof wf-recorder");
-
         // Poll the process list (this is a simplified check)
         // In a real implementation, you'd want a more robust check
 
+        const wasRecording = root.isRecording;
+        // Simple check using pidof
+        const result = Noon.exec("pidof wf-recorder");
         if (wasRecording && !root.isRecording) {
             root.recordingDuration = 0;
             root.recordingStopped();
@@ -87,28 +88,28 @@ Singleton {
         switch (root.quality) {
         case RecordingService.Quality.Low:
             return {
-                fps: 30,
-                crf: 28
-            };  // Lower quality, smaller file
+                "fps": 30,
+                "crf": 28
+            }; // Lower quality, smaller file
         case RecordingService.Quality.Medium:
             return {
-                fps: 30,
-                crf: 23
-            };  // Balanced (default)
+                "fps": 30,
+                "crf": 23
+            }; // Balanced (default)
         case RecordingService.Quality.High:
             return {
-                fps: 60,
-                crf: 20
-            };  // Higher quality
+                "fps": 60,
+                "crf": 20
+            }; // Higher quality
         case RecordingService.Quality.Ultra:
             return {
-                fps: 60,
-                crf: 18
-            };  // Best quality, larger file
+                "fps": 60,
+                "crf": 18
+            }; // Best quality, larger file
         default:
             return {
-                fps: 30,
-                crf: 23
+                "fps": 30,
+                "crf": 23
             };
         }
     }
@@ -118,24 +119,19 @@ Singleton {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-').split('.')[0];
         return `${FileUtils.trimFileProtocol(Directories.videos)}/recordings/recording-${timestamp}.mp4`;
     }
-    // Replace the startRecording() function with this corrected version:
 
     function startRecording() {
         if (root.isRecording) {
             console.warn("RecordingService: Already recording");
             return false;
         }
-
         try {
             const qualityParams = getQualityParams();
             const fps = root.customFramerate > 0 ? root.customFramerate : qualityParams.fps;
             const outputPath = getOutputPath();
-
             let cmd = [];
-
             // Use software encoding - works everywhere
             const codec = "libx264";
-
             // Handle region selection first
             if (root.recordingMode === RecordingService.RecordingMode.Region) {
                 // Use slurp to get region, then pipe to wf-recorder
@@ -144,24 +140,20 @@ Singleton {
                 cmd = ["sh", "-c", `slurp | xargs -I {} wf-recorder -g "{}" -f ${outputPath} -r ${fps} -c ${codec} -p preset=fast -p crf=${qualityParams.crf}${cursorFlag}${audioFlags}`];
             } else {
                 cmd = ["wf-recorder", "-f", outputPath, "-r", fps.toString(), "-c", codec];
-
                 // Add codec parameters separately
                 cmd.push("-p", "preset=fast");
                 cmd.push("-p", `crf=${qualityParams.crf}`);
-
                 // Add cursor option
-                if (!root.showCursor) {
+                if (!root.showCursor)
                     cmd.push("--no-damage");
-                }
 
                 // Add audio options
                 if (root.audioMode !== RecordingService.AudioMode.Muted) {
                     cmd.push("--audio");
-                    if (root.audioMode === RecordingService.AudioMode.MicrophoneAudio || root.audioMode === RecordingService.AudioMode.BothAudio) {
+                    if (root.audioMode === RecordingService.AudioMode.MicrophoneAudio || root.audioMode === RecordingService.AudioMode.BothAudio)
                         cmd.push("--audio-device=default");
-                    }
-                }
 
+                }
                 // Add geometry for active window
                 if (root.recordingMode === RecordingService.RecordingMode.ActiveWindow) {
                     // Get active window geometry - simplified approach
@@ -170,20 +162,16 @@ Singleton {
                     cmd = ["sh", "-c", `GEOM=$(hyprctl -j activewindow | jq -r '\"\\(.at[0]),\\(.at[1]) \\(.size[0])x\\(.size[1])\"') && wf-recorder -g "$GEOM" -f ${outputPath} -r ${fps} -c ${codec} -p preset=fast -p crf=${qualityParams.crf}${cursorFlag}${audioFlags}`];
                 }
             }
-
             console.log("RecordingService: Starting recording:", cmd.join(" "));
-
             // Execute via hyprland dispatch
             const fullCmd = cmd.join(" ");
             Noon.exec(` ${fullCmd}`);
-
             // Set recording state after a short delay to allow process to start
             Qt.callLater(() => {
                 root.isRecording = true;
                 root.recordingDuration = 0;
                 root.lastError = "";
             });
-
             return true;
         } catch (e) {
             root.lastError = e.toString();
@@ -195,14 +183,13 @@ Singleton {
 
     // Get audio flags as string
     function getAudioFlags() {
-        if (root.audioMode === RecordingService.AudioMode.Muted) {
+        if (root.audioMode === RecordingService.AudioMode.Muted)
             return "";
-        }
 
         let flags = " --audio";
-        if (root.audioMode === RecordingService.AudioMode.MicrophoneAudio || root.audioMode === RecordingService.AudioMode.BothAudio) {
+        if (root.audioMode === RecordingService.AudioMode.MicrophoneAudio || root.audioMode === RecordingService.AudioMode.BothAudio)
             flags += " --audio-device=default";
-        }
+
         return flags;
     }
 
@@ -212,15 +199,12 @@ Singleton {
             console.warn("RecordingService: Not currently recording");
             return false;
         }
-
         try {
             // Send SIGINT to wf-recorder to stop gracefully
             Noon.exec("pkill -SIGINT wf-recorder");
-
             root.isRecording = false;
             root.recordingDuration = 0;
             root.lastError = "";
-
             console.log("RecordingService: Stopped recording");
             return true;
         } catch (e) {
@@ -330,21 +314,20 @@ Singleton {
     onQualityChanged: Mem.options.services.recording.quality = quality
     onShowCursorChanged: Mem.options.services.recording.showCursor = showCursor
     onCustomFramerateChanged: Mem.options.services.recording.customFramerate = customFramerate
-
     // Initialize config structure
     Component.onCompleted: {
-        if (!Mem.options.services) {
-            Mem.options.services = {};
-        }
-
-        if (!Mem.options.services.recording) {
-            Mem.options.services.recording = {
-                recordingMode: RecordingService.RecordingMode.FullScreen,
-                audioMode: RecordingService.AudioMode.SystemAudio,
-                quality: RecordingService.Quality.Medium,
-                showCursor: true,
-                customFramerate: 0
+        if (!Mem.options.services)
+            Mem.options.services = {
             };
-        }
+
+        if (!Mem.options.services.recording)
+            Mem.options.services.recording = {
+                "recordingMode": RecordingService.RecordingMode.FullScreen,
+                "audioMode": RecordingService.AudioMode.SystemAudio,
+                "quality": RecordingService.Quality.Medium,
+                "showCursor": true,
+                "customFramerate": 0
+            };
+
     }
 }

@@ -1,7 +1,6 @@
 import QtQuick
 import Quickshell
 import Quickshell.Hyprland
-import Quickshell.Io
 import qs.modules.common
 import qs.modules.common.functions
 import qs.modules.common.widgets

@@ -2,7 +2,6 @@ import Qt5Compat.GraphicalEffects
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import Quickshell.Io
 import Quickshell.Widgets
 import qs.modules.common
 import qs.modules.common.widgets

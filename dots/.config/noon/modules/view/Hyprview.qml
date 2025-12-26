@@ -6,7 +6,6 @@ import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
-import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Widgets
 import qs.modules.common
@@ -125,43 +124,6 @@ StyledPanel {
     FocusScope {
         id: mainScope
 
-        anchors.fill: parent
-        focus: true
-        // Keyboard navigation
-        Keys.onPressed: (event) => {
-            if (!root.isActive)
-                return ;
-
-            if (event.key === Qt.Key_Escape) {
-                root.toggleExpose();
-                event.accepted = true;
-                return ;
-            }
-            const total = winRepeater.count;
-            if (total <= 0)
-                return ;
-
-            if (event.key === Qt.Key_Right || event.key === Qt.Key_Tab) {
-                moveSelectionHorizontal(1);
-                event.accepted = true;
-            } else if (event.key === Qt.Key_Left || event.key === Qt.Key_Backtab) {
-                moveSelectionHorizontal(-1);
-                event.accepted = true;
-            } else if (event.key === Qt.Key_Down) {
-                moveSelectionVertical(1);
-                event.accepted = true;
-            } else if (event.key === Qt.Key_Up) {
-                moveSelectionVertical(-1);
-                event.accepted = true;
-            } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                var item = winRepeater.itemAt(exposeArea.currentIndex);
-                if (item && item.activateWindow) {
-                    item.activateWindow();
-                    event.accepted = true;
-                }
-            }
-        }
-
         // Helper for horizontal navigation
         function moveSelectionHorizontal(delta) {
             var start = exposeArea.currentIndex;
@@ -215,6 +177,43 @@ StyledPanel {
             if (bestIndex >= 0)
                 exposeArea.currentIndex = bestIndex;
 
+        }
+
+        anchors.fill: parent
+        focus: true
+        // Keyboard navigation
+        Keys.onPressed: (event) => {
+            if (!root.isActive)
+                return ;
+
+            if (event.key === Qt.Key_Escape) {
+                root.toggleExpose();
+                event.accepted = true;
+                return ;
+            }
+            const total = winRepeater.count;
+            if (total <= 0)
+                return ;
+
+            if (event.key === Qt.Key_Right || event.key === Qt.Key_Tab) {
+                moveSelectionHorizontal(1);
+                event.accepted = true;
+            } else if (event.key === Qt.Key_Left || event.key === Qt.Key_Backtab) {
+                moveSelectionHorizontal(-1);
+                event.accepted = true;
+            } else if (event.key === Qt.Key_Down) {
+                moveSelectionVertical(1);
+                event.accepted = true;
+            } else if (event.key === Qt.Key_Up) {
+                moveSelectionVertical(-1);
+                event.accepted = true;
+            } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                var item = winRepeater.itemAt(exposeArea.currentIndex);
+                if (item && item.activateWindow) {
+                    item.activateWindow();
+                    event.accepted = true;
+                }
+            }
         }
 
         MouseArea {

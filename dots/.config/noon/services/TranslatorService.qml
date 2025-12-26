@@ -1,12 +1,13 @@
-/**
- * Singleton service for translation using the `trans` commandline tool.
- */
 pragma Singleton
 import QtQuick
 import Quickshell
-import Quickshell.Io
+import qs.modules.common.utils
 import qs.modules.common.functions
 import qs.modules.common
+
+/**
+ * Singleton service for translation using the `trans` commandline tool.
+ */
 
 Singleton {
     id: service

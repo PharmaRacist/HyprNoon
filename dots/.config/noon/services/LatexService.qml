@@ -5,7 +5,6 @@ import qs.modules.common.functions
 import qs.modules.common
 import QtQuick
 import Quickshell
-import Quickshell.Io
 import Quickshell.Hyprland
 import Qt.labs.platform
 
@@ -55,8 +54,7 @@ Singleton {
         // console.log(`                to file: ${imagePath}`)
         // console.log(`                with command: cd ${microtexBinaryDir} && ./${microtexBinaryName} -headless -input=${StringUtils.shellSingleQuoteEscape(expression)} -output=${imagePath} -textsize=${Fonts.sizes.normal} -padding=${renderPadding} -background=${Colors.m3.m3tertiary} -foreground=${Colors.m3.m3onTertiary} -maxwidth=0.85`)
         const processQml = `
-            import Quickshell.Io
-            Process {
+                        Process {
                 id: microtexProcess${hash}
                 running: true
                 command: [ "bash", "-c",

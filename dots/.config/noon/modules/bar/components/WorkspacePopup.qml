@@ -7,7 +7,6 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
-import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
 

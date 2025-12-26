@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
-import Quickshell.Io
 import qs.modules.bar.components
 import qs.modules.common
 import qs.modules.common.widgets

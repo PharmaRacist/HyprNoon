@@ -3,9 +3,9 @@ pragma ComponentBehavior: Bound
 
 import qs.modules.common
 import qs.modules.common.functions
+import qs.modules.common.utils
 import QtQuick
 import Quickshell
-import Quickshell.Io
 
 Singleton {
     id: root

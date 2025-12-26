@@ -1,9 +1,8 @@
-pragma Singleton
 import Quickshell
-import Quickshell.Hyprland
-import Quickshell.Io
 import qs.modules.common
 import qs.modules.common.functions
+import qs.modules.common.utils
+pragma Singleton
 
 Singleton {
     id: root
@@ -27,11 +26,12 @@ Singleton {
         id: firstRunFileView
 
         path: Qt.resolvedUrl(firstRunFilePath)
-        onLoadFailed: error => {
+        onLoadFailed: (error) => {
             if (error == FileViewError.FileNotFound) {
                 firstRunFileView.setText(root.firstRunFileContent);
                 root.handleFirstRun();
             }
         }
     }
+
 }

@@ -8,7 +8,6 @@ import qs.services
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Services.Mpris
-import Quickshell.Io
 import Quickshell.Widgets
 import QtNetwork
 

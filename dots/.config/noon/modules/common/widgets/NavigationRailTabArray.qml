@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import Quickshell.Io
 import qs.modules.common
 import qs.modules.common.widgets
 
@@ -33,8 +32,11 @@ Item {
         }
 
         Behavior on anchors.topMargin {
-            Anim {}
+            Anim {
+            }
+
         }
+
     }
 
     ColumnLayout {
@@ -43,4 +45,5 @@ Item {
         anchors.fill: parent
         spacing: 10
     }
+
 }

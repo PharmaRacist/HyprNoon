@@ -1,9 +1,7 @@
-pragma Singleton
-pragma ComponentBehavior: Bound
-
 import QtQuick
 import Quickshell
-import Quickshell.Io
+import qs.modules.common.utils
+pragma Singleton
 
 /**
  * Provides some system info: distro, username.
@@ -23,16 +21,13 @@ Singleton {
             getUsername.running = true;
             fileOsRelease.reload();
             const textOsRelease = fileOsRelease.text();
-
             // Extract the friendly name (PRETTY_NAME field, fallback to NAME)
             const prettyNameMatch = textOsRelease.match(/^PRETTY_NAME="(.+?)"/m);
             const nameMatch = textOsRelease.match(/^NAME="(.+?)"/m);
             distroName = prettyNameMatch ? prettyNameMatch[1] : (nameMatch ? nameMatch[1].replace(/Linux/i, "").trim() : "Unknown");
-
             // Extract the ID (LOGO field, fallback to "unknown")
             const logoMatch = textOsRelease.match(/^LOGO=(.+)$/m);
             distroId = logoMatch ? logoMatch[1].replace(/"/g, "") : "unknown";
-
             // Update the distroIcon property based on distroId
             switch (distroId) {
             case "arch":
@@ -70,16 +65,21 @@ Singleton {
 
     Process {
         id: getUsername
+
         command: ["whoami"]
+
         stdout: SplitParser {
-            onRead: data => {
+            onRead: (data) => {
                 username = data.trim();
             }
         }
+
     }
 
     FileView {
         id: fileOsRelease
+
         path: "/etc/os-release"
     }
+
 }

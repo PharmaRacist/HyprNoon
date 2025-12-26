@@ -8,7 +8,6 @@ import QtQuick.Controls
 import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Io
 import Quickshell.Widgets
 import Quickshell.Hyprland
 import Quickshell.Services.Notifications
