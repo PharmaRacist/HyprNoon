@@ -5,11 +5,13 @@ import qs.services
 import qs.common
 import qs.common.utils
 import qs.common.functions
+import qs.common.widgets
 
 /* Bundled Custom QS Functions For Noon */
 
 Singleton {
     id: root
+    property string errStr: ""
     readonly property var avilableSystemCommands: Mem.states.misc.systemCommands
     readonly property var avilableIpcCommands: Mem.states.misc.ipcCommands
     property bool ipcReady: false
@@ -80,8 +82,19 @@ Singleton {
     function installPkg(app: string) {
         const terminal = Mem.options.apps.terminal || "kitty";
         Quickshell.execDetached(["kitty", "-e", "fish", "-c", ` yay -S --noconfirm  ${app}`]);
+    }   
+    function error(e:var) {
+        console.log(e)
+        // popupLoader.active = true
+        // root.errStr = e[0]
     }
+    function edit(filePath){
+        if (!filePath) return;
+        exec(
+            `${Quickshell.env('EDITOR')} ${Quickshell.env('SHELL_CONFIG_PATH')}` 
+        )
 
+    }
     Process {
         id: execProc
     }
@@ -140,4 +153,19 @@ Singleton {
             }
         }
     }
+    WidgetLoader {
+        id: popupLoader
+        active:false
+        ReloadPopup {
+            description:root.errStr
+        }
+    }
+    Connections {
+		target: Quickshell
+        function onReloadFailed(error: string) {
+            popupLoader.active = true;
+            root.errStr = error;
+        }
+	}
+
 }

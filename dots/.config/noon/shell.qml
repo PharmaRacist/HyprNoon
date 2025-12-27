@@ -31,7 +31,7 @@ ShellRoot {
         enabled: Mem.options.desktop.bg.borderMultiplier > 0
         Border {}
     }
-
+    
     WidgetLoader {
         enabled: true
         Sidebar {}

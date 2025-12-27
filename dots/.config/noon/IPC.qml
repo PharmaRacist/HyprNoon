@@ -87,7 +87,7 @@ Scope {
         }
 
         function edit_json(){
-            Noon.exec(`${Quickshell.env('EDITOR')} ${Quickshell.env('SHELL_CONFIG_PATH')}`)
+            Noon.edit(Quickshell.env('SHELL_CONFIG_PATH'))
         }
         function lock() {
             GlobalStates.locked = true;

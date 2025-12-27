@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import qs.common
 import qs.common.utils
+import qs.common.widgets
 pragma Singleton
 
 Singleton {
@@ -17,16 +18,7 @@ Singleton {
     IdleInhibitor {
         enabled: Mem.options.services.idle.inhibit
 
-        window: PanelWindow {
-            id: inhibitorWindow
-
-            visible: true
-            color: "transparent"
-
-            mask: Region {
-                item: null
-            }
-
+        window: DummyPanel {
         }
 
     }
