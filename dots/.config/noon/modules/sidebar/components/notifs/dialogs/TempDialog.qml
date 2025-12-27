@@ -23,6 +23,7 @@ BottomDialog {
 
         BottomDialogHeader {
             title: qsTr("Nightlight")
+            subTitle: "Adjust HyprSunset from here"
         }
 
         BottomDialogSeparator {
@@ -51,8 +52,8 @@ BottomDialog {
                 }
 
                 StyledSwitch {
-                    checked: NightLightService.enabled
-                    onToggled: NightLightService.enabled = checked
+                    checked: Mem.states.services.nightLight.enabled
+                    onToggled: Mem.states.services.nightLight.enabled = checked
                 }
 
             }

@@ -117,6 +117,7 @@ JsonAdapter {
         property JsonObject weather
         property JsonObject recording
         property JsonObject notifications
+        property JsonObject nightLight
         property JsonObject ambientSounds
 
         property string backlightDevice: ""
@@ -131,10 +132,12 @@ JsonAdapter {
         todo: JsonObject {
             property bool enableTodoist: true
         }
+        nightLight: JsonObject {
+            property bool autoNightLightCycle: false
 
+        }
         time: JsonObject {
             property bool use12HourFormat: true
-            property bool autoNightLightCycle: false
         }
 
         prayer: JsonObject {

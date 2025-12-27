@@ -8,8 +8,10 @@ QuickToggleButton {
 
     buttonName: "Night Light"
     buttonIcon: "nightlight"
-    toggled: NightLightService.enabled
-    onClicked: NightLightService.toggle()
+    toggled: Mem.states.services.nightLight.enabled
+    onClicked: {
+        Mem.states.services.nightLight.enabled = !Mem.states.services.nightLight.enabled;
+    }
     onRequestDialog: GlobalStates.showTempDialog = true
     hasDialog: true
 }

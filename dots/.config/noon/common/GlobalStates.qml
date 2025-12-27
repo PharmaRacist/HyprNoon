@@ -28,12 +28,14 @@ Singleton {
     property bool showKdeConnectDialog: false
 
     function handle_init() {
-        ColorsService.reload();
-        ClipboardService.reload();
-        AmbientSoundsService.reload();
-        KeyringStorage.reload();
-        NightLightService.reload();
-        Noon.playSound("device_unlocked");
+        if (Mem.ready) {
+            ColorsService.reload();
+            ClipboardService.reload();
+            AmbientSoundsService.reload();
+            KeyringStorage.reload();
+            NightLightService.reload();
+            Noon.playSound("device_unlocked");
+        }
     }
 
     onSuperReleaseMightTriggerChanged: superHeld.stop()

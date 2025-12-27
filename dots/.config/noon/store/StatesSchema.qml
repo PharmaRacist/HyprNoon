@@ -44,6 +44,7 @@ JsonAdapter {
         property JsonObject bookmarks
         property JsonObject wm
         property JsonObject emojis
+        property JsonObject nightLight
         property JsonObject ambientSounds
         property JsonObject mediaPlayer
         property JsonObject power
@@ -59,7 +60,10 @@ JsonAdapter {
             property string selectedDeviceId: ""
             property string myDeviceId: ""
         }
-
+        nightLight:JsonObject {
+            property bool enabled: false
+            property int temperature: 3600
+        }
         bookmarks: JsonObject {
             property list<var> firefoxBookmarks: []
         }

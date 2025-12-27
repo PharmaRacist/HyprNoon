@@ -5,170 +5,83 @@ import qs.common.utils
 pragma Singleton
 
 Singleton {
-    id: nightLightService
+    id: root
 
-    property bool enabled: false
-    property int temperature: 5000
-    readonly property int debounceDelay: 400
-    // Auto cycle properties
-    property bool autoEnabled: Mem.options.services.time.autoNightLightCycle ?? false
-    property bool nextIsEnable: false
+    property bool enabled: Mem.states.services.nightLight.enabled
+    property int temperature: Mem.states.services.nightLight.temperature ?? 6400
+    property bool autoEnabled: Mem.options.services.nightLight.autoNightLightCycle ?? false
 
-    function parseTimeToHours(timeStr) {
-        var parts = timeStr.split(":");
-        return parseInt(parts[0]) + parseInt(parts[1]) / 60;
-    }
-
-    function updateSchedule() {
-        if (!autoEnabled)
-            return ;
-
-        var now = new Date();
-        var currentHour = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
-        var todayRise = parseTimeToHours(WeatherService.sunrise);
-        var todaySet = parseTimeToHours(WeatherService.sunset);
-        var isNightNow = currentHour < todayRise || currentHour > todaySet;
-        if (isNightNow !== enabled) {
-            if (isNightNow)
-                enable();
-            else
-                disable();
-        }
-        var nextTime;
-        var isEnableTransition = false;
-        var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-        if (isNightNow) {
-            // Next: sunrise (disable)
-            isEnableTransition = false;
-            var nextRise;
-            if (currentHour < todayRise) {
-                nextRise = todayRise;
-                nextTime = new Date(today.getTime() + nextRise * 3.6e+06);
-            } else {
-                // Tomorrow's sunrise
-                var tomorrowRiseStr = WeatherService.weatherPredictions.length > 0 ? WeatherService.weatherPredictions[0].sunrise : WeatherService.sunrise;
-                var tomorrowRise = parseTimeToHours(tomorrowRiseStr);
-                var tomorrow = new Date(today.getTime() + 8.64e+07);
-                nextTime = new Date(tomorrow.getTime() + tomorrowRise * 3.6e+06);
-            }
+    function reload() {
+        if (enabled) {
+            mainProc.running = false;
+            mainProc.running = true;
         } else {
-            // Next: sunset (enable)
-            isEnableTransition = true;
-            nextTime = new Date(today.getTime() + todaySet * 3.6e+06);
-        }
-        var delay = nextTime.getTime() - now.getTime();
-        if (delay > 0) {
-            nextIsEnable = isEnableTransition;
-            nextTransitionTimer.stop();
-            nextTransitionTimer.interval = delay;
-            nextTransitionTimer.start();
-        } else {
-            // Recalculate if delay <= 0 (should be rare)
-            updateSchedule();
+            mainProc.running = false;
+            Noon.execDetached("killall hyprsunset");
         }
     }
 
-    function enable() {
-        if (enabled)
-            return ;
-
-        Noon.execDetached(`hyprsunset -t ${temperature}`);
-        enabled = true;
-    }
-
-    function disable() {
-        if (!enabled)
-            return ;
-
-        Noon.execDetached("pkill -9 hyprsunset");
-        enabled = false;
-    }
-
-    function toggle() {
-        if (enabled)
-            disable();
-        else
-            enable();
-    }
-
-    function setTemperature(value) {
-        if (value === temperature)
-            return ;
-
-        temperature = value;
+    function debounced_reload() {
         debounceTimer.restart();
     }
 
-    function reload() {
-        applyTemperature();
-    }
-
-    function applyTemperature() {
-        if (!enabled)
+    function syncWithSunset() {
+        if (!autoEnabled)
             return ;
 
-        Noon.execDetached(`hyprsunset -t ${temperature}`);
+        const now = new Date();
+        const currentHour = now.getHours() + now.getMinutes() / 60;
+        const [sunriseH, sunriseM] = WeatherService.sunrise.split(":").map(Number);
+        const [sunsetH, sunsetM] = WeatherService.sunset.split(":").map(Number);
+        const sunrise = sunriseH + sunriseM / 60;
+        const sunset = sunsetH + sunsetM / 60;
+        const isNight = currentHour < sunrise || currentHour > sunset;
+        isNight ? enable() : disable();
     }
 
+    onEnabledChanged: () => {
+        return reload();
+    }
+    onTemperatureChanged: () => {
+        return debounced_reload();
+    }
     onAutoEnabledChanged: {
         if (autoEnabled)
-            updateSchedule();
-        else
-            nextTransitionTimer.stop();
+            syncWithSunset();
+
     }
 
     Timer {
         id: debounceTimer
 
-        interval: nightLightService.debounceDelay
-        repeat: false
-        onTriggered: {
-            if (nightLightService.enabled)
-                nightLightService.applyTemperature();
-
-        }
-    }
-
-    Timer {
-        id: nextTransitionTimer
-
-        interval: 1000 // Default; will be set dynamically
-        repeat: false
-        onTriggered: {
-            if (nextIsEnable)
-                enable();
-            else
-                disable();
-            updateSchedule();
-        }
+        interval: 200
+        onTriggered: reload()
     }
 
     Process {
-        id: processChecker
+        id: mainProc
 
+        command: ["bash", "-c", `hyprsunset -t ${temperature}`]
+    }
+
+    Process {
         running: true
         command: ["pidof", "hyprsunset"]
         onExited: (exitCode) => {
-            nightLightService.enabled = (exitCode === 0);
+            return Mem.states.services.nightLight.enabled = (exitCode === 0);
         }
     }
 
     Connections {
         function onSunriseChanged() {
-            if (nightLightService.autoEnabled)
-                nightLightService.updateSchedule();
+            if (root.autoEnabled)
+                root.syncWithSunset();
 
         }
 
         function onSunsetChanged() {
-            if (nightLightService.autoEnabled)
-                nightLightService.updateSchedule();
-
-        }
-
-        function onWeatherPredictionsChanged() {
-            if (nightLightService.autoEnabled)
-                nightLightService.updateSchedule();
+            if (root.autoEnabled)
+                root.syncWithSunset();
 
         }
 

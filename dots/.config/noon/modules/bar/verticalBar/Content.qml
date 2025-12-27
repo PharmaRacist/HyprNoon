@@ -97,8 +97,6 @@ ColumnLayout {
                     return brightnessComponent;
                 case "unicodeWs":
                     return unicodeWsComponent;
-                case "nightlight":
-                    return nightlightComponent;
                 case "progressWs":
                     return progressWsComponent;
                 case "systemStatusIcons":
@@ -241,13 +239,6 @@ ColumnLayout {
                 }
             }
 
-            Component {
-                id: nightlightComponent
-
-                NightLightIndicator {
-                    verticalMode: true
-                }
-            }
             Component {
                 id: brightnessComponent
 
