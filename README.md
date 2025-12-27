@@ -20,7 +20,10 @@
   # for legacy nvidia
   install noon-nvidia-legacy package
 ```
-
+checkout more noon packages at 
+```
+yay noon-
+```
 ## Some Screenshots
 
 ![Beam, Clipboard](./.github/screenshots/1.png) 
