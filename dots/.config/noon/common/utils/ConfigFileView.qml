@@ -10,7 +10,7 @@ FileView {
     property string fileName
     property alias data: root.adapter
     property Timer reloadTimer: timer.createObject(root)
-    property bool state: false
+    property bool state: true
     property Component timer
 
     filePath: (state ? Directories.state + "/" : Directories.shellConfigs) + fileName + ".json"
@@ -25,6 +25,7 @@ FileView {
             root.writeAdapter();
 
     }
+    adapter: children[0] ?? null
 
     timer: Timer {
         id: reloadTimer

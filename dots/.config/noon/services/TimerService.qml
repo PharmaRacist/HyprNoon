@@ -1,251 +1,248 @@
 pragma Singleton
-pragma ComponentBehavior: Bound
-import Quickshell
 import QtQuick
+import QtMultimedia
+import Quickshell
+import Qt.labs.folderlistmodel
 import qs.common
+import qs.common.utils
 
 Singleton {
     id: root
 
+    // Constants
+    readonly property string audioDir: Directories.sounds + "ambient"
+    readonly property var iconMap: ({
+        "rain": "water_drop",
+        "storm": "thunderstorm",
+        "waves": "waves",
+        "ocean": "waves",
+        "fire": "local_fire_department",
+        "fireplace": "local_fire_department",
+        "wind": "air",
+        "birds": "flutter_dash",
+        "bird": "flutter_dash",
+        "stream": "water",
+        "river": "water",
+        "water": "water",
+        "white": "graphic_eq",
+        "pink": "graphic_eq",
+        "noise": "graphic_eq",
+        "coffee": "local_cafe",
+        "cafe": "local_cafe",
+        "shop": "local_cafe",
+        "train": "train",
+        "boat": "sailing",
+        "ship": "sailing",
+        "night": "nightlight",
+        "summer": "wb_sunny",
+        "city": "location_city",
+        "urban": "location_city"
+    })
+
     // Direct binding to JsonAdapter
-    property var timers: Mem.timers.timers
-    property int nextTimerId: Mem.timers.nextTimerId
+    property var availableSounds: Mem.states.services.ambientSounds.availableSounds
+    property var activeSounds: Mem.states.services.ambientSounds.activeSounds
+    property real masterVolume: Mem.states.services.ambientSounds.masterVolume
+    property bool muted: Mem.states.services.ambientSounds.muted
+    property bool masterPaused: Mem.states.services.ambientSounds.masterPaused
 
-    signal timerFinished(int timerId, string name)
+    // Computed property
+    readonly property var activeSoundsList: activeSounds.map(soundData => ({
+        id: soundData.id,
+        name: soundData.name,
+        volume: soundData.volume,
+        isPlaying: soundData.player.playbackState === MediaPlayer.PlayingState
+    }))
 
-    readonly property list<var> presets: [
-        { "duration": 1500, "icon": "timer", "name": "Pomodoro" },
-        { "duration": 300, "icon": "coffee", "name": "Short Break" },
-        { "duration": 900, "icon": "bed", "name": "Long Break" },
-        { "duration": 5400, "icon": "mindfulness", "name": "Deep Work" },
-        { "duration": 1800, "icon": "fitness_center", "name": "Exercise" },
-        { "duration": 600, "icon": "self_improvement", "name": "Meditation" },
-        { "duration": 900, "icon": "flash_on", "name": "Quick Task" },
-        { "duration": 3600, "icon": "groups", "name": "Meeting" }
-    ]
-
-    property var uiTimers: timers
-
-    Timer {
-        interval: 1000
-        repeat: true
-        running: timers.some(t => t?.isRunning)
-        onTriggered: tick()
+    // Folder scanner
+    FolderListModel {
+        id: audioFolderModel
+        folder: Qt.resolvedUrl(root.audioDir)
+        nameFilters: ["*.mp3", "*.ogg", "*.wav", "*.flac", "*.m4a"]
+        showDirs: false
+        onCountChanged: if (count > 0) scanAudioFiles()
     }
 
-    function tick() {
-        const now = Date.now();
-        const updated = [];
-        let changed = false;
-
-        for (let i = 0; i < timers.length; i++) {
-            const timer = timers[i];
-            if (!timer.isRunning) {
-                updated.push(timer);
-                continue;
-            }
-
-            const elapsed = Math.floor((now - timer.startTime) / 1000);
-            const remaining = Math.max(0, timer.originalDuration - elapsed);
-
-            if (remaining === 0) {
-                updated.push({
-                    id: timer.id,
-                    name: timer.name,
-                    originalDuration: timer.originalDuration,
-                    remainingTime: 0,
-                    isRunning: false,
-                    startTime: 0,
-                    preset: timer.preset,
-                    icon: timer.icon
-                });
-                playSound("finish");
-                Noon.notify(`'⏰ Timer Complete , ${timer.name} finished!'`);
-                timerFinished(timer.id, timer.name);
-                changed = true;
-            } else {
-                updated.push({
-                    id: timer.id,
-                    name: timer.name,
-                    originalDuration: timer.originalDuration,
-                    remainingTime: remaining,
-                    isRunning: true,
-                    startTime: timer.startTime,
-                    preset: timer.preset,
-                    icon: timer.icon
-                });
-                changed = true;
-            }
-        }
-
-        if (changed) {
-            Mem.timers.timers = updated;
+    // MediaPlayer component
+    Component {
+        id: playerComponent
+        MediaPlayer {
+            loops: MediaPlayer.Infinite
+            audioOutput: AudioOutput {}
         }
     }
 
-    function addTimer(name, duration, preset) {
-        const newTimer = {
-            id: nextTimerId,
-            name: name,
-            originalDuration: duration,
-            remainingTime: duration,
-            isRunning: false,
-            startTime: 0,
-            preset: preset || null,
-            icon: preset ? preset.icon : "timer"
-        };
-        
-        Mem.timers.nextTimerId = nextTimerId + 1;
-        Mem.timers.timers = timers.concat([newTimer]);
-        return newTimer.id;
-    }
+    // Change handlers
+    onMasterVolumeChanged: { updateAllVolumes(); saveState() }
+    onMutedChanged: { updateAllVolumes(); saveState() }
+    onMasterPausedChanged: { updateAllPlayback(); saveState() }
 
-    function removeTimer(timerId) {
-        Mem.timers.timers = timers.filter(t => t.id !== timerId);
-    }
+    // === Public API ===
 
-    function startTimer(timerId) {
-        const updated = timers.map(t => {
-            if (t.id !== timerId || t.remainingTime <= 0) return t;
-            return {
-                id: t.id,
-                name: t.name,
-                originalDuration: t.originalDuration,
-                remainingTime: t.remainingTime,
-                isRunning: true,
-                startTime: Date.now() - (t.originalDuration - t.remainingTime) * 1000,
-                preset: t.preset,
-                icon: t.icon
-            };
-        });
-        
-        Mem.timers.timers = updated;
-        playSound("start");
-    }
+    function playSound(soundId, volume = null) {
+        if (activeSounds.some(s => s.id === soundId)) return
 
-    function pauseTimer(timerId) {
-        const updated = timers.map(t => {
-            if (t.id !== timerId) return t;
-            
-            let remaining = t.remainingTime;
-            if (t.isRunning && t.startTime > 0) {
-                const elapsed = Math.floor((Date.now() - t.startTime) / 1000);
-                remaining = Math.max(0, t.originalDuration - elapsed);
-            }
-            
-            return {
-                id: t.id,
-                name: t.name,
-                originalDuration: t.originalDuration,
-                remainingTime: remaining,
-                isRunning: false,
-                startTime: 0,
-                preset: t.preset,
-                icon: t.icon
-            };
-        });
-        
-        Mem.timers.timers = updated;
-    }
-
-    function resetTimer(timerId) {
-        const updated = timers.map(t => {
-            if (t.id !== timerId) return t;
-            return {
-                id: t.id,
-                name: t.name,
-                originalDuration: t.originalDuration,
-                remainingTime: t.originalDuration,
-                isRunning: false,
-                startTime: 0,
-                preset: t.preset,
-                icon: t.icon
-            };
-        });
-        
-        Mem.timers.timers = updated;
-    }
-
-    function updateTimer(timerId, newDuration) {
-        const timer = timers.find(t => t.id === timerId);
-        if (!timer) return;
-
-        const wasRunning = timer.isRunning;
-        if (wasRunning) pauseTimer(timerId);
-
-        const updated = timers.map(t => {
-            if (t.id !== timerId) return t;
-            return {
-                id: t.id,
-                name: t.name,
-                originalDuration: newDuration,
-                remainingTime: newDuration,
-                isRunning: false,
-                startTime: 0,
-                preset: t.preset,
-                icon: t.icon
-            };
-        });
-        
-        Mem.timers.timers = updated;
-        if (wasRunning) Qt.callLater(() => startTimer(timerId));
-    }
-
-    function formatTime(seconds) {
-        const h = Math.floor(seconds / 3600);
-        const m = Math.floor((seconds % 3600) / 60);
-        const s = seconds % 60;
-        return h > 0 ? `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}` : `${m}:${String(s).padStart(2, '0')}`;
-    }
-
-    function parseTimeString(input) {
-        if (!input) return 0;
-        input = String(input).trim().toLowerCase();
-
-        const regex = /(\d+)([hms])/g;
-        let total = 0;
-        let match;
-
-        while ((match = regex.exec(input)) !== null) {
-            const val = parseInt(match[1]);
-            const unit = match[2];
-            if (unit === "h") total += val * 3600;
-            else if (unit === "m") total += val * 60;
-            else if (unit === "s") total += val;
+        const sound = availableSounds.find(s => s.id === soundId)
+        if (!sound) {
+            console.error("AmbientSound: Sound not found:", soundId)
+            return
         }
 
-        if (total === 0 && /^\d+$/.test(input)) total = parseInt(input) * 60;
-        return total;
+        const player = playerComponent.createObject(root, {
+            source: sound.filePath,
+            "audioOutput.volume": calculateVolume(volume ?? masterVolume)
+        })
+
+        if (!player) return
+
+        masterPaused ? player.pause() : player.play()
+
+        activeSounds.push({
+            id: soundId,
+            player: player,
+            volume: volume ?? masterVolume,
+            name: sound.name
+        })
+        activeSoundsChanged()
+        saveState()
     }
 
-    function playSound(name) {
-        const sound = name === "start" ? "alarm_endded" : name === "finish" ? "alarm_started" : "";
-        if (sound) Noon.playSound(sound);
+    function stopSound(soundId) {
+        const index = activeSounds.findIndex(s => s.id === soundId)
+        if (index === -1) return
+
+        const soundData = activeSounds[index]
+        soundData.player.stop()
+        soundData.player.destroy()
+        activeSounds.splice(index, 1)
+        activeSoundsChanged()
+        saveState()
     }
-    // Ai Helpers
-    function formatTimers() {
-        if (TimerService.uiTimers.length === 0) {
-            return "No timers currently";
+
+    function toggleSound(soundId, volume = null) {
+        const isActive = activeSounds.some(s => s.id === soundId)
+        isActive ? stopSound(soundId) : playSound(soundId, volume)
+    }
+
+    function setSoundVolume(soundId, volume) {
+        const soundData = activeSounds.find(s => s.id === soundId)
+        if (!soundData) return
+
+        const clampedVolume = Math.max(0, Math.min(1, volume))
+        soundData.volume = clampedVolume
+        soundData.player.audioOutput.volume = calculateVolume(clampedVolume)
+        activeSoundsChanged()
+        saveState()
+    }
+
+    function toggleMasterPause() {
+        masterPaused = !masterPaused
+    }
+
+    function toggleMute() {
+        muted = !muted
+    }
+
+    function stopAll() {
+        activeSounds.forEach(s => {
+            s.player.stop()
+            s.player.destroy()
+        })
+        activeSounds = []
+        masterPaused = false
+        activeSoundsChanged()
+        saveState()
+    }
+
+    function refresh() {
+        audioFolderModel.folder = ""
+        Qt.callLater(() => audioFolderModel.folder = Qt.resolvedUrl(root.audioDir))
+    }
+
+    function isPlaying(soundId) {
+        return activeSounds.some(s => s.id === soundId)
+    }
+
+    function getSoundVolume(soundId) {
+        const soundData = activeSounds.find(s => s.id === soundId)
+        return soundData?.volume ?? masterVolume
+    }
+
+    // === Private Functions ===
+
+    function reload() {
+        loadState()
+        if (availableSounds.length === 0) {
+            audioFolderModel.folder = Qt.resolvedUrl(root.audioDir)
+        }
+    }
+
+    function scanAudioFiles() {
+        const sounds = []
+
+        for (let i = 0; i < audioFolderModel.count; i++) {
+            const fileName = audioFolderModel.get(i, "fileName")
+            const nameWithoutExt = fileName.replace(/\.[^.]+$/, '')
+            const soundId = nameWithoutExt.toLowerCase().replace(/[^a-z0-9]/g, '_')
+
+            sounds.push({
+                id: soundId,
+                name: formatDisplayName(nameWithoutExt),
+                icon: getIconForName(nameWithoutExt.toLowerCase()),
+                filePath: audioFolderModel.get(i, "fileUrl"),
+                fileName: fileName
+            })
         }
 
-        let output = "Current timers:\n\n";
-
-        TimerService.uiTimers.forEach(timer => {
-            const status = timer.isRunning ? "Running" : timer.isPaused ? "Paused" : "Stopped";
-
-            const remaining = TimerService.formatTime(timer.remainingTime);
-            const total = TimerService.formatTime(timer.originalDuration);
-            const progress = (total - remaining) / total 
-
-            output += `ID: ${timer.id}\n`;
-            output += `Name: ${timer.name}\n`;
-            output += `Status: ${status}\n`;
-            output += `Time: ${remaining} / ${total} (${progress}% complete)\n`;
-            output += `Icon: ${timer.icon}\n`;
-            output += `\n`;
-        });
-
-        return output;
+        availableSounds = sounds
+        saveState()
     }
 
+    function formatDisplayName(name) {
+        return name.replace(/[_-]/g, ' ')
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ')
+    }
+
+    function getIconForName(lowerName) {
+        for (const [key, value] of Object.entries(iconMap)) {
+            if (lowerName.includes(key)) return value
+        }
+        return "music_note"
+    }
+
+    function calculateVolume(soundVolume) {
+        return muted ? 0 : soundVolume * masterVolume
+    }
+
+    function updateAllVolumes() {
+        activeSounds.forEach(soundData => {
+            soundData.player.audioOutput.volume = calculateVolume(soundData.volume)
+        })
+    }
+
+    function updateAllPlayback() {
+        activeSounds.forEach(soundData => {
+            masterPaused ? soundData.player.pause() : soundData.player.play()
+        })
+    }
+
+    function saveState() {
+        Mem.states.services.ambientSounds = {
+            masterVolume: masterVolume,
+            muted: muted,
+            masterPaused: masterPaused,
+            availableSounds: availableSounds,
+            activeSounds: activeSounds.map(soundData => ({
+                id: soundData.id,
+                volume: soundData.volume,
+                name: soundData.name
+            }))
+        }
+    }
+
+    function loadState() {
+        // State is auto-loaded via binding to Mem.states.services.ambientSounds
+    }
 }

@@ -1,0 +1,4 @@
+import Quickshell
+
+Singleton {
+}

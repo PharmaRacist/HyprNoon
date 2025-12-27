@@ -5,6 +5,14 @@ import qs.services
 pragma Singleton
 
 Singleton {
+    // Connections {
+    //     target: Mem
+    //     onReadyChanged: {
+    //         if (ready) {
+    //         }
+    //     }
+    // }
+
     id: root
 
     property bool locked: false
@@ -28,16 +36,14 @@ Singleton {
     property bool showKdeConnectDialog: false
 
     function handle_init() {
-        if (Mem.ready) {
-            ColorsService.reload();
-            TimerService.reload();
-            AlarmService.reload();
-            ClipboardService.reload();
-            AmbientSoundsService.reload();
-            KeyringStorage.reload();
-            NightLightService.reload();
-            Noon.playSound("device_unlocked");
-        }
+        ColorsService.reload();
+        KeyringStorage.reload();
+        NightLightService.reload();
+        TimerService.reload();
+        AlarmService.reload();
+        ClipboardService.reload();
+        AmbientSoundsService.reload();
+        Noon.playSound("device_unlocked");
     }
 
     onSuperReleaseMightTriggerChanged: superHeld.stop()

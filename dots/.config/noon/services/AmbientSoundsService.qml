@@ -39,20 +39,15 @@ Singleton {
         "urban": "location_city"
     })
 
-    // State properties
-    property var availableSounds: []
-    property var activeSounds: ({})
-    property real masterVolume: 1.0
-    property bool muted: false
-    property bool masterPaused: false
+    // State bindings
+    property var availableSounds: Mem.states.services.ambientSounds.availableSounds
+    property var activeSounds: Mem.states.services.ambientSounds.activeSounds
+    property real masterVolume: Mem.states.services.ambientSounds.masterVolume
+    property bool muted: Mem.states.services.ambientSounds.muted
+    property bool masterPaused: Mem.states.services.ambientSounds.masterPaused
 
-    // Computed property
-    readonly property var activeSoundsList: Object.keys(activeSounds).map(soundId => ({
-        id: soundId,
-        name: activeSounds[soundId].name,
-        volume: activeSounds[soundId].volume,
-        isPlaying: activeSounds[soundId].player.playbackState === MediaPlayer.PlayingState
-    }))
+    // Players map (not persisted - QML objects can't be serialized)
+    property var players: ({})
 
     // Folder scanner
     FolderListModel {
@@ -72,78 +67,96 @@ Singleton {
         }
     }
 
-    
     // Change handlers
-    onMasterVolumeChanged: { updateAllVolumes(); saveState() }
-    onMutedChanged: { updateAllVolumes(); saveState() }
-    onMasterPausedChanged: { updateAllPlayback(); saveState() }
+    onMasterVolumeChanged: updateAllVolumes()
+    onMutedChanged: updateAllVolumes()
+    onMasterPausedChanged: updateAllPlayback()
 
     // === Public API ===
 
     function playSound(soundId, volume = null) {
-        if (activeSounds[soundId]) return
+        const existing = activeSounds.find(s => s.id === soundId)
+        if (existing) return
 
         const sound = availableSounds.find(s => s.id === soundId)
-        if (!sound) {
-            console.error("AmbientSound: Sound not found:", soundId)
-            return
-        }
+        if (!sound) return
 
+        const vol = volume ?? masterVolume
         const player = playerComponent.createObject(root, {
             source: sound.filePath,
-            "audioOutput.volume": calculateVolume(volume ?? masterVolume)
+            "audioOutput.volume": calculateVolume(vol)
         })
 
         if (!player) return
 
         masterPaused ? player.pause() : player.play()
+        players[soundId] = player
 
-        activeSounds[soundId] = {
-            player: player,
-            volume: volume ?? masterVolume,
+        Mem.states.services.ambientSounds.activeSounds.push({
+            id: soundId,
+            volume: vol,
             name: sound.name
-        }
-        activeSoundsChanged()
-        saveState()
+        })
     }
 
     function stopSound(soundId) {
-        const soundData = activeSounds[soundId]
-        if (!soundData) return
+        const index = activeSounds.findIndex(s => s.id === soundId)
+        if (index === -1) return
 
-        soundData.player.stop()
-        soundData.player.destroy()
-        delete activeSounds[soundId]
-        activeSoundsChanged()
-        saveState()
+        // Destroy the player
+        const player = players[soundId]
+        if (player) {
+            player.stop()
+            player.destroy()
+            delete players[soundId]
+        }
+
+        // Remove from state
+        Mem.states.services.ambientSounds.activeSounds.splice(index, 1)
     }
 
     function toggleSound(soundId, volume = null) {
-        activeSounds[soundId] ? stopSound(soundId) : playSound(soundId, volume)
+        activeSounds.find(s => s.id === soundId) ? stopSound(soundId) : playSound(soundId, volume)
     }
 
     function setSoundVolume(soundId, volume) {
-        const soundData = activeSounds[soundId]
+        const soundData = activeSounds.find(s => s.id === soundId)
         if (!soundData) return
 
         const clampedVolume = Math.max(0, Math.min(1, volume))
         soundData.volume = clampedVolume
-        soundData.player.audioOutput.volume = calculateVolume(clampedVolume)
-        activeSoundsChanged()
-        saveState()
+        
+        const player = players[soundId]
+        if (player) {
+            player.audioOutput.volume = calculateVolume(clampedVolume)
+        }
     }
 
     function toggleMasterPause() {
-        masterPaused = !masterPaused
+        Mem.states.services.ambientSounds.masterPaused = !masterPaused
     }
 
     function toggleMute() {
-        muted = !muted
+        Mem.states.services.ambientSounds.muted = !muted
     }
 
     function stopAll() {
-        Object.keys(activeSounds).forEach(stopSound)
-        masterPaused = false
+        for (let i = activeSounds.length - 1; i >= 0; i--) {
+            stopSound(activeSounds[i].id)
+        }
+        Mem.states.services.ambientSounds.masterPaused = false
+    }
+
+    function isPlaying(soundId) {
+        return !!players[soundId]
+    }
+
+    function getSoundVolume(soundId) {
+        return activeSounds.find(s => s.id === soundId)?.volume ?? masterVolume
+    }
+
+    function getPlayer(soundId) {
+        return players[soundId]
     }
 
     function refresh() {
@@ -151,21 +164,36 @@ Singleton {
         Qt.callLater(() => audioFolderModel.folder = Qt.resolvedUrl(root.audioDir))
     }
 
-    function isPlaying(soundId) {
-        return !!activeSounds[soundId]
-    }
-
-    function getSoundVolume(soundId) {
-        return activeSounds[soundId]?.volume ?? masterVolume
-    }
-
     // === Private Functions ===
 
     function reload() {
-        loadState()
         if (availableSounds.length === 0) {
             audioFolderModel.folder = Qt.resolvedUrl(root.audioDir)
+        } else {
+            restorePlayers()
         }
+    }
+
+    function restorePlayers() {
+        Qt.callLater(() => {
+            for (let i = 0; i < activeSounds.length; i++) {
+                const soundData = activeSounds[i]
+                if (players[soundData.id]) continue
+
+                const sound = availableSounds.find(s => s.id === soundData.id)
+                if (!sound) continue
+
+                const player = playerComponent.createObject(root, {
+                    source: sound.filePath,
+                    "audioOutput.volume": calculateVolume(soundData.volume)
+                })
+
+                if (player) {
+                    masterPaused ? player.pause() : player.play()
+                    players[soundData.id] = player
+                }
+            }
+        })
     }
 
     function scanAudioFiles() {
@@ -185,8 +213,8 @@ Singleton {
             })
         }
 
-        availableSounds = sounds
-        saveState()
+        Mem.states.services.ambientSounds.availableSounds = sounds
+        restorePlayers()
     }
 
     function formatDisplayName(name) {
@@ -208,48 +236,22 @@ Singleton {
     }
 
     function updateAllVolumes() {
-        Object.values(activeSounds).forEach(soundData => {
-            soundData.player.audioOutput.volume = calculateVolume(soundData.volume)
-        })
-    }
-
-    function updateAllPlayback() {
-        Object.values(activeSounds).forEach(soundData => {
-            masterPaused ? soundData.player.pause() : soundData.player.play()
-        })
-    }
-
-    function saveState() {
-        Mem.states.services.ambientSounds = {
-            masterVolume: masterVolume,
-            muted: muted,
-            masterPaused: masterPaused,
-            availableSounds: availableSounds,
-            activeSounds: Object.keys(activeSounds).map(soundId => ({
-                id: soundId,
-                volume: activeSounds[soundId].volume,
-                name: activeSounds[soundId].name
-            }))
+        for (let i = 0; i < activeSounds.length; i++) {
+            const soundData = activeSounds[i]
+            const player = players[soundData.id]
+            if (player) {
+                player.audioOutput.volume = calculateVolume(soundData.volume)
+            }
         }
     }
 
-    function loadState() {
-        const state = Mem.states.services.ambientSounds
-        if (!state) return
-
-        masterVolume = state.masterVolume ?? 1.0
-        muted = state.muted ?? false
-        masterPaused = state.masterPaused ?? false
-        availableSounds = state.availableSounds ?? []
-
-        if (state.activeSounds?.length > 0) {
-            Qt.callLater(() => {
-                state.activeSounds.forEach(soundData => {
-                    if (availableSounds.find(s => s.id === soundData.id)) {
-                        playSound(soundData.id, soundData.volume)
-                    }
-                })
-            })
+    function updateAllPlayback() {
+        for (let i = 0; i < activeSounds.length; i++) {
+            const soundData = activeSounds[i]
+            const player = players[soundData.id]
+            if (player) {
+                masterPaused ? player.pause() : player.play()
+            }
         }
     }
 }

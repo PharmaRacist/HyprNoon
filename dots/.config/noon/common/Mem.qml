@@ -1,8 +1,4 @@
-import QtQuick
-import Quickshell
-import Quickshell.Widgets
 import qs.common.utils
-import qs.services
 import qs.store
 pragma Singleton
 
@@ -18,9 +14,10 @@ Singleton {
     ConfigFileView {
         id: optionsView
 
+        state: false
         fileName: "options"
 
-        adapter: OptionsSchema {
+        OptionsSchema {
         }
 
     }
@@ -28,10 +25,9 @@ Singleton {
     ConfigFileView {
         id: todoView
 
-        state: true
         fileName: "todo"
 
-        adapter: TodoSchema {
+        TodoSchema {
         }
 
     }
@@ -39,10 +35,9 @@ Singleton {
     ConfigFileView {
         id: statesView
 
-        state: true
         fileName: "states"
 
-        adapter: StatesSchema {
+        StatesSchema {
         }
 
     }
@@ -50,10 +45,9 @@ Singleton {
     ConfigFileView {
         id: timersView
 
-        state: true
         fileName: "timers"
 
-        adapter: TimersSchema {
+        TimersSchema {
         }
 
     }
